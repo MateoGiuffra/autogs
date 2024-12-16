@@ -1,6 +1,8 @@
 from automation.Login import Login 
 from automation.Report import Report 
 from automation.DateSetter import DateSetter
+from automation.FileDownloader import FileDownloader
+
 from selenium import webdriver
 from selenium.webdriver import Chrome 
 from selenium.webdriver.chrome.service import Service   
@@ -8,16 +10,16 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
-import os 
-import time 
+
 
 class WebDriverManager:
 
-    def __init__(self, output_path, expected_filename):
+    def __init__(self, output_path, expected_filename_pattern ):
         self.output_path = output_path
         self.driver = None
         self.configure_driver()
-        self.expected_filename = expected_filename
+        self.expected_filename_pattern = expected_filename_pattern
+        self.file_downloaded_path = None
 
     def configure_driver(self):
         service = Service(ChromeDriverManager().install())
@@ -58,17 +60,9 @@ class WebDriverManager:
         date_setter.set()
 
     def download_file(self):
-        
-        download_button = self.driver.find_element(By.NAME,"ctl15$btnConsultar")
-        download_button.click()
+        file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
+        self.file_downloaded_path = file_downloader.download()
 
-        wait_time = 5  # Tiempo máximo de espera
-        start_time = time.time()
-
-        while not os.path.exists(os.path.join(self.output_path, self.expected_filename)):
-            time.sleep(1)
-            if time.time() - start_time > wait_time:
-                return
 
     def get_driver(self):
         if self.driver is None:

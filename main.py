@@ -1,4 +1,4 @@
-from decouple import config  # Si usas python-decouple
+from decouple import config  
 import os 
 from automation.WebDriverManager import WebDriverManager
 
@@ -9,9 +9,9 @@ def main():
     password = config("DB_PASSWORD")
 
     output_path = obtener_abspath()
-    expected_filename = "archivo.xlsx"
+    expected_filename_pattern = 'rptCobranzas*.xls'
 
-    web_driver_manager = WebDriverManager(output_path, expected_filename)
+    web_driver_manager = WebDriverManager(output_path, expected_filename_pattern)
     web_driver_manager.start(url, user, password)
 
 
