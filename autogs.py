@@ -59,7 +59,6 @@ try:
     driver.get(url) 
 
    
-    
     user_input = driver.find_element(By.XPATH, "/html/body/div[1]/div/form/fieldset/div/div/label[1]/span/input")
     user_input.send_keys(db_user)
     password_input = driver.find_element(By.XPATH, "/html/body/div[1]/div/form/fieldset/div/div/label[2]/span/input")
