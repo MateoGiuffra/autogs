@@ -26,7 +26,9 @@ def main():
     options 
     service  
 
+
 try: 
+    
     url = "https://game.systemmaster.com.ar/frmLogin.aspx"
     db_user = config("DB_USER")
     db_password = config("DB_PASSWORD")
@@ -88,21 +90,19 @@ try:
     # calendar.click()
 
     #el primer dia del mes
-    firstDayOfThisMonth = datetime.date.today().replace(day=1)
-    formattedFDOTM = firstDayOfThisMonth.strftime("%d/%m/%Y")
+    firstDayOfThisMonth = datetime.date.today().replace(day=1).strftime("%d/%m/%Y")
 
     fechaCobroDesde = driver.find_element(By.NAME, "ctl15$FechaDesde$txtFecha")
     fechaCobroDesde.clear()
-    fechaCobroDesde.send_keys(formattedFDOTM)
+    fechaCobroDesde.send_keys(firstDayOfThisMonth)
     
     #el primer dia del proximo mes
     nextmonth = datetime.date.today() + relativedelta.relativedelta(months=1)
-    firstDayOfNextMonth = nextmonth.replace(day=1)
-    formattedDateFDONM = firstDayOfNextMonth.strftime("%d/%m/%Y")
+    firstDayOfNextMonth = nextmonth.replace(day=1).strftime("%d/%m/%Y")
 
     fechaVtoDeste = driver.find_element(By.NAME, "ctl15$FechaVtoDesde$txtFecha")
     fechaVtoDeste.clear()
-    fechaVtoDeste.send_keys(formattedDateFDONM)
+    fechaVtoDeste.send_keys(firstDayOfNextMonth)
 
     #click en resumen
     resume_button = driver.find_element(By.ID, "ctl15_chkResumen")
@@ -119,10 +119,6 @@ try:
         time.sleep(1)
         if time.time() - start_time > wait_time:
             raise TimeoutError("El archivo no se descargó dentro del tiempo esperado.")
-    
-except Exception as e: 
-    print(f"Error: {e}")
-    # time.sleep(2)
      
 finally:    
     driver.quit()
