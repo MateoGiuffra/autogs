@@ -63,6 +63,8 @@ class WebDriverManager:
         file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
         self.file_downloaded_path = file_downloader.download()
 
+    def get_file_downloaded_path(self):
+        return self.file_downloaded_path
 
     def get_driver(self):
         if self.driver is None:

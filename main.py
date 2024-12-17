@@ -1,6 +1,7 @@
 from decouple import config  
 import os 
 from automation.WebDriverManager import WebDriverManager
+from automation.ExcelReader import ExcelReader
 
 def main():
 
@@ -14,13 +15,17 @@ def main():
     web_driver_manager = WebDriverManager(output_path, expected_filename_pattern)
     web_driver_manager.start(url, user, password)
 
+    path = web_driver_manager.get_file_downloaded_path()
+    excel_reader = ExcelReader(path)
+    return excel_reader.get_total()
+
 
 def obtener_abspath():
     # Obtengo la ruta absoluta del directorio actual (donde está el script)
     project_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Le agrego al path Output
-    output_dir = os.path.join(project_dir, "Output")
+    output_dir = os.path.join(project_dir,"Output")
 
     # Creo la carpeta si no existe
     if not os.path.exists(output_dir):
