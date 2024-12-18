@@ -1,6 +1,10 @@
 from flask import Flask, jsonify
 from application.service.SummaryService import SummaryService
 from decouple import config  
+from dotenv import load_dotenv 
+
+
+load_dotenv() # para cargar el .env en local
 
 app = Flask(__name__)
 
