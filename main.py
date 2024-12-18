@@ -1,7 +1,7 @@
 from decouple import config  
 import os 
-from automation.WebDriverManager import WebDriverManager
-from automation.ExcelReader import ExcelReader
+from src.automation.WebDriverManager import WebDriverManager
+from src.pandas.ExcelReader import ExcelReader
 
 def main():
 
@@ -17,7 +17,10 @@ def main():
 
     path = web_driver_manager.get_file_downloaded_path()
     excel_reader = ExcelReader(path)
-    return excel_reader.get_total()
+    total = excel_reader.get_total()
+    print(total)
+    
+    return total 
 
 
 def obtener_abspath():

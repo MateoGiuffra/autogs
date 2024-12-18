@@ -1,7 +1,7 @@
-from automation.Login import Login 
-from automation.Report import Report 
-from automation.DateSetter import DateSetter
-from automation.FileDownloader import FileDownloader
+from src.automation.Login import Login 
+from src.automation.Report import Report 
+from src.automation.DateSetter import DateSetter
+from src.automation.FileDownloader import FileDownloader
 
 from selenium import webdriver
 from selenium.webdriver import Chrome 
