@@ -24,7 +24,8 @@ class WebDriverManager:
     def configure_driver(self):
         service = Service(ChromeDriverManager().install())
         options = webdriver.ChromeOptions()
-        options.add_argument("--window-size=1920,1080")
+        options.add_argument("--headless")
+        # options.add_argument("--window-size=1920,1080") # si queres ver el proceso, descomenta esta linea y comenta options.add_argument("--headless")
         options.add_experimental_option("prefs", {
             "download.default_directory": self.output_path,
             "download.prompt_for_download": False,
