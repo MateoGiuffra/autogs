@@ -1,7 +1,7 @@
-from src.automation.Login import Login 
-from src.automation.Report import Report 
-from src.automation.DateSetter import DateSetter
-from src.automation.FileDownloader import FileDownloader
+from application.automation.Login import Login 
+from application.automation.Report import Report 
+from application.automation.DateSetter import DateSetter
+from application.automation.FileDownloader import FileDownloader
 
 from selenium import webdriver
 from selenium.webdriver import Chrome 
@@ -63,7 +63,7 @@ class WebDriverManager:
         file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
         self.file_downloaded_path = file_downloader.download()
 
-    def get_file_downloaded_path(self):
+    def get_downloaded_file_path(self):
         return self.file_downloaded_path
 
     def get_driver(self):
