@@ -15,10 +15,12 @@ app = Flask(__name__)
 
 @app.route("/resumen", methods=["POST"])
 def recibir_mensaje():
-    incoming_message = request.form.get("Body").strip().lower()  # Mensaje de WhatsApp
+    # Obtener el mensaje enviado por Twilio (formato formulario)
+    incoming_message = request.form.get("Body", "").strip().lower()  # Mensaje de WhatsApp
     
     if incoming_message == "resumen":
         try:
+            # Aquí puedes realizar la lógica de obtener el resumen
             url = "https://game.systemmaster.com.ar/frmLogin.aspx"
             user = config("DB_USER")
             password = config("DB_PASSWORD")
@@ -30,11 +32,12 @@ def recibir_mensaje():
     else:
         response_message = "Mensaje no reconocido. Envía 'resumen' para obtener el total."
 
-    # Respuesta al remitente
+    # Respuesta en formato XML para Twilio
     response = f"""<Response>
                       <Message>{response_message}</Message>
                    </Response>"""
     return response, 200, {'Content-Type': 'application/xml'}
+
 
 
 @app.route("/obtenerResumen", methods=["GET"])
