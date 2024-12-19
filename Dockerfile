@@ -1,5 +1,5 @@
 # Define una variable de argumento para el puerto (puedes cambiarlo al build si es necesario)
-ARG PORT=443
+ARG PORT=10000
 
 # Usa una imagen base con soporte de Python (no es necesario usar una imagen de Cypress si no usas sus funcionalidades)
 FROM python:3.10-slim-buster
@@ -26,4 +26,4 @@ ENV PATH="/root/.local/bin:${PATH}"
 EXPOSE $PORT
 
 # Comando para ejecutar la aplicación
-CMD ["uvicorn", "application.APIREST.SummaryApi:app", "--host", "0.0.0.0", "--port", "443"]
+CMD ["uvicorn", "application.APIREST.SummaryApi:app", "--host", "0.0.0.0", "--port", "10000"]
