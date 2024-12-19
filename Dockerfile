@@ -14,8 +14,16 @@ COPY requirements.txt ./requirements.txt
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
-    && pip install --no-cache-dir -r requirements.txt
-                                     
+    wget \
+    unzip \
+    && pip install --no-cache-dir -r requirements.txt \
+    # Instalar chromedriver
+    && wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_linux64.zip \
+    && unzip /tmp/chromedriver.zip -d /usr/local/bin/ \
+    && rm /tmp/chromedriver.zip \
+    # Agregar permisos de ejecución
+    && chmod +x /usr/local/bin/chromedriver
+
 # Copia el resto de los archivos del proyecto al directorio de trabajo
 COPY . .
 
@@ -26,4 +34,4 @@ ENV PATH="/root/.local/bin:${PATH}"
 EXPOSE 10000
 
 # Comando para ejecutar la aplicación
-CMD ["uvicorn", "application.APIREST.SummaryApi:app", "--host", "0.0.0.0", "--port", "10000"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:10000", "application.APIREST.SummaryApi:app"]
