@@ -22,6 +22,30 @@ class WebDriverManager:
         self.expected_filename_pattern = expected_filename_pattern
         self.file_downloaded_path = None
     
+    def configure_driver(self):
+        # Utilizamos ChromeDriverManager para manejar la instalación del driver
+        service = Service(ChromeDriverManager().install())
+        
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        
+        # Verifica si se puede acceder al binario de google-chrome-stable y configura la ubicación
+        if os.path.exists("/usr/bin/google-chrome-stable"):
+            options.binary_location = "/usr/bin/google-chrome-stable"
+        
+        options.add_experimental_option("prefs", {
+            "download.default_directory": self.output_path,
+            "download.prompt_for_download": False,
+            "download.directory_upgrade": True,
+            "safebrowsing.enabled": True
+        })
+        
+        # Crea el WebDriver con la configuración
+        self.driver = webdriver.Chrome(service=service, options=options)
+
+
     def start(self, url, user, password):
         self.driver.get(url)
         
@@ -64,25 +88,4 @@ class WebDriverManager:
         if self.driver:
             self.driver.quit()
 
-    def configure_driver(self):
-        # Utilizamos ChromeDriverManager para manejar la instalación del driver
-        service = Service(ChromeDriverManager().install())
-        
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        
-        # Verifica si se puede acceder al binario de google-chrome-stable y configura la ubicación
-        if os.path.exists("/usr/bin/google-chrome-stable"):
-            options.binary_location = "/usr/bin/google-chrome-stable"
-        
-        options.add_experimental_option("prefs", {
-            "download.default_directory": self.output_path,
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": True
-        })
-        
-        # Crea el WebDriver con la configuración
-        self.driver = webdriver.Chrome(service=service, options=options)
+    
