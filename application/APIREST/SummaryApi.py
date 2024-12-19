@@ -48,12 +48,15 @@ def obtener_resumen():
         # Obtener el resumen usando el servicio
         total = SummaryService.get_summary(url, user, password)
         response_message = {"message": f"El total es: {total}"}
-        return jsonify(response_message), 200
+        response = f"""<Response>
+                      <Message>{response_message}</Message>
+                   </Response>"""
+        return response, 200, {'Content-Type': 'application/xml'}
 
     except Exception as e:
         # Manejo de errores
         error_message = {"error": str(e)}
-        return jsonify(error_message), 500
+        return error_message, 200
            
 
 
