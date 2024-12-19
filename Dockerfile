@@ -58,4 +58,4 @@ ENV LC_ALL en_US.UTF-8
 EXPOSE 10000
 
 # Comando para ejecutar la aplicación con Gunicorn y un timeout adecuado para Selenium
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:10000", "--timeout", "600", "application.APIREST.SummaryApi:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:10000", "--timeout", "600", "application.APIREST.wsgi:app"]
