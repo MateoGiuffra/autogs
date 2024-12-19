@@ -75,5 +75,7 @@ class SummaryApi:
 
 # Ejecutar la aplicación
 if __name__ == "__main__":
+    # Instanciar la aplicación y exponerla como 'app'
     app_routes = SummaryApi()
-    app_routes.run()
+    app = app_routes.app  # Esto lo hace compatible con Gunicorn
+

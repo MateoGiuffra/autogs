@@ -2,10 +2,6 @@ import datetime
 from selenium.webdriver.common.by import By 
 from dateutil import relativedelta 
 
-import datetime
-from dateutil import relativedelta
-from selenium.webdriver.common.by import By
-
 class DateSetter:
     def __init__(self, driver):
         self.driver = driver
