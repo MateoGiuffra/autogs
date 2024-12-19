@@ -57,5 +57,5 @@ def obtener_resumen():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))  # Render asigna el puerto como variable de entorno
+    port = int(os.environ.get("PORT", 10000))  # Render asigna el puerto como variable de entorno
     app.run(host="0.0.0.0", port=port, debug=True)
