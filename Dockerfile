@@ -23,7 +23,7 @@ COPY . .
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Expone el puerto para que esté disponible externamente
-EXPOSE $PORT
+EXPOSE 10000
 
 # Comando para ejecutar la aplicación
 CMD ["uvicorn", "application.APIREST.SummaryApi:app", "--host", "0.0.0.0", "--port", "10000"]
