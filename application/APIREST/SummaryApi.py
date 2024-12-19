@@ -13,7 +13,7 @@ def recibir_mensaje():
     # Obtener el mensaje del cuerpo de la solicitud
     incoming_message = request.form.get("Body").strip().lower()  # Mensaje de WhatsApp
     print("Mensaje recibido:", incoming_message)  # Ver lo que llega
-
+    
     if incoming_message == "resumen":
         print("Entrando en el bloque de resumen")  # Ver si entra aquí
         try:
