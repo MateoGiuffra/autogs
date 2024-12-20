@@ -25,7 +25,7 @@ class FileDownloader:
         while time.time() - start_time < timeout:
             try:
                 return self.get_latest_file()
-            except FileNotFoundError:
+            except FileNotFoundError as e:
                 time.sleep(1)  # Esperar antes de intentar nuevamente
 
         raise TimeoutError("No se encontró el archivo esperado dentro del tiempo especificado.")

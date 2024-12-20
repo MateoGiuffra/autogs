@@ -30,14 +30,18 @@ class SummaryApi:
         )
 
     def setup_routes(self):
+        @self.app.route("/test", methods=["GET"])
+        def test():
+            return "Prueba exitosa", 200
+        
         @self.app.route("/obtenerResumen", methods=["GET"])
         def obtener_resumen():
             try:
-                return jsonify(self.get_summary()), 200
-            except Exception as e:
-                error_message = {"error": str(e)}
-                return jsonify(error_message), 500
-        
+               return jsonify(self.get_summary()), 200
+            except Exception as p:
+                print("Pues que paso pe: {p}")
+                return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
+         
         @self.app.route("/resumen", methods=["POST"])
         def recibir_mensaje():
             incoming_message = request.form.get("Body", "").strip().lower()
@@ -51,6 +55,7 @@ class SummaryApi:
     
     def validate_incoming_message(self, incoming_message):
         if (incoming_message != "resumen"): 
+             print("no es un mensaje valido")
              raise ValueError("Mensaje no reconocido. Envía 'resumen' para obtener el total. Si no proba entrando al link: https://autogs-2.onrender.com/obtenerResumen")
 
     def get_summary(self):
@@ -64,18 +69,7 @@ class SummaryApi:
             return total
         except Exception as e:
             logging.error(f"Error al obtener el resumen: {e}")
-            raise e
-    
-    def set_new_total(self):
-        pass
-        # current_time = time.time()
-        # time_since_last_summary = current_time - SummaryApi.cache["timestamp"]
-        # # si fue pedido hace menos de 10 minutos no hace nada
-        # if SummaryApi.cache["summary"] is not None and  time_since_last_summary < SummaryApi.CACHE_TIMEOUT: return
-        # # caso contrario, calcula
-        # SummaryApi.total = SummaryService.get_summary(SummaryApi.BASE_URL, SummaryApi.DB_USER, SummaryApi.DB_PASSWORD)
-        # SummaryApi.cache["summary"] =  SummaryApi.total 
-        # SummaryApi.cache["timestamp"] = current_time 
+        raise e    
     
     def answer_message(self, message, value):
         response = f"""<Response>
@@ -85,9 +79,12 @@ class SummaryApi:
 
     def run(self):
         port = int(os.environ.get("PORT", 10000))
-        self.app.run(host="0.0.0.0", port=port, debug=True)
+        self.app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
 
-# Ejecutar la aplicación
+
 if __name__ == "__main__":
-    app_routes = SummaryApi()
-    app_routes.run()
+    try:
+        app_routes = SummaryApi()
+        app_routes.run()
+    except Exception as e:
+        print(f"Error al iniciar la aplicación: {e}")
