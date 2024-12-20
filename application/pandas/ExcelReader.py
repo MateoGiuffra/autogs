@@ -9,8 +9,6 @@ class ExcelReader:
 
     def get_total(self):
         try:
-            
-
             # leo el archivo (es un .xls pero es mentira, es un HTML)
             html_tables = pd.read_html(self.path, decimal=',', thousands='.') # esto devuelve una "lista" de data frames
 
