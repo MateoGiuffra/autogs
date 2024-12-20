@@ -3,3 +3,4 @@ Output/
 node_modules/
 __pycache__/
 *.pyc
+webdriver_errors.log

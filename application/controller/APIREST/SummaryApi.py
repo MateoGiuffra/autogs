@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, request
+from application.controller.utils.CacheManager import CacheManager
 from application.service.SummaryService import SummaryService
-from decouple import config  
-import os 
-import time 
+from flask import Flask, jsonify, request
 from dotenv import load_dotenv 
+from decouple import config  
+import logging 
+import os 
+
 load_dotenv()  # para cargar el .env en local
 
 class SummaryApi:
@@ -12,15 +14,20 @@ class SummaryApi:
     DB_PASSWORD = config("DB_PASSWORD")
     CACHE_TIMEOUT = 10 * 60
     TOTAL = 0
-    cache = {
-    "summary": None, 
-    "timestamp":0 
-    }
 
     def __init__(self):
         self.app = Flask(__name__)
-        self.total = 0
+        self.cache_manager = CacheManager(SummaryApi.CACHE_TIMEOUT)     
+        self.initialize_logging()   
         self.setup_routes()
+
+    def initialize_logging(self):
+        logging.basicConfig(
+            level=logging.ERROR,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            filename='webdriver_errors.log',
+            filemode='a'
+        )
 
     def setup_routes(self):
         @self.app.route("/obtenerResumen", methods=["GET"])
@@ -38,7 +45,7 @@ class SummaryApi:
                 self.validate_incoming_message(incoming_message)
                 response_message = self.get_summary()
                 return self.answer_message(response_message, 200)
-            except ValueError as ve:
+            except ValueError | Exception as ve:
                 response_message = str(ve)
                 return self.answer_message(response_message, 400)
     
@@ -47,21 +54,28 @@ class SummaryApi:
              raise ValueError("Mensaje no reconocido. Envía 'resumen' para obtener el total. Si no proba entrando al link: https://autogs-2.onrender.com/obtenerResumen")
 
     def get_summary(self):
-        try: 
-            self.set_new_total()           
-            return  f"El total es: {SummaryApi.total}"
-        except Exception as e: 
-            return f"Error: {str(e)}"
+        cached_summary = self.cache_manager.get_cached_data()
+        if cached_summary:
+            return cached_summary
+
+        try:
+            total = SummaryService.get_summary(SummaryApi.BASE_URL, SummaryApi.DB_USER, SummaryApi.DB_PASSWORD)
+            self.cache_manager.update_cache(total)
+            return total
+        except Exception as e:
+            logging.error(f"Error al obtener el resumen: {e}")
+            raise e
     
     def set_new_total(self):
-        current_time = time.time()
-        time_since_last_summary = current_time - SummaryApi.cache["timestamp"]
-        # si fue pedido hace menos de 10 minutos no hace nada
-        if SummaryApi.cache["summary"] is not None and  time_since_last_summary < SummaryApi.CACHE_TIMEOUT: return
-        # caso contrario, calcula
-        SummaryApi.total = SummaryService.get_summary(SummaryApi.BASE_URL, SummaryApi.DB_USER, SummaryApi.DB_PASSWORD)
-        SummaryApi.cache["summary"] =  SummaryApi.total 
-        SummaryApi.cache["timestamp"] = current_time 
+        pass
+        # current_time = time.time()
+        # time_since_last_summary = current_time - SummaryApi.cache["timestamp"]
+        # # si fue pedido hace menos de 10 minutos no hace nada
+        # if SummaryApi.cache["summary"] is not None and  time_since_last_summary < SummaryApi.CACHE_TIMEOUT: return
+        # # caso contrario, calcula
+        # SummaryApi.total = SummaryService.get_summary(SummaryApi.BASE_URL, SummaryApi.DB_USER, SummaryApi.DB_PASSWORD)
+        # SummaryApi.cache["summary"] =  SummaryApi.total 
+        # SummaryApi.cache["timestamp"] = current_time 
     
     def answer_message(self, message, value):
         response = f"""<Response>
