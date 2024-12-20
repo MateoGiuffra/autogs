@@ -39,7 +39,6 @@ class SummaryApi:
                 response_message = self.get_summary()
                 return self.answer_message(response_message, 200)
             except ValueError as ve:
-           
                 return self.answer_message(str(ve), 400)
     
     def validate_incoming_message(self, incoming_message):
