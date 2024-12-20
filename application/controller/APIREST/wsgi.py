@@ -1,4 +1,4 @@
-from application.APIREST.SummaryApi import SummaryApi
+from application.controller.APIREST.SummaryApi import SummaryApi
 
 # Instanciar la aplicación
 app_routes = SummaryApi()

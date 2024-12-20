@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 import os 
+import logging 
 
 
 class WebDriverManager:
@@ -23,28 +24,33 @@ class WebDriverManager:
         self.file_downloaded_path = None
     
     def configure_driver(self):
-        # Utilizamos ChromeDriverManager para manejar la instalación del driver
-        service = Service(ChromeDriverManager().install())
-        
-        options = webdriver.ChromeOptions()
-        options.add_argument("--headless")
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        
-        # Verifica si se puede acceder al binario de google-chrome-stable y configura la ubicación
-        if os.path.exists("/usr/bin/google-chrome-stable"):
-            options.binary_location = "/usr/bin/google-chrome-stable"
-        
-        options.add_experimental_option("prefs", {
-            "download.default_directory": self.output_path,
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True,
-            "safebrowsing.enabled": True
-        })
-        
-        # Crea el WebDriver con la configuración
-        self.driver = webdriver.Chrome(service=service, options=options)
-
+        self.initialize_logging()
+        try:
+            service = Service(ChromeDriverManager().install())
+            options = webdriver.ChromeOptions()
+            options.add_argument("--headless")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--disable-extensions")
+            options.add_argument("--disable-gpu")
+            options.add_argument("--window-size=1920,1080")
+            options.add_experimental_option("prefs", {
+                "download.default_directory": self.output_path,
+                "safebrowsing.enabled": True
+            })
+            self.driver = webdriver.Chrome(service=service, options=options)
+            self.driver.set_page_load_timeout(30)
+        except Exception as e: 
+            logging.error(f"Error al configuar el WebDriver: {e}")
+            raise e 
+    
+    def initialize_logging(self):
+        logging.basicConfig(
+            level=logging.ERROR,
+            format='%(asctime)s - %(levelname)s - %(message)s',
+            filename='webdriver_errors.log',
+            filemode='a'
+        )
 
     def start(self, url, user, password):
         self.driver.get(url)
