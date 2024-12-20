@@ -39,7 +39,8 @@ class SummaryApi:
                 response_message = self.get_summary()
                 return self.answer_message(response_message, 200)
             except ValueError as ve:
-                return self.answer_message("Mensaje no reconocido. Envía 'resumen' para obtener el total. Si no proba entrando al link: https://autogs-2.onrender.com/obtenerResumen" , 400)
+                response_message = str(ve)
+                return self.answer_message(response_message, 400)
     
     def validate_incoming_message(self, incoming_message):
         if (incoming_message != "resumen"): 
