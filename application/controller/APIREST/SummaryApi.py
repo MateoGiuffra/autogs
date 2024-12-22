@@ -1,6 +1,6 @@
-from application.controller.utils.CacheManager import CacheManager
+from application.service.utils.CacheManager import CacheManager
 from application.service.SummaryService import SummaryService
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv 
 from decouple import config  
 import logging 
@@ -9,15 +9,12 @@ import os
 load_dotenv()  # para cargar el .env en local
 
 class SummaryApi:
-    BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
-    DB_USER = config("DB_USER")
-    DB_PASSWORD = config("DB_PASSWORD")
-    CACHE_TIMEOUT = 10 * 60
-    TOTAL = 0
+
+    TIMEOUT = 10 * 60
+    CACHE = CacheManager(10 * 60) 
 
     def __init__(self):
-        self.app = Flask(__name__)
-        self.cache_manager = CacheManager(SummaryApi.CACHE_TIMEOUT)     
+        self.app = Flask(__name__, template_folder="../../../front/templates",  static_folder='static')
         self.initialize_logging()   
         self.setup_routes()
 
@@ -30,24 +27,28 @@ class SummaryApi:
         )
 
     def setup_routes(self):
+        @self.app.route("/", methods=["GET"])
+        def index():
+            return render_template("index.html")
+    
         @self.app.route("/test", methods=["GET"])
         def test():
             return "Prueba exitosa", 200
         
         @self.app.route("/obtenerResumen", methods=["GET"])
-        def obtener_resumen():
+        def get_summary():
             try:
-               return jsonify(self.get_summary()), 200
+               return jsonify(SummaryService.get_summary(SummaryApi.CACHE)), 200
             except Exception as p:
-                print("Pues que paso pe: {p}")
+                print()
                 return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
          
         @self.app.route("/resumen", methods=["POST"])
-        def recibir_mensaje():
+        def send_summary():
             incoming_message = request.form.get("Body", "").strip().lower()
             try:
                 self.validate_incoming_message(incoming_message)
-                response_message = self.get_summary()
+                response_message = SummaryService.SERVICE.get_summary()
                 return self.answer_message(response_message, 200)
             except ValueError | Exception as ve:
                 response_message = str(ve)
@@ -57,19 +58,6 @@ class SummaryApi:
         if (incoming_message != "resumen"): 
              print("no es un mensaje valido")
              raise ValueError("Mensaje no reconocido. Envía 'resumen' para obtener el total. Si no proba entrando al link: https://autogs-2.onrender.com/obtenerResumen")
-
-    def get_summary(self):
-        cached_summary = self.cache_manager.get_cached_data()
-        if cached_summary:
-            return cached_summary
-
-        try:
-            total = SummaryService.get_summary(SummaryApi.BASE_URL, SummaryApi.DB_USER, SummaryApi.DB_PASSWORD)
-            self.cache_manager.update_cache(total)
-            return total
-        except Exception as e:
-            logging.error(f"Error al obtener el resumen: {e}")
-        raise e    
     
     def answer_message(self, message, value):
         response = f"""<Response>

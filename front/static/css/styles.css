@@ -1,0 +1,18 @@
+/* styles.css */
+form {
+    margin-bottom: 20px;
+}
+
+#response {
+    margin-top: 20px;
+    color: green;
+}
+
+body {
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    background-size: cover; /* Hace que la imagen cubra todo el fondo */
+    background-position: center center; /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
