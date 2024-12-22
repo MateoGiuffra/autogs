@@ -27,9 +27,9 @@ class SummaryApi:
         )
 
     def setup_routes(self):
-        @self.app.route("/", methods=["GET"])
-        def index():
-            return render_template("index.html")
+        # @self.app.route("/", methods=["GET"])
+        # def index():
+        #     return render_template("index.html")
     
         @self.app.route("/test", methods=["GET"])
         def test():
@@ -43,6 +43,14 @@ class SummaryApi:
                 print()
                 return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
          
+        @self.app.route("/diferenciaResumenes", methods=["GET"])
+        def dif_summaries():
+            try:
+               return jsonify(SummaryService.dif_summaries(SummaryApi.CACHE)), 200
+            except Exception as p:
+                print()
+                return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
+
         @self.app.route("/resumen", methods=["POST"])
         def send_summary():
             incoming_message = request.form.get("Body", "").strip().lower()
