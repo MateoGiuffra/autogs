@@ -9,6 +9,7 @@ class Login:
 
     def login(self):
         if self.user and self.password:
+            
             user_input = self.driver.find_element(By.ID, "txtUsuarioId")
             user_input.send_keys(self.user)
             print("Usuario escrito")

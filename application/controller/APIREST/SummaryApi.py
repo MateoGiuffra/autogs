@@ -17,6 +17,7 @@ class SummaryApi:
         self.app = Flask(__name__, template_folder="../../../front/templates",  static_folder='static')
         self.initialize_logging()   
         self.setup_routes()
+        self.service = SummaryService()
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -38,7 +39,7 @@ class SummaryApi:
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:
-               return jsonify(SummaryService.get_summary(SummaryApi.CACHE)), 200
+               return jsonify(self.service.get_summary(SummaryApi.CACHE)), 200
             except Exception as p:
                 print()
                 return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
@@ -46,7 +47,7 @@ class SummaryApi:
         @self.app.route("/diferenciaResumenes", methods=["GET"])
         def dif_summaries():
             try:
-               return jsonify(SummaryService.dif_summaries(SummaryApi.CACHE)), 200
+               return jsonify(self.service.dif_summaries(SummaryApi.CACHE)), 200
             except Exception as p:
                 print()
                 return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
@@ -56,7 +57,7 @@ class SummaryApi:
             incoming_message = request.form.get("Body", "").strip().lower()
             try:
                 self.validate_incoming_message(incoming_message)
-                response_message = SummaryService.SERVICE.get_summary()
+                response_message = self.service.SERVICE.get_summary()
                 return self.answer_message(response_message, 200)
             except ValueError | Exception as ve:
                 response_message = str(ve)

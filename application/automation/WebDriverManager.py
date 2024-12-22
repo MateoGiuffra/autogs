@@ -22,7 +22,6 @@ class WebDriverManager:
         self.configure_driver()
         self.expected_filename_pattern = expected_filename_pattern
         self.file_downloaded_path = None
-        self.login_page = Login(self.driver, None, None)
         self.report_page = Report(self.driver)
         self.date_setter = DateSetterCurrentMonth(self.driver)
         self.file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
@@ -33,7 +32,7 @@ class WebDriverManager:
         try:
             service = Service(ChromeDriverManager().install())
             options = webdriver.ChromeOptions()
-            # options.add_argument("--headless")
+            options.add_argument("--headless")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-extensions")
@@ -59,28 +58,26 @@ class WebDriverManager:
 
     def start(self, url, user, password):
         try: 
-            try:
-                self.driver.get(url)
-            except Exception as a:
-                print("Hubo error en el login: {a}")
-                print(str(a))
-                raise a
+            self.driver.delete_all_cookies()
+            self.driver.get(url)
+            
             self.login(user, password)
             self.navigate_to_report()        
             self.set_dates()
             #click on resume
             self.driver.find_element(By.ID, "ctl15_chkResumen").click()
             self.download_file()
-            
-            self.quit_driver()
         except Exception as e:
             print("Hubo un error al iniciar: {e}")
+            print(str(e))
             raise
+        finally:
+            self.quit_driver()
+
 
     def login(self, user, password):
-        self.login_page.set_user(user)
-        self.login_page.set_password(password)
-        self.login_page.login()
+        login_page = Login(self.driver, user, password) 
+        login_page.login()
 
     def navigate_to_report(self):
         self.report_page.navigate_to_report()
