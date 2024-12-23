@@ -1,6 +1,6 @@
-from application.controller.utils.CacheManager import CacheManager
+from application.service.utils.CacheManager import CacheManager
 from application.service.SummaryService import SummaryService
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv 
 from decouple import config  
 import logging 
@@ -9,17 +9,16 @@ import os
 load_dotenv()  # para cargar el .env en local
 
 class SummaryApi:
-    BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
-    DB_USER = config("DB_USER")
-    DB_PASSWORD = config("DB_PASSWORD")
-    CACHE_TIMEOUT = 10 * 60
-    TOTAL = 0
+
+    TIMEOUT = 10 * 60
+    CACHE = CacheManager(10 * 60) 
 
     def __init__(self):
-        self.app = Flask(__name__)
-        self.cache_manager = CacheManager(SummaryApi.CACHE_TIMEOUT)     
+        self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
         self.initialize_logging()   
         self.setup_routes()
+        self.total = 0
+        self.last_month_total = 0
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -30,53 +29,46 @@ class SummaryApi:
         )
 
     def setup_routes(self):
+        @self.app.route("/", methods=["GET"])
+        def index():
+            return render_template("index.html")
+    
         @self.app.route("/test", methods=["GET"])
         def test():
             return "Prueba exitosa", 200
         
+        @self.app.route("/diferenciaResumenes", methods=["GET"])
+        def dif_summaries():
+            try: 
+                print("El total actual es de: " + str(self.total))
+                service = SummaryService()
+                if self.last_month_total != 0: 
+                    return jsonify(service.calculate_dif(self.last_month_total, self.total)), 200 
+                answerJSON = service.dif_summaries(self.total)
+                self.last_month_total =  answerJSON["last_month_total"] 
+                print(f"Contenido del JSON: {answerJSON["last_month_total"]}")
+                print(f"Contenido del self.last_month_total: {self.last_month_total}")
+                return jsonify(answerJSON["message"]),200
+            except Exception as e:
+                print(str(e))
+                return jsonify("Hubo un error, intentalo mas tarde:" +  str(e)), 500
+
         @self.app.route("/obtenerResumen", methods=["GET"])
-        def obtener_resumen():
+        def get_summary():
             try:
-               return jsonify(self.get_summary()), 200
+                if SummaryApi.CACHE.didnt_arrive_at_established_time():
+                    cached_data = SummaryApi.CACHE.get_cached_data()
+                    return jsonify(cached_data["message"]), 200 
+                service = SummaryService()
+                answerJSON = service.get_summary()
+                self.total = answerJSON["total"]
+                SummaryApi.CACHE.update_cache(self.total)
+                print("Se guardo el total " + str(answerJSON["total"]) + " en la API: " + str(self.total))
+                return jsonify(answerJSON["message"]), 200
             except Exception as p:
-                print("Pues que paso pe: {p}")
-                return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
+                print()
+                return jsonify("Hubo un error, intentalo mas tarde: " +  str(p)), 500
          
-        @self.app.route("/resumen", methods=["POST"])
-        def recibir_mensaje():
-            incoming_message = request.form.get("Body", "").strip().lower()
-            try:
-                self.validate_incoming_message(incoming_message)
-                response_message = self.get_summary()
-                return self.answer_message(response_message, 200)
-            except ValueError | Exception as ve:
-                response_message = str(ve)
-                return self.answer_message(response_message, 400)
-    
-    def validate_incoming_message(self, incoming_message):
-        if (incoming_message != "resumen"): 
-             print("no es un mensaje valido")
-             raise ValueError("Mensaje no reconocido. Envía 'resumen' para obtener el total. Si no proba entrando al link: https://autogs-2.onrender.com/obtenerResumen")
-
-    def get_summary(self):
-        cached_summary = self.cache_manager.get_cached_data()
-        if cached_summary:
-            return cached_summary
-
-        try:
-            total = SummaryService.get_summary(SummaryApi.BASE_URL, SummaryApi.DB_USER, SummaryApi.DB_PASSWORD)
-            self.cache_manager.update_cache(total)
-            return total
-        except Exception as e:
-            logging.error(f"Error al obtener el resumen: {e}")
-        raise e    
-    
-    def answer_message(self, message, value):
-        response = f"""<Response>
-                         <Message>{message}</Message>
-                    </Response>"""
-        return response, value, {'Content-Type': 'application/xml'}   
-
     def run(self):
         port = int(os.environ.get("PORT", 10000))
         self.app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
