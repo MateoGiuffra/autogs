@@ -47,18 +47,27 @@ class SummaryService:
             raise
     
     def answer(self, total):
-        message = f"El total actual es: {total}."
+        message = f"El total actual es: {total}"
         return {
                 "total": total,
                 "message": message
                }
       
     def calculate_dif(self, last_month_total, current_total):
-        dif = current_total - last_month_total
-        porcent = (dif / last_month_total) * 100
-        more_or_lower = 'menos' if porcent < 0 else 'mas'
-        return f"El mes pasado a esta altura se hicieron: {last_month_total} de pesos. Por lo tanto, se obtuvo un {porcent}% {more_or_lower} que el mes anterior. Habiendo una diferencia de {dif} de pesos entre ambos."
-               
+        try:
+            dif = current_total - last_month_total
+            porcent = (dif / last_month_total) * 100
+            return(
+                   f"El mes pasado se llegó a los: {last_month_total} de pesos. " 
+                   f"Por lo tanto, actualmente hay un {porcent:.2f}% mas que el mes anterior. Habiendo una diferencia de {abs(dif):.2f} de pesos entre ambos."
+            ) 
+        except ZeroDivisionError:
+            print("Error: No se puede dividir por 0")
+            return f"El monto total del mes pasado fue de $ 0."
+        except Exception as e:
+            print(f"Error inesperado en calculate_dif: {e}") 
+            return 
+        
     def get_total(self, type_date):
         self.web_driver_manager.set_date_setter(type_date)
         self.web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)

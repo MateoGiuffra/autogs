@@ -3,14 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resumen App</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Summary Application</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-    <h1>Resumen App</h1>
-    <button type="button" onclick="obtenerResumen()">Obtener Resumen</button>
-    <div id="response"></div>
-
-    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+    <div class="container">
+        <h1>Resumenes</h1>
+        <div class="buttons">
+            <button id="btn-obtener-resumen">Obtener Resumen</button>
+            <button id="btn-diferencia-resumenes" disabled>Diferencia entre Resúmenes</button>
+        </div>
+        <div id="response-container">
+            <p id="response-message">Aquí aparecerán los resultados.</p>
+        </div>
+    </div>
+    <script src="/static/js/scripts.js"></script>
 </body>
 </html>
