@@ -46,8 +46,6 @@ class SummaryApi:
                     return jsonify(service.calculate_dif(self.last_month_total, self.total)), 200 
                 answerJSON = service.dif_summaries(self.total)
                 self.last_month_total =  answerJSON["last_month_total"] 
-                print(f"Contenido del JSON: {answerJSON["last_month_total"]}")
-                print(f"Contenido del self.last_month_total: {self.last_month_total}")
                 return jsonify(answerJSON["message"]),200
             except Exception as e:
                 print(str(e))
