@@ -4,3 +4,4 @@ python-dotenv==1.0.1
 python_dateutil==2.9.0.post0
 selenium==4.27.1
 webdriver_manager==4.0.2
+html5lib==1.1

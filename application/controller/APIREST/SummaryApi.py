@@ -14,7 +14,7 @@ class SummaryApi:
     CACHE = CacheManager(10 * 60) 
 
     def __init__(self):
-        self.app = Flask(__name__, template_folder="../../../front/templates",  static_folder='static')
+        self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
         self.initialize_logging()   
         self.setup_routes()
         self.total = 0
@@ -29,9 +29,9 @@ class SummaryApi:
         )
 
     def setup_routes(self):
-        # @self.app.route("/", methods=["GET"])
-        # def index():
-        #     return render_template("index.html")
+        @self.app.route("/", methods=["GET"])
+        def index():
+            return render_template("index.html")
     
         @self.app.route("/test", methods=["GET"])
         def test():
@@ -43,9 +43,11 @@ class SummaryApi:
                 print("El total actual es de: " + str(self.total))
                 service = SummaryService()
                 if self.last_month_total != 0: 
-                    service.calculate_dif(self.last_month_total, self.total) 
+                    return jsonify(service.calculate_dif(self.last_month_total, self.total)), 200 
                 answerJSON = service.dif_summaries(self.total)
                 self.last_month_total =  answerJSON["last_month_total"] 
+                print(f"Contenido del JSON: {answerJSON["last_month_total"]}")
+                print(f"Contenido del self.last_month_total: {self.last_month_total}")
                 return jsonify(answerJSON["message"]),200
             except Exception as e:
                 print(str(e))
@@ -54,9 +56,13 @@ class SummaryApi:
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:
+                if SummaryApi.CACHE.didnt_arrive_at_established_time():
+                    cached_data = SummaryApi.CACHE.get_cached_data()
+                    return jsonify(cached_data["message"]), 200 
                 service = SummaryService()
                 answerJSON = service.get_summary()
                 self.total = answerJSON["total"]
+                SummaryApi.CACHE.update_cache(self.total)
                 print("Se guardo el total " + str(answerJSON["total"]) + " en la API: " + str(self.total))
                 return jsonify(answerJSON["message"]), 200
             except Exception as p:
