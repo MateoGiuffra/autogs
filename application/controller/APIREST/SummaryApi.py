@@ -48,7 +48,7 @@ class SummaryApi:
                 self.last_month_total =  answerJSON["last_month_total"] 
                 print(f"Contenido del JSON: {answerJSON["last_month_total"]}")
                 print(f"Contenido del self.last_month_total: {self.last_month_total}")
-                return jsonify(answerJSON["message"]),200
+                return jsonify(answerJSON),200
             except Exception as e:
                 print(str(e))
                 return jsonify("Hubo un error, intentalo mas tarde:" +  str(e)), 500
@@ -64,7 +64,7 @@ class SummaryApi:
                 self.total = answerJSON["total"]
                 SummaryApi.CACHE.update_cache(self.total)
                 print("Se guardo el total " + str(answerJSON["total"]) + " en la API: " + str(self.total))
-                return jsonify(answerJSON["message"]), 200
+                return jsonify(answerJSON), 200
             except Exception as p:
                 print()
                 return jsonify("Hubo un error, intentalo mas tarde: " +  str(p)), 500
