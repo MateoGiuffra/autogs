@@ -9,13 +9,23 @@ class Login:
 
     def login(self):
         if self.user and self.password:
-            user_input = self.driver.find_element(By.XPATH, "/html/body/div[1]/div/form/fieldset/div/div/label[1]/span/input")
+            
+            user_input = self.driver.find_element(By.ID, "txtUsuarioId")
             user_input.send_keys(self.user)
+            print("Usuario escrito")
             
-            password_input = self.driver.find_element(By.XPATH, "/html/body/div[1]/div/form/fieldset/div/div/label[2]/span/input")
+            password_input = self.driver.find_element(By.ID, "txtClave")
             password_input.send_keys(self.password)
-            
-            login_button = self.driver.find_element(By.XPATH,"/html/body/div[1]/div/form/fieldset/div/div/ul/li/span")
+            print("Contraseña escrita")
+
+            login_button = self.driver.find_element(By.ID,"btnLogin")
             login_button.click()
+            print("Botón de Login cleckeado")
         else: 
-            raise Exception("NO HAY USER NI CONTRASEÑA PAPA COMO HAGO??")
+            raise Exception("No se puso usuario o contraseña")
+        
+    def set_user(self, user):
+            self.user = user
+            
+    def set_password(self, password):
+        self.password = password   
