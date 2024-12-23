@@ -17,7 +17,8 @@ class SummaryApi:
         self.app = Flask(__name__, template_folder="../../../front/templates",  static_folder='static')
         self.initialize_logging()   
         self.setup_routes()
-        self.service = SummaryService()
+        self.total = 0
+        self.last_month_total = 0
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -36,44 +37,32 @@ class SummaryApi:
         def test():
             return "Prueba exitosa", 200
         
+        @self.app.route("/diferenciaResumenes", methods=["GET"])
+        def dif_summaries():
+            try: 
+                print("El total actual es de: " + str(self.total))
+                service = SummaryService()
+                if self.last_month_total != 0: 
+                    service.calculate_dif(self.last_month_total, self.total) 
+                answerJSON = service.dif_summaries(self.total)
+                self.last_month_total =  answerJSON["last_month_total"] 
+                return jsonify(answerJSON["message"]),200
+            except Exception as e:
+                print(str(e))
+                return jsonify("Hubo un error, intentalo mas tarde:" +  str(e)), 500
+
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:
-               return jsonify(self.service.get_summary(SummaryApi.CACHE)), 200
+                service = SummaryService()
+                answerJSON = service.get_summary()
+                self.total = answerJSON["total"]
+                print("Se guardo el total " + str(answerJSON["total"]) + " en la API: " + str(self.total))
+                return jsonify(answerJSON["message"]), 200
             except Exception as p:
                 print()
-                return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
+                return jsonify("Hubo un error, intentalo mas tarde: " +  str(p)), 500
          
-        @self.app.route("/diferenciaResumenes", methods=["GET"])
-        def dif_summaries():
-            try:
-               return jsonify(self.service.dif_summaries(SummaryApi.CACHE)), 200
-            except Exception as p:
-                print()
-                return jsonify("Hubo un error, intentalo mas tarde:" +  str(p)), 500
-
-        @self.app.route("/resumen", methods=["POST"])
-        def send_summary():
-            incoming_message = request.form.get("Body", "").strip().lower()
-            try:
-                self.validate_incoming_message(incoming_message)
-                response_message = self.service.SERVICE.get_summary()
-                return self.answer_message(response_message, 200)
-            except ValueError | Exception as ve:
-                response_message = str(ve)
-                return self.answer_message(response_message, 400)
-    
-    def validate_incoming_message(self, incoming_message):
-        if (incoming_message != "resumen"): 
-             print("no es un mensaje valido")
-             raise ValueError("Mensaje no reconocido. Envía 'resumen' para obtener el total. Si no proba entrando al link: https://autogs-2.onrender.com/obtenerResumen")
-    
-    def answer_message(self, message, value):
-        response = f"""<Response>
-                         <Message>{message}</Message>
-                    </Response>"""
-        return response, value, {'Content-Type': 'application/xml'}   
-
     def run(self):
         port = int(os.environ.get("PORT", 10000))
         self.app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)

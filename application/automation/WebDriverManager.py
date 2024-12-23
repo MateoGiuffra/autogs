@@ -16,16 +16,13 @@ import logging
 
 class WebDriverManager:
 
-    def __init__(self, output_path, expected_filename_pattern):
+    def __init__(self, output_path, expected_filename_pattern ):
         self.output_path = output_path
         self.driver = None
         self.configure_driver()
         self.expected_filename_pattern = expected_filename_pattern
         self.file_downloaded_path = None
-        self.report_page = Report(self.driver)
-        self.date_setter = DateSetterCurrentMonth(self.driver)
-        self.file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
-
+        self.date_setter =  DateSetterCurrentMonth(self.driver)
     
     def configure_driver(self):
         self.initialize_logging()
@@ -68,32 +65,30 @@ class WebDriverManager:
             self.driver.find_element(By.ID, "ctl15_chkResumen").click()
             self.download_file()
         except Exception as e:
-            print("Hubo un error al iniciar: {e}")
+            print(f"Hubo un error al iniciar: {e}")
             print(str(e))
             raise
         finally:
             self.quit_driver()
 
-
     def login(self, user, password):
-        login_page = Login(self.driver, user, password) 
+        login_page = Login(self.driver, user, password)
         login_page.login()
 
+
     def navigate_to_report(self):
-        self.report_page.navigate_to_report()
+        report_page = Report(self.driver)
+        report_page.navigate_to_report()
 
     def set_dates(self):
-        self.date_setter.set()
+       self.date_setter.set()
 
     def download_file(self):
-        self.file_downloaded_path = self.file_downloader.download()
+        file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
+        self.file_downloaded_path = file_downloader.download()
 
     def get_downloaded_file_path(self):
         return self.file_downloaded_path
-
-    def set_date_setter(self, date_setter):
-        date_setter.set_driver(self.driver)
-        self.date_setter = date_setter
 
     def get_driver(self):
         if self.driver is None:
@@ -104,4 +99,6 @@ class WebDriverManager:
         if self.driver:
             self.driver.quit()
 
-    
+    def set_date_setter(self, date_setter):
+        date_setter.set_driver(self.driver)
+        self.date_setter = date_setter
