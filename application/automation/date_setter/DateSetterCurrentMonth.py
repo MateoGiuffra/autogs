@@ -12,4 +12,6 @@ class DateSetterCurrentMonth(DateSetter):
     
     def next_month_of_today(self, today):
         return today + relativedelta.relativedelta(months = 1)
-    
+
+    def get_fecha_cobro_hasta(self, today):
+        return today.strftime("%d/%m/%Y")
