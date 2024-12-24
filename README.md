@@ -7,6 +7,8 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 - **Automatización Web**: Navega automáticamente por el sistema externo, ingresa credenciales, descarga reportes y procesa la información.
 - **API REST**: Ofrece endpoints para interactuar con la automatización y obtener resúmenes financieros.
 - **Procesamiento de Datos**: Analiza reportes descargados utilizando Pandas y extrae información relevante.
+- **Frontend Interactivo**: Interfaz web diseñada para interactuar con los endpoints de la API. Está optimizada para dispositivos móviles, 
+  permitiendo al usuario acceder fácilmente desde su celular y obtener los resúmenes financieros con facilidad
 
 ## Estructura del Proyecto
 ```
@@ -43,20 +45,24 @@ autogs/
 ```
 
 ### Descripción de Carpetas y Archivos
-- **APIREST/**: Implementa la API REST con Flask.
-  - `SummaryApi.py`: Define los endpoints `/resumen` y `/obtenerResumen` para interactuar con el servicio.
+- **controller/**: Implementa la API REST con Flask.
+  - `SummaryApi.py`: Define los endpoints `/diferenciaResumenes` y `/obtenerResumen` para interactuar con el servicio.
+  - `CacheManager.py`: Mini implementacion de cache para no saturar endpoints en un periodo de tiempo definido (en este caso 10 minutos).
 - **automation/**: Contiene los scripts de automatización basados en Selenium.
-  - `WebDriverManager.py`: Configura el WebDriver, navega y descarga reportes.
-  - `DateSetter.py`: Establece rangos de fechas en formularios.
+  - `WebDriverManager.py`: Trabaja como Orquestador usando el resto de las clases. Configura el WebDriver, navega y descarga reportes.
+  - `DateSetter.py`: Establece rangos de fechas en formularios dependiendo lo requerido.
   - `Login.py`: Realiza el inicio de sesión en el sistema externo.
   - `Report.py`: Navega al reporte deseado dentro del sistema.
   - `FileDownloader.py`: Descarga el archivo del reporte y verifica su existencia.
-- **pandas/**: Procesa los datos de los reportes descargados.
-  - `ExcelReader.py`: Lee y analiza los archivos descargados para extraer el total.
+- **pandas/**: Procesa los datos del reporte descargado.
+  - `ExcelReader.py`: Lee y analiza el archivo descargado para extraer el total. Se maneja de forma eficiente borrando al anterior 
+    para ahorrar espacio en memoria y recursos.
 - **service/**: Define la lógica del negocio.
   - `SummaryService.py`: Orquesta los pasos de automatización y procesamiento de datos.
-- **AbsPath.py**: Define rutas absolutas para asegurar que los archivos se almacenen correctamente.
+- **AbsPath.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
 - **requeriments.txt**: Lista de dependencias necesarias para ejecutar el proyecto.
+- **Dockerfile**: Archivo de Docker preparado para que todo funcione correctamente en produccion. 
+- **front/**: Un mini front para interactuar con la aplicación. Hecho solo con CSS, HTML y JavaScript para que la app sea lo menos pesado y eficiente.
 
 ## Tecnologías Utilizadas
 - **Flask**: Framework para construir la API REST.
@@ -89,23 +95,23 @@ autogs/
    ```
 3. Ejecuta la API REST:
    ```bash
-   python application/APIREST/SummaryApi.py
+   python -m application.controller.APIREST.SummaryApi
    ```
 4. Accede a los endpoints:
-   - POST `/resumen`: Envía "resumen" para obtener el total financiero.
-   - GET `/obtenerResumen`: Obtiene el resumen en formato JSON.
+   - GET `/diferenciaResumenes`: Devuelve en formato JSON el resumen del mes anterior y el diferencial con el resumen actual
+   - GET `/obtenerResumen`: Devuelve el resumen del dia actual en formato JSON.
 
 ## Ventajas del Proyecto
 - **Escalabilidad**: Diseñado con una arquitectura modular para agregar nuevas funcionalidades.
 - **Automatización Eficiente**: Reduce el tiempo de procesamiento de tareas repetitivas.
 - **Fácil Integración**: Puede ser integrado en otros sistemas mediante la API REST.
+- **Eficiencia**: Busca ser lo mas optimazado posible, consumiendo lo minimo e indispensable.  
 
-## Posibles Mejoras
-- Implementar autenticación en la API REST.
-- Dockerizar el proyecto para facilitar su despliegue.
-- Ampliar los casos de uso de automatización.
+## Deploy
+- El proyecto ya esta listo para el deploy a traves del Dockerfile. 
+Especificamente listo para Render ya que esta escuchando en el puerto 10000, pero podes cambiarlo segun tus necesidades.
 
 ## Contacto
-Cualquier consulta o mejora, no dudes en contactarme.
+Cualquier consulta o mejora, no dudes en contactarme: matteogiuffrah40@gmail.com
 
 
