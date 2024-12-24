@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 responseMessage.textContent = data;
             })
             .catch(error => {
-                responseMessage.textContent = `Error: ${error.message}`;
+                responseMessage.textContent = `Ocurrio algo inesperado: ${error.message}`;
             });
     });
 });
