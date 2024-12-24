@@ -10,27 +10,8 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 - **Frontend Interactivo**: Interfaz web diseñada para interactuar con los endpoints de la API. Está optimizada para dispositivos móviles, 
   permitiendo al usuario acceder fácilmente desde su celular y obtener los resúmenes financieros con facilidad
 
-![Muestra del GIF](./static/assets/muestra.gif)
+![Muestra del GIF](./front/static/assets/muestra.gif)
 
-### Descripción de Carpetas y Archivos
-- **controller/**: Implementa la API REST con Flask.
-  - `SummaryApi.py`: Define los endpoints `/diferenciaResumenes` y `/obtenerResumen` para interactuar con el servicio.
-  - `CacheManager.py`: Mini implementacion de cache para no saturar endpoints en un periodo de tiempo definido (en este caso 10 minutos).
-- **automation/**: Contiene los scripts de automatización basados en Selenium.
-  - `WebDriverManager.py`: Trabaja como Orquestador usando el resto de las clases. Configura el WebDriver, navega y descarga reportes.
-  - `DateSetter.py`: Establece rangos de fechas en formularios dependiendo lo requerido.
-  - `Login.py`: Realiza el inicio de sesión en el sistema externo.
-  - `Report.py`: Navega al reporte deseado dentro del sistema.
-  - `FileDownloader.py`: Descarga el archivo del reporte y verifica su existencia.
-- **pandas/**: Procesa los datos del reporte descargado.
-  - `ExcelReader.py`: Lee y analiza el archivo descargado para extraer el total. Se maneja de forma eficiente borrando al anterior 
-    para ahorrar espacio en memoria y recursos.
-- **service/**: Define la lógica del negocio.
-  - `SummaryService.py`: Orquesta los pasos de automatización y procesamiento de datos.
-- **AbsPath.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
-- **requeriments.txt**: Lista de dependencias necesarias para ejecutar el proyecto.
-- **Dockerfile**: Archivo de Docker preparado para que todo funcione correctamente en produccion. 
-- **front/**: Un mini front para interactuar con la aplicación. Hecho solo con CSS, HTML y JavaScript para que la app sea lo menos pesado y eficiente.
 
 ## Estructura del Proyecto
 ```
@@ -65,6 +46,27 @@ autogs/
 ├── Procfile.py
 └── requirements.txt
 ```
+
+
+### Descripción de Carpetas y Archivos
+- **controller/**: Implementa la API REST con Flask.
+  - `SummaryApi.py`: Define los endpoints `/diferenciaResumenes` y `/obtenerResumen` para interactuar con el servicio.
+  - `CacheManager.py`: Mini implementacion de cache para no saturar endpoints en un periodo de tiempo definido (en este caso 10 minutos).
+- **automation/**: Contiene los scripts de automatización basados en Selenium.
+  - `WebDriverManager.py`: Trabaja como Orquestador usando el resto de las clases. Configura el WebDriver, navega y descarga reportes.
+  - `DateSetter.py`: Establece rangos de fechas en formularios dependiendo lo requerido.
+  - `Login.py`: Realiza el inicio de sesión en el sistema externo.
+  - `Report.py`: Navega al reporte deseado dentro del sistema.
+  - `FileDownloader.py`: Descarga el archivo del reporte y verifica su existencia.
+- **pandas/**: Procesa los datos del reporte descargado.
+  - `ExcelReader.py`: Lee y analiza el archivo descargado para extraer el total. Se maneja de forma eficiente borrando al anterior 
+    para ahorrar espacio en memoria y recursos.
+- **service/**: Define la lógica del negocio.
+  - `SummaryService.py`: Orquesta los pasos de automatización y procesamiento de datos.
+- **AbsPath.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
+- **requeriments.txt**: Lista de dependencias necesarias para ejecutar el proyecto.
+- **Dockerfile**: Archivo de Docker preparado para que todo funcione correctamente en produccion. 
+- **front/**: Un mini front para interactuar con la aplicación. Hecho solo con CSS, HTML y JavaScript para que la app sea lo menos pesado y eficiente.
 
 ## Tecnologías Utilizadas
 - **Flask**: Framework para construir la API REST.
