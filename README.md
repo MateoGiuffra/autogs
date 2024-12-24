@@ -41,7 +41,7 @@ autogs/
 │   │   │   └── index.html
 ├── Dockerfile.py
 ├── Procfile.py
-└── requeriments.txt
+└── requirements.txt
 ```
 
 ### Descripción de Carpetas y Archivos
@@ -74,7 +74,7 @@ autogs/
 1. **Python 3.12+**
 2. Instalación de dependencias:
    ```bash
-   pip install -r requeriments.txt
+   pip install -r requirements.txt
    ```
 3. **Google Chrome** y su correspondiente **ChromeDriver**.
 4. Configurar un archivo `.env` con las credenciales:
@@ -91,7 +91,7 @@ autogs/
    ```
 2. Instala las dependencias:
    ```bash
-   pip install -r requeriments.txt
+   pip install -r requirements.txt
    ```
 3. Ejecuta la API REST:
    ```bash
