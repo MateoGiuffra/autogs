@@ -20,7 +20,7 @@ class Login:
 
             login_button = self.driver.find_element(By.ID,"btnLogin")
             login_button.click()
-            print("Botón de Login cleckeado")
+            print("Botón de Login clickeado")
         else: 
             raise Exception("No se puso usuario o contraseña")
         
