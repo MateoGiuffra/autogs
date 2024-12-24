@@ -29,5 +29,4 @@ class CacheManager:
 
     def is_summary_zero(self):
         return self.cache["summary"] == 0 
-    
-    
+
