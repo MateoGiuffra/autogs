@@ -1,0 +1,125 @@
+/* style.css */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background: #1e1e2f;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+/* Contenedor de los botones principales */
+.buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Espaciado entre botones */
+    margin-bottom: 20px; /* Espaciado con respecto al siguiente bloque */
+}
+
+/* Contenedor para botones adicionales */
+.other-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px; /* Separación del grupo superior */
+}
+
+/* Estilo general para todos los botones */
+button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3b82f6;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+/* Estilo de hover en botones habilitados */
+button:hover:not(:disabled) {
+    background: #2563eb;
+}
+
+/* Icono dentro del botón */
+button img.icon {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+}
+
+/* Botón deshabilitado */
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+
+#response-container {
+    margin-top: 20px;
+}
+
+#response-message {
+    font-size: 1.2em;
+}
+
+
+/* Indicador de carga */
+#loading-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1000;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #ffffff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+/* Animación del spinner */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#btn-copy-number {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#btn-copy-number .icon {
+    width: 24px;
+    height: 24px;
+}
+
+
+.highlighted-number {
+    font-size: 2rem; /* Tamaño de la fuente */
+    font-weight: bold; /* Grosor de la fuente */
+    color: #ffffff; /* Cambia esto si necesitas otro color */
+    text-align: center; /* Centrado del texto */
+    margin: 20px 0; /* Espaciado */
+}
