@@ -10,24 +10,36 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 
 ## Estructura del Proyecto
 ```
-carpeta_raiz/
-├── autogs/
-│   ├── AbsPath.py
-│   ├── application/
-│   │   ├── APIREST/
-│   │   │   ├── __init__.py
-│   │   │   └── SummaryApi.py
-│   │   ├── automation/
-│   │   │   ├── DateSetter.py
-│   │   │   ├── FileDownloader.py
-│   │   │   ├── Login.py
-│   │   │   ├── Report.py
-│   │   │   └── WebDriverManager.py
-│   │   ├── pandas/
-│   │   │   └── ExcelReader.py
-│   │   ├── service/
-│   │   │   └── SummaryService.py
-│   └── requeriments.txt
+autogs/
+├── AbsPath.py
+├── application/
+│   ├── APIREST/
+│   │   ├── __init__.py
+│   │   └── SummaryApi.py
+│   │   ├── utils/
+│   │       ├── CacheManager.py
+│   ├── automation/
+│   │   ├── DateSetter.py
+│   │   ├── FileDownloader.py
+│   │   ├── Login.py
+│   │   ├── Report.py
+│   │   └── WebDriverManager.py
+│   ├── pandas/
+│   │   └── ExcelReader.py
+│   ├── service/
+│   │   └── SummaryService.py
+├── front/
+│   ├── static/
+│   │   ├── css/
+│   │   │   └── style.css           
+│   │   ├── js/
+│   │   │   └── scripts.css  
+│   │   ├── assets/
+│   ├── templates/
+│   │   │   └── index.html
+├── Dockerfile.py
+├── Procfile.py
+└── requeriments.txt
 ```
 
 ### Descripción de Carpetas y Archivos
