@@ -1,22 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Summary Application</title>
+    <meta name="description" content="Aplicación para obtener resúmenes y compararlos.">
+    <title>Resumenes</title>
     <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
     <div class="container">
-        <h1>Resumenes</h1>
+        <h1>Resúmenes</h1>
         <div class="buttons">
-            <button id="btn-obtener-resumen">Obtener Resumen</button>
+            <button id="btn-obtener-resumen">Obtener Resumen</button>  
+            <button id="btn-copy-number" style="display: none;" aria-label="Copiar al portapapeles">
+                <img src="/static/assets/copy.png" alt="Copiar" class="icon">
+            </button>
         </div>
         <div id="summary-container" style="display: none;">
-            <p id="summary-number"></p>
-            <button id="btn-copy-number" style="display: none;">Copiar Número</button>
+            <p id="summary-number" class="highlighted-number"></p>
             <p id="summary-text"></p>
-            <button id="btn-diferencia-resumenes" disabled>Diferencia entre Resúmenes</button>
+            <div class="other-buttons">
+                <button id="btn-diferencia-resumenes" disabled>Diferencia entre Resúmenes</button>
+            </div>
         </div>
         <div id="loading-indicator" style="display: none;">
             <div class="spinner"></div>
