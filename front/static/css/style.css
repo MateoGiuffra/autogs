@@ -21,29 +21,53 @@ body {
 h1 {
     margin-bottom: 20px;
 }
-
+/* Contenedor de los botones principales */
 .buttons {
-    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Espaciado entre botones */
+    margin-bottom: 20px; /* Espaciado con respecto al siguiente bloque */
 }
 
+/* Contenedor para botones adicionales */
+.other-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px; /* Separación del grupo superior */
+}
+
+/* Estilo general para todos los botones */
 button {
-    margin: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background: #3b82f6;
+    background-color: #3b82f6;
     color: white;
     cursor: pointer;
     transition: background 0.3s;
 }
 
-button:disabled {
-    background: #555;
-    cursor: not-allowed;
-}
-
+/* Estilo de hover en botones habilitados */
 button:hover:not(:disabled) {
     background: #2563eb;
+}
+
+/* Icono dentro del botón */
+button img.icon {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+}
+
+/* Botón deshabilitado */
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
 }
 
 #response-container {
@@ -78,4 +102,24 @@ button:hover:not(:disabled) {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+
+#btn-copy-number {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#btn-copy-number .icon {
+    width: 24px;
+    height: 24px;
+}
+
+
+.highlighted-number {
+    font-size: 2rem; /* Tamaño de la fuente */
+    font-weight: bold; /* Grosor de la fuente */
+    color: #ffffff; /* Cambia esto si necesitas otro color */
+    text-align: center; /* Centrado del texto */
+    margin: 20px 0; /* Espaciado */
 }

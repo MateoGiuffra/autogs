@@ -19,10 +19,18 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Función para copiar el número al portapapeles
-    const copyToClipboard = (text) => {
-        navigator.clipboard.writeText(text).then(() => {
-            alert("Número copiado al portapapeles");
-        });
+    const copyToClipboard = (text, buttonElement) => {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                const originalText = buttonElement.textContent;
+                buttonElement.textContent = "¡Copiado!";
+                setTimeout(() => {
+                    buttonElement.textContent = originalText;
+                }, 2000); // Cambia el texto por 2 segundos
+            })
+            .catch(() => {
+                console.error("Error al copiar el texto.");
+            });
     };
 
     // Hacer que el botón de copiar funcione
@@ -52,28 +60,32 @@ document.addEventListener("DOMContentLoaded", () => {
                 hideLoadingIndicator();  // Ocultar el spinner cuando se reciba la respuesta
             })
             .catch(error => {
-                responseMessage.textContent = `Error: ${error.message}`;
+                responseMessage.textContent = `Ocurrio algo inesperado: ${error.message}`;
                 hideLoadingIndicator();  // Ocultar el spinner en caso de error
             });
     });
 
     btnDiferenciaResumenes.addEventListener("click", () => {
-        showLoadingIndicator();  // Mostrar el spinner al hacer la solicitud
-
+        showLoadingIndicator(); // Mostrar el spinner al hacer la solicitud
+    
         fetch("/diferenciaResumenes")
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Error al calcular diferencia entre resúmenes");
                 }
-                return response.json();
+                return response.json(); // Parsear la respuesta JSON
             })
             .then(data => {
-                responseMessage.textContent = data;
-                hideLoadingIndicator();  // Ocultar el spinner cuando se reciba la respuesta
+                if (data.error) {
+                    responseMessage.textContent = data.error; // Mostrar el mensaje de error si existe
+                } else {
+                    responseMessage.textContent = data.message; // Mostrar el mensaje principal
+                }
+                hideLoadingIndicator(); // Ocultar el spinner cuando se reciba la respuesta
             })
             .catch(error => {
                 responseMessage.textContent = `Error: ${error.message}`;
-                hideLoadingIndicator();  // Ocultar el spinner en caso de error
+                hideLoadingIndicator(); // Ocultar el spinner en caso de error
             });
     });
 });

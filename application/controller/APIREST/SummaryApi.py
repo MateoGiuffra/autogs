@@ -48,7 +48,7 @@ class SummaryApi:
                 self.last_month_total =  answerJSON["last_month_total"] 
                 print(f"Contenido del JSON: {answerJSON["last_month_total"]}")
                 print(f"Contenido del self.last_month_total: {self.last_month_total}")
-                return jsonify(answerJSON),200
+                return jsonify(answerJSON), 200
             except Exception as e:
                 print(str(e))
                 return jsonify("Hubo un error, intentalo mas tarde:" +  str(e)), 500
