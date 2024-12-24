@@ -26,5 +26,8 @@ class CacheManager:
         self.cache["summary"] = data
         self.cache["timestamp"] = time.time()
         self.cache["message"] = f"El total actual es: {data}. Se obtuvieron {data - last_total} pesos más que la anterior vez."
+
+    def is_summary_zero(self):
+        return self.cache["summary"] == 0 
     
     

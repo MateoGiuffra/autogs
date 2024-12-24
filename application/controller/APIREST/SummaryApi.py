@@ -11,7 +11,6 @@ load_dotenv()  # para cargar el .env en local
 class SummaryApi:
 
     TIMEOUT = 10 * 60
-    CACHE = CacheManager(10 * 60) 
 
     def __init__(self):
         self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
@@ -19,6 +18,7 @@ class SummaryApi:
         self.setup_routes()
         self.total = 0
         self.last_month_total = 0
+        self.cache = CacheManager(SummaryApi.TIMEOUT) 
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -54,13 +54,13 @@ class SummaryApi:
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:
-                if SummaryApi.CACHE.didnt_arrive_at_established_time():
+                if (not self.cache.is_summary_zero()) and self.cache.didnt_arrive_at_established_time():
                     cached_data = SummaryApi.CACHE.get_cached_data()
                     return jsonify(cached_data["message"]), 200 
                 service = SummaryService()
                 answerJSON = service.get_summary()
                 self.total = answerJSON["total"]
-                SummaryApi.CACHE.update_cache(self.total)
+                self.cache.update_cache(self.total)
                 print("Se guardo el total " + str(answerJSON["total"]) + " en la API: " + str(self.total))
                 return jsonify(answerJSON), 200
             except Exception as p:
