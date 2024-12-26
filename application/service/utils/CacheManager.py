@@ -31,7 +31,8 @@ class CacheManager:
         self.cache["last_summary"] = self.cache["summary"]
         self.cache["summary"] = data
         self.cache["timestamp"] = time.time()
-        self.cache["message"] = f"El total actual es: {data} de pesos. Se obtuvieron {data - self.cache["last_summary"]} pesos más que la anterior vez."
+        last = self.cache["last_summary"]
+        self.cache["message"] = f"El total actual es: {data} de pesos. Se obtuvieron {data - last} pesos más que la anterior vez."
 
     def is_summary_zero(self):
         return self.cache["summary"] == 0 
