@@ -42,7 +42,6 @@ class SummaryApi:
                 if (not self.cache.is_summary_zero()) and self.cache.didnt_arrive_at_established_time():
                     print("Respuesta de cache.")
                     answerJSON = self.cache.get_message()
-                    print(f"Respuesta JSON: El mensaje es: {answerJSON["message"]} y el total es: {answerJSON["total"]}")
                     return jsonify(answerJSON), 200 
                 service = SummaryService()
                 answerJSON = service.get_summary()
