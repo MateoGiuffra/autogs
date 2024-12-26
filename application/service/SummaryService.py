@@ -4,8 +4,6 @@ from application.automation.date_setter.DateSetterLastMonth import DateSetterLas
 from application.automation.WebDriverManager import WebDriverManager
 from application.pandas.ExcelReader import ExcelReader
 from AbsPath import AbsPath
-import threading
-from application.service.utils.CacheManager import CacheManager
 
 import logging
 
@@ -17,7 +15,6 @@ class SummaryService:
     def __init__(self):
         self.web_driver_manager = WebDriverManager(AbsPath.obtener_abspath(), 'rptCobranzas*.xls')
         self.initialize_logging()
-        self.lock = threading.Lock()
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -35,13 +32,10 @@ class SummaryService:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
 
-    def dif_summaries(self, total):
+    def dif_summaries(self, total, date_setter):
         try:
-            last_month_total = self.get_total(DateSetterLastMonth(None))
-            return {
-                "message": self.calculate_dif(last_month_total, total),
-                "last_month_total": last_month_total
-            } 
+            last_month_total = self.get_total(date_setter)
+            return self.calculate_dif(last_month_total, total)
         except Exception as e:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
@@ -49,27 +43,34 @@ class SummaryService:
     def answer(self, total):
         message = f"El total actual es: {total}"
         return {
-                "total": total,
-                "message": message
+                 "total": total,
+                 "message": message
                }
       
     def calculate_dif(self, last_month_total, current_total):
         try:
             dif = current_total - last_month_total
             porcent = (dif / last_month_total) * 100
-            return(
-                   f"El mes pasado se llegó a los: {last_month_total} de pesos. " 
-                   f"Por lo tanto, actualmente hay un {porcent:.2f}% mas que el mes anterior. Habiendo una diferencia de {abs(dif):.2f} de pesos entre ambos."
-            ) 
+            more_or_less = "menos" if dif < 0 else "mas"
+            return {
+                     "message" : (
+                         f"El mes pasado se llegó a los: {last_month_total} de pesos. " 
+                         f"Por lo tanto, actualmente hay un {abs(porcent):.2f}% {more_or_less} que el mes anterior. Habiendo una diferencia de {abs(dif):.2f} de pesos entre ambos."
+                     ),
+                     "last_month_total": last_month_total
+                   }
         except ZeroDivisionError:
             print("Error: No se puede dividir por 0")
-            return f"El monto total del mes pasado fue de $ 0."
+            return {
+                     "message": f"El monto total del mes pasado fue de $ 0.",
+                     "last_month_total": 0
+                   }
         except Exception as e:
             print(f"Error inesperado en calculate_dif: {e}") 
-            return 
+            raise 
         
-    def get_total(self, type_date):
-        self.web_driver_manager.set_date_setter(type_date)
+    def get_total(self, date_setter):
+        self.web_driver_manager.set_date_setter(date_setter)
         self.web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)
         
         path = self.web_driver_manager.get_downloaded_file_path()

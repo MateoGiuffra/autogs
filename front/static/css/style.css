@@ -35,7 +35,8 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 10px; /* Separación del grupo superior */
+    margin-top: 10px;
+    gap: 10px;
 }
 
 /* Estilo general para todos los botones */
