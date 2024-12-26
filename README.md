@@ -102,7 +102,10 @@ autogs/
    python -m application.controller.APIREST.SummaryApi
    ```
 4. Accede a los endpoints:
-   - GET `/diferenciaResumenes`: Devuelve en formato JSON el resumen del mes anterior y el diferencial con el resumen actual
+   - GET `/diferenciaResumenes`: Devuelve la diferencia entre el resumen total del mes anterior y el resumen del dia actual. 
+     -- ``Ejemplo``: Suponiendo que hoy es 26/12/2024, entonces la resta es entre el resumen del 30/11/2024 y del 26/12/2024 
+   - GET `/diferenciaResumenesHoy`: Devuelve la diferencia entre el resumen de hoy pero un mes atras y el resumen del dia actual.
+     -- ``Ejemplo``: La resta es entre el resumen del 26/11/2024 y del 26/12/2024
    - GET `/obtenerResumen`: Devuelve el resumen del dia actual en formato JSON.
 
 ## Ventajas del Proyecto
