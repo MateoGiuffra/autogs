@@ -51,7 +51,7 @@ class SummaryApi:
                 return jsonify(answerJSON), 200 
             except Exception as p:
                 answerJSON =  {"message": "Hubo un error, intentalo mas tarde: " +  str(p)}
-                jsonify(answerJSON), 500
+                return jsonify(answerJSON), 500
 
         @self.app.route("/diferenciaResumenes", methods=["GET"])
         def diferencia_resumenes():

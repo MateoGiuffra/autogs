@@ -4,7 +4,8 @@ from application.automation.date_setter.DateSetterLastMonth import DateSetterLas
 from application.automation.WebDriverManager import WebDriverManager
 from application.pandas.ExcelReader import ExcelReader
 from AbsPath import AbsPath
-
+from application.persistence.SummaryDAO import SummaryDAO
+from datetime import datetime
 import logging
 
 class SummaryService:
@@ -15,6 +16,7 @@ class SummaryService:
     def __init__(self):
         self.web_driver_manager = WebDriverManager(AbsPath.obtener_abspath(), 'rptCobranzas*.xls')
         self.initialize_logging()
+        self.dao = SummaryDAO()
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -24,9 +26,18 @@ class SummaryService:
             filemode='a'
         )
 
+    def update(self, field, value):
+        current_month = datetime.now().month
+        self.dao.update(current_month, field, value)
+    
+    def get(self, field):
+        current_month = datetime.now().month
+        return self.dao.get(current_month, field)
+
     def get_summary(self):
         try:
             total = self.get_total(DateSetterCurrentMonth(None))
+            self.update("total", total)
             return self.answer(total)
         except Exception as e:
             logging.error(f"Error al obtener el resumen: {e}")
@@ -35,7 +46,8 @@ class SummaryService:
     def dif_summaries(self, total, date_setter):
         try:
             last_month_total = self.get_total(date_setter)
-            return self.calculate_dif(last_month_total, total)
+            real_total = self.get("total")
+            return self.calculate_dif(last_month_total, real_total)
         except Exception as e:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
