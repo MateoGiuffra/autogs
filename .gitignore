@@ -4,4 +4,3 @@ node_modules/
 __pycache__/
 *.pyc
 webdriver_errors.log
-application/resources/cobranzas-key.json

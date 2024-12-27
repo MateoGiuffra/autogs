@@ -13,11 +13,5 @@ class AbsPath:
            os.makedirs(output_dir)
            
        return output_dir
-    
-    @staticmethod
-    def get_key_abspath():
-       project_dir = os.path.dirname(os.path.abspath(__file__))
-       key_dir = os.path.join(project_dir,"application","resources", "cobranzas-key.json")
-           
-       return key_dir
+
      

@@ -1,18 +1,16 @@
-import sys
-import os
-
-project_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(project_dir, "..", ".."))
-sys.path.append(project_root)
-from AbsPath import AbsPath
+import json
 from firebase_admin import credentials, initialize_app, firestore
+from decouple import config
 
-# Ruta al archivo de credenciales
-KEY_PATH =  AbsPath.get_key_abspath()
+# Leer la clave JSON directamente desde el .env
+DB_KEY = config("DB_KEY")
 
-# Inicialización de Firebase
-cred = credentials.Certificate(KEY_PATH)
+# Convertir la cadena JSON en un diccionario
+cred_data = json.loads(DB_KEY)
+
+# Usar los datos para inicializar la aplicación Firebase
+cred = credentials.Certificate(cred_data)
 initialize_app(cred)
 
-# Instancia del cliente Firestore
+# Instancia de Firestore
 db = firestore.client()
