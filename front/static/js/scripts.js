@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     const resetResponseMessage = () => {
-        responseMessage.textContent = "Procesando...";
+        responseMessage.textContent = "";
     };
 
     const copyToClipboard = (text, buttonElement) => {

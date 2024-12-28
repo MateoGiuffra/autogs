@@ -13,7 +13,6 @@ load_dotenv()  # para cargar el .env en local
 
 class SummaryApi:
 
-
     def __init__(self):
         self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
         self.initialize_logging()   

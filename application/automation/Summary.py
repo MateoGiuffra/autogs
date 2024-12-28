@@ -1,7 +1,7 @@
 from decouple import config  
 from application.automation.WebDriverManager import WebDriverManager
 from application.pandas.ExcelReader import ExcelReader
-from AbsPath import AbsPath
+from abs_path import dir
 import logging
 class Summary:
 
@@ -10,7 +10,7 @@ class Summary:
     DB_PASSWORD = config("DB_PASSWORD")
     
     def __init__(self, month_and_year):
-        self.web_driver_manager = WebDriverManager(AbsPath.obtener_abspath(), 'rptCobranzas*.xls')
+        self.web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
         self.initialize_logging()
         self.total = 0
         self.last_total  = 0
