@@ -16,7 +16,7 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 ## Estructura del Proyecto
 ```
 autogs/
-├── AbsPath.py
+├── abs_path.py
 ├── application/
 │   ├── configuration/
 │   │   └── firebase_config.py
@@ -74,7 +74,7 @@ autogs/
   - `SummaryService.py`: Interviene como intermediario entre el negocio y la persistencia de datos para asegurar consistencia en los datos.
 - **persistencia/**: Se encarga de interactuar con la base de datos (firestore).
   - `SummaryDAO.py`: Crea y actualiza instancias de Summary con lo suficiente para asegurar su correcto funcionamiento.
-- **AbsPath.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
+- **abs_path.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
 - **requeriments.txt**: Lista de dependencias necesarias para ejecutar el proyecto.
 - **Dockerfile**: Archivo de Docker preparado para que todo funcione correctamente en produccion. 
 - **front/**: Un mini front para interactuar con la aplicación. Hecho solo con CSS, HTML y JavaScript para que la app sea lo menos pesado y eficiente.
