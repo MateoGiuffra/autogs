@@ -23,7 +23,7 @@ class SummaryApi:
         logging.basicConfig(
             level=logging.ERROR,
             format='%(asctime)s - %(levelname)s - %(message)s',
-            filename='webdriver_errors.log',
+            filename='summary_api.log',
             filemode='a'
         )
 
