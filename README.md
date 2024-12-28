@@ -10,7 +10,7 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 - **Frontend Interactivo**: Interfaz web diseñada para interactuar con los endpoints de la API. Está optimizada para dispositivos móviles, 
   permitiendo al usuario acceder fácilmente desde su celular y obtener los resúmenes financieros con facilidad
 
-![Muestra del GIF](./front/static/assets/muestra.gif)
+![Muestra del GIF](./front/static/assets/muestra.mp4)
 
 
 ## Estructura del Proyecto
