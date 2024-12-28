@@ -1,10 +1,12 @@
 from application.service.utils.CacheManager import CacheManager
 from application.service.SummaryService import SummaryService
 from application.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth
+from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
 from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
 from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv 
 from decouple import config  
+from datetime import datetime
 import logging 
 import os 
 
@@ -18,10 +20,8 @@ class SummaryApi:
         self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
         self.initialize_logging()   
         self.setup_routes()
-        self.total = 0
-        self.last_month_total = 0
-        self.last_month_total_today = 0
         self.cache = CacheManager(SummaryApi.TIMEOUT) 
+        self.month_and_year = f"{datetime.now().month}-{datetime.now().year}"
 
     def initialize_logging(self):
         logging.basicConfig(
@@ -39,53 +39,33 @@ class SummaryApi:
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:
-                if (not self.cache.is_summary_zero()) and self.cache.didnt_arrive_at_established_time():
-                    print("Respuesta de cache.")
-                    answerJSON = self.cache.get_message()
-                    return jsonify(answerJSON), 200 
                 service = SummaryService()
-                answerJSON = service.get_summary()
-                self.total = answerJSON["total"]
-                self.cache.update_cache(self.total)
-                print("Se guardo el total " + str(answerJSON["total"]) + " en la API: " + str(self.total))
+                answerJSON = service.get_summarys_answer(DateSetterCurrentMonth(None), self.month_and_year)
+                print("El total del answerJSON de la API es: " + str(answerJSON["total"]))
                 return jsonify(answerJSON), 200 
             except Exception as p:
-                answerJSON =  {"message": "Hubo un error, intentalo mas tarde: " +  str(p)}
+                answerJSON =  {"message": f"Hubo un error, intentalo mas tarde: {p}"}
                 return jsonify(answerJSON), 500
 
         @self.app.route("/diferenciaResumenes", methods=["GET"])
         def diferencia_resumenes():
             print("Se le pegó al endpoint diferenciaResumenes")
-            try: 
-                answerJSON = self.dif_summaries(DateSetterLastMonth(None), self.last_month_total)
-                self.last_month_total =  answerJSON["last_month_total"] 
-                return jsonify(answerJSON), 200 
-            except Exception as e: 
-                answerJSON = {"message": "Hubo un error, intentalo mas tarde:" +  str(e)}
-                return jsonify(answerJSON), 500
+            return self.dif_summaries(DateSetterLastMonth(None))
 
         @self.app.route("/diferenciaResumenesHoy", methods=["GET"])
         def diferencia_resumenes_hoy():
             print("Se le pegó al endpoint diferenciaResumenesHoy")
-            try: 
-                answerJSON = self.dif_summaries(DateSetterLastMonthToday(None), self.last_month_total_today)
-                self.last_month_total_today =  answerJSON["last_month_total"] 
-                return jsonify(answerJSON), 200 
-            except Exception as e: 
-                answerJSON = {"message": "Hubo un error, intentalo mas tarde:" +  str(e)}
-                return jsonify(answerJSON), 500
-         
-    def dif_summaries(self, date_setter, last_month):
-            try: 
-                print(f"El total actual es de: {self.total}")
-                service = SummaryService()
-                if last_month != 0: 
-                    return service.calculate_dif(last_month, self.total)
-                return service.dif_summaries(self.total, date_setter)
-            except Exception as e:
-                print(f"{e}")
-                raise 
-            
+            return self.dif_summaries(DateSetterLastMonthToday(None))
+
+    def dif_summaries(self, date_setter):
+        try: 
+            service = SummaryService()
+            answerJSON =  service.dif_summaries(date_setter, self.month_and_year)
+            return jsonify(answerJSON), 200
+        except Exception as e: 
+            answerJSON = {"message": "Hubo un error, intentalo mas tarde:" +  str(e)}
+            return jsonify(answerJSON), 500               
+
     def run(self):
         port = int(os.environ.get("PORT", 10000))
         self.app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
