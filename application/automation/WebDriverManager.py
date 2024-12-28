@@ -1,16 +1,11 @@
-from application.automation.Login import Login 
-from application.automation.Report import Report 
 from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
 from application.automation.FileDownloader import FileDownloader
-
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium import webdriver
-from selenium.webdriver import Chrome 
 from selenium.webdriver.chrome.service import Service   
+from application.automation.Report import Report 
+from application.automation.Login import Login 
 from selenium.webdriver.common.by import By 
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-import os 
+from selenium import webdriver
 import logging 
 
 
@@ -23,6 +18,9 @@ class WebDriverManager:
         self.expected_filename_pattern = expected_filename_pattern
         self.file_downloaded_path = None
         self.date_setter =  DateSetterCurrentMonth(self.driver)
+        self.report_page = Report(self.driver)
+        self.file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
+        self.login_page = None 
     
     def configure_driver(self):
         self.initialize_logging()
@@ -72,20 +70,18 @@ class WebDriverManager:
             self.quit_driver()
 
     def login(self, user, password):
-        login_page = Login(self.driver, user, password)
-        login_page.login()
-
+        if self.login_page is None: 
+            self.login_page = Login(self.driver, user, password)
+        self.login_page.login()
 
     def navigate_to_report(self):
-        report_page = Report(self.driver)
-        report_page.navigate_to_report()
+        self.report_page.navigate_to_report()
 
     def set_dates(self):
        self.date_setter.set()
 
     def download_file(self):
-        file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
-        self.file_downloaded_path = file_downloader.download()
+        self.file_downloaded_path = self.file_downloader.download()
 
     def get_downloaded_file_path(self):
         return self.file_downloaded_path
