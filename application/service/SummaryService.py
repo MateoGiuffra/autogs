@@ -1,11 +1,7 @@
-from decouple import config  
 from application.persistence.SummaryDAO import SummaryDAO
 import logging
 
 class SummaryService:
-    BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
-    DB_USER = config("DB_USER")
-    DB_PASSWORD = config("DB_PASSWORD")
     
     def __init__(self):
         self.dao = SummaryDAO()

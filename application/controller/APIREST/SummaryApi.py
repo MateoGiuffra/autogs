@@ -1,4 +1,3 @@
-from application.service.utils.CacheManager import CacheManager
 from application.service.SummaryService import SummaryService
 from application.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth
 from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
@@ -14,13 +13,11 @@ load_dotenv()  # para cargar el .env en local
 
 class SummaryApi:
 
-    TIMEOUT = 10 * 60
 
     def __init__(self):
         self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
         self.initialize_logging()   
         self.setup_routes()
-        self.cache = CacheManager(SummaryApi.TIMEOUT) 
         self.month_and_year = f"{datetime.now().month}-{datetime.now().year}"
 
     def initialize_logging(self):
