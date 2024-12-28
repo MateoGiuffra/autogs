@@ -65,7 +65,7 @@ class WebDriverManager:
         except Exception as e:
             print(f"Hubo un error al iniciar: {e}")
             print(str(e))
-            raise
+            raise 
         finally:
             self.quit_driver()
 
