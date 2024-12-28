@@ -18,21 +18,28 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 autogs/
 ├── AbsPath.py
 ├── application/
-│   ├── APIREST/
-│   │   ├── __init__.py
-│   │   └── SummaryApi.py
-│   │   ├── utils/
-│   │       ├── CacheManager.py
+│   ├── configuration/
+│   │   └── firebase_config.py
+│   ├── controller/
+│   │   ├── APIREST/
+│   │   │   └── SummaryApi.py
 │   ├── automation/
-│   │   ├── DateSetter.py
+│   │   ├── date_setter/
+│   │   │   ├── DateSetter.py 
+│   │   │   ├── DateSetterLastMonth.py
+│   │   │   ├── DateSetterLastMonthToday.py
+│   │   │   └── DateSetterCurrentMonth.py
 │   │   ├── FileDownloader.py
 │   │   ├── Login.py
 │   │   ├── Report.py
+│   │   ├── Summary.py
 │   │   └── WebDriverManager.py
 │   ├── pandas/
 │   │   └── ExcelReader.py
 │   ├── service/
 │   │   └── SummaryService.py
+│   ├── persistence/
+│   │   └── SummaryDAO.py
 ├── front/
 │   ├── static/
 │   │   ├── css/
@@ -49,20 +56,24 @@ autogs/
 
 
 ### Descripción de Carpetas y Archivos
+- **configuration/**: Configuracion de la base de datos.
+  - `firebase_config.py`: Encargado de leer las credenciales para inicializar la app de firebase y crear una instancia de firestore.  
 - **controller/**: Implementa la API REST con Flask.
-  - `SummaryApi.py`: Define los endpoints `/diferenciaResumenes` y `/obtenerResumen` para interactuar con el servicio.
-  - `CacheManager.py`: Mini implementacion de cache para no saturar endpoints en un periodo de tiempo definido (en este caso 10 minutos).
+  - `SummaryApi.py`: Define los endpoints `/diferenciaResumenes`,  `/diferenciaResumenesHoy` y `/obtenerResumen` para interactuar con el servicio.
 - **automation/**: Contiene los scripts de automatización basados en Selenium.
   - `WebDriverManager.py`: Trabaja como Orquestador usando el resto de las clases. Configura el WebDriver, navega y descarga reportes.
   - `DateSetter.py`: Establece rangos de fechas en formularios dependiendo lo requerido.
   - `Login.py`: Realiza el inicio de sesión en el sistema externo.
   - `Report.py`: Navega al reporte deseado dentro del sistema.
   - `FileDownloader.py`: Descarga el archivo del reporte y verifica su existencia.
+  - `Summary.py`: Define la lógica del negocio. Orquesta los pasos de automatización y procesamiento de datos. Almacena los datos de valor.  
 - **pandas/**: Procesa los datos del reporte descargado.
   - `ExcelReader.py`: Lee y analiza el archivo descargado para extraer el total. Se maneja de forma eficiente borrando al anterior 
     para ahorrar espacio en memoria y recursos.
-- **service/**: Define la lógica del negocio.
-  - `SummaryService.py`: Orquesta los pasos de automatización y procesamiento de datos.
+- **service/**: Se encarga de interactuar con el modelo y la capa de persistencia.
+  - `SummaryService.py`: Interviene como intermediario entre el negocio y la persistencia de datos para asegurar consistencia en los datos.
+- **persistencia/**: Se encarga de interactuar con la base de datos (firestore).
+  - `SummaryDAO.py`: Crea y actualiza instancias de Summary con lo suficiente para asegurar su correcto funcionamiento.
 - **AbsPath.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
 - **requeriments.txt**: Lista de dependencias necesarias para ejecutar el proyecto.
 - **Dockerfile**: Archivo de Docker preparado para que todo funcione correctamente en produccion. 
@@ -85,6 +96,7 @@ autogs/
    ```env
    DB_USER=usuario
    DB_PASSWORD=contraseña
+   DB_KEY=key de firebase (tiene que estar en una sola linea)
    ```
 
 ## Cómo Ejecutar el Proyecto
@@ -110,9 +122,10 @@ autogs/
 
 ## Ventajas del Proyecto
 - **Escalabilidad**: Diseñado con una arquitectura modular para agregar nuevas funcionalidades.
-- **Automatización Eficiente**: Reduce el tiempo de procesamiento de tareas repetitivas.
+- **Automatización Eficiente**: Reduce significativamente el tiempo empleado en tareas repetitivas, aumentando la productividad.
 - **Fácil Integración**: Puede ser integrado en otros sistemas mediante la API REST.
-- **Eficiencia**: Busca ser lo mas optimazado posible, consumiendo lo minimo e indispensable.  
+- **Eficiencia**: Optimizado para consumir únicamente los recursos necesarios, garantizando un desempeño eficiente.
+- **Consistencia de Datos**: Utiliza Firestore como base de datos, asegurando la consistencia, alta disponibilidad y escalabilidad de los datos en tiempo real.
 
 ## Deploy
 - El proyecto ya esta listo para el deploy a traves del Dockerfile. 
