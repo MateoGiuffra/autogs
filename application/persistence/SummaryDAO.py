@@ -66,19 +66,6 @@ class SummaryDAO:
             return data.get(field, f"No existe el campo: {field}")
         return None 
     
-# def main():
-#     dao = SummaryDAO()
-#     # dao.create_new_summary(12)
-#     # dao.update(12,"total",1100000)
-#     # total = dao.get(12,"total")
-#     # noexiste = dao.get(12,"totala")
-#     # tiene0 = dao.get(12,"last_total")
-#     # print(total)
-#     # print(noexiste)
-#     # print(tiene0)
-#     dao.find_or_create("12-2024")
-
-# main()     
 
 
    
