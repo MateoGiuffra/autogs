@@ -43,6 +43,14 @@ class DateSetter(ABC):
     def get_today(self):
         pass 
 
+    @abstractmethod
+    def set_summary_total(self, summary, amount):
+        pass
+
+    @abstractmethod 
+    def get_field(self):
+        pass    
+
     def set_driver(self, driver):
         self.driver = driver 
 

@@ -15,3 +15,10 @@ class DateSetterCurrentMonth(DateSetter):
 
     def get_fecha_cobro_hasta(self, today):
         return today.strftime("%d/%m/%Y")
+    
+    def set_summary_total(self, summary, amount):
+        summary.set_last_total(summary.get_total())
+        summary.set_total(amount)
+    
+    def get_field(self):
+        return "total"

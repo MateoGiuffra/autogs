@@ -1,8 +1,6 @@
 from .DateSetter import DateSetter
-# import DateSetter
 import datetime
 from dateutil import relativedelta 
-import sys
 
 class DateSetterLastMonth(DateSetter):
 
@@ -22,3 +20,10 @@ class DateSetterLastMonth(DateSetter):
     def next_month_of_today(self, today):
         return datetime.date.today()
     
+
+    def set_summary_total(self, summary, amount):
+        print(f"Se settio el set_last_months_total a {amount}")
+        summary.set_last_months_total(amount)
+
+    def get_field(self):
+        return "last_months_total"
