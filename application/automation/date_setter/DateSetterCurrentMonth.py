@@ -1,6 +1,7 @@
 from .DateSetter import DateSetter
 import datetime
 from dateutil import relativedelta 
+import pytz 
 
 class DateSetterCurrentMonth(DateSetter):
 
@@ -8,7 +9,9 @@ class DateSetterCurrentMonth(DateSetter):
         super().__init__(driver)
 
     def get_today(self):
-        return datetime.date.today()
+        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        now = datetime.datetime.now(tz_buenos_aires)
+        return now.astimezone(tz_buenos_aires).date()
     
     def next_month_of_today(self, today):
         return today + relativedelta.relativedelta(months = 1)
@@ -22,3 +25,6 @@ class DateSetterCurrentMonth(DateSetter):
     
     def get_field(self):
         return "total"
+    
+    def is_necesary_calculate(self):
+        return True 

@@ -1,6 +1,7 @@
 from .DateSetter import DateSetter
 import datetime
 from dateutil import relativedelta 
+import pytz
 
 class DateSetterLastMonth(DateSetter):
 
@@ -14,11 +15,15 @@ class DateSetterLastMonth(DateSetter):
         return last_day.strftime("%d/%m/%Y") 
 
     def get_today(self):
-        today = datetime.date.today()
+        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        now = datetime.datetime.now(tz_buenos_aires)
+        today = now.astimezone(tz_buenos_aires).date()
         return today + relativedelta.relativedelta(months = -1)
     
     def next_month_of_today(self, today):
-        return datetime.date.today()
+        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        now = datetime.datetime.now(tz_buenos_aires)
+        return now.astimezone(tz_buenos_aires).date()
     
 
     def set_summary_total(self, summary, amount):
@@ -27,3 +32,6 @@ class DateSetterLastMonth(DateSetter):
 
     def get_field(self):
         return "last_months_total"
+    
+    def is_necesary_calculate(self):
+        return False  

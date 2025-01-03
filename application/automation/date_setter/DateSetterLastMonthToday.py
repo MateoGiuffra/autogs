@@ -10,3 +10,6 @@ class DateSetterLastMonthToday(DateSetterLastMonth):
 
     def get_field(self):
         return "last_months_total_today"
+    
+    def is_necesary_calculate(self):
+        return True     

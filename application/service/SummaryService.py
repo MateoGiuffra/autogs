@@ -21,7 +21,7 @@ class SummaryService:
             summary = self.find_or_create(month_and_year)
             field = date_setter.get_field() # obtengo el field que tengo que buscar, depende de que date setter me pasen. 
             last_month = self.get(field, month_and_year) # obtengo el contenido
-            if last_month > 0: # si ya se calculo, que no lo haga de vuelta. Solo que haga la cuenta. 
+            if last_month > 0 and  (not date_setter.is_necesary_calculate()): # si ya se calculo, que no lo haga de vuelta. Solo que haga la cuenta. 
                 return summary.calculate_dif(last_month, summary.get_total())    
             #caso contrario, tiene que calcularlo
             last_month = summary.get_total_number(date_setter)

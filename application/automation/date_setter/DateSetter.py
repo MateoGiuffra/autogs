@@ -51,6 +51,10 @@ class DateSetter(ABC):
     def get_field(self):
         pass    
 
+    @abstractmethod
+    def is_necesary_calculate(self):
+        pass   
+
     def set_driver(self, driver):
         self.driver = driver 
 
