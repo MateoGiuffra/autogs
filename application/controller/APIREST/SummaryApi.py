@@ -32,6 +32,11 @@ class SummaryApi:
         def index():
             return render_template("index.html")
         
+        @self.app.route("/info", methods=["GET"])
+        def info():
+            service = SummaryService()
+            return jsonify(service.get_info(self.month_and_year)), 200
+
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:
@@ -52,6 +57,7 @@ class SummaryApi:
         def diferencia_resumenes_hoy():
             print("Se le pegó al endpoint diferenciaResumenesHoy")
             return self.dif_summaries(DateSetterLastMonthToday(None))
+    
 
     def dif_summaries(self, date_setter):
         try: 

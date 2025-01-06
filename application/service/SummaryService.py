@@ -32,6 +32,12 @@ class SummaryService:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
     
+    #get total info
+    def get_info(self, month_and_year):
+        info = self.dao.get_info(month_and_year)
+        return info.get_json()
+
+
     #cruds
     def find_or_create(self, month_and_year):
         return self.dao.find_or_create(month_and_year)

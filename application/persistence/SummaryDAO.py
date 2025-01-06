@@ -1,6 +1,7 @@
 import logging
 from application.configuration.firebase_config import db
 from application.automation.Summary import Summary
+from application.automation.Info import Info 
 
 class SummaryDAO:
 
@@ -65,6 +66,17 @@ class SummaryDAO:
             data = doc.to_dict()
             return data.get(field, f"No existe el campo: {field}")
         return None 
+
+    #no forma parte de este dao porque devuelve otro objeto
+    def get_info(self,month_and_year):
+        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
+        doc = doc_ref.get()
+        info = Info()
+        if doc.exists:
+            data = doc.to_dict()
+            info.set_last_month(float(data.get("last_months_total", 0)))
+            info.set_last_month_today(float(data.get("last_months_total_today", 0)))
+        return info
     
 
 
