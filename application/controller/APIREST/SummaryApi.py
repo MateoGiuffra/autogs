@@ -1,5 +1,6 @@
 from application.service.SummaryService import SummaryService
 from application.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth
+from application.automation.Summary import Summary
 from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
 from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
 from flask import Flask, jsonify, request, render_template
@@ -26,17 +27,23 @@ class SummaryApi:
             filename='summary_api.log',
             filemode='a'
         )
-
+    #endpoints
     def setup_routes(self):
+        # carga la pagina principal con sus datos
         @self.app.route("/", methods=["GET"])
         def index():
-            return render_template("index.html")
-        
-        @self.app.route("/info", methods=["GET"])
-        def info():
             service = SummaryService()
-            return jsonify(service.get_info(self.month_and_year)), 200
+            data1 = service.get_info(self.month_and_year)
+            print(f"aca esta {data1}")    
+            return render_template("pagina.html", data1=data1)
+        
+        # actualiza el resumen al ultimo hecho
+        @self.app.route("/actualizar_resumen", methods=["PUT"])
+        def update_summary():
+            service = SummaryService()
+            service.update_total()
 
+        #endpoints innecesarios
         @self.app.route("/obtenerResumen", methods=["GET"])
         def get_summary():
             try:

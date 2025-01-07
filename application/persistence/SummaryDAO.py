@@ -2,7 +2,7 @@ import logging
 from application.configuration.firebase_config import db
 from application.automation.Summary import Summary
 from application.automation.Info import Info 
-
+from datetime import datetime
 class SummaryDAO:
 
     def __init__(self):
@@ -25,7 +25,8 @@ class SummaryDAO:
             summary_recuperado.set_total(float(data.get("total", 0)))  
             summary_recuperado.set_last_total(float(data.get("last_total", 0)))  
             summary_recuperado.set_last_months_total(float(data.get("last_months_total", 0)))  
-            summary_recuperado.set_last_months_total_today(float(data.get("last_months_total_today", 0)))  
+            summary_recuperado.set_last_months_total_today(float(data.get("last_months_total_today", 0)))
+            summary_recuperado.set_last_report_date(data.get("last_report_date", datetime.now()))
             return summary_recuperado
         else:
             summary_creado = Summary(month_and_year)
@@ -38,7 +39,8 @@ class SummaryDAO:
                 "total": summary.get_total(),
                 "last_total": summary.get_last_total(),
                 "last_months_total": summary.get_last_months_total(),
-                "last_months_total_today": summary.get_last_months_total_today()
+                "last_months_total_today": summary.get_last_months_total_today(), 
+                "last_report_date" : summary.get_last_report_date()
             })
         except Exception as e:
             print(f"Error al actualizar el documento: {e}")
@@ -53,7 +55,8 @@ class SummaryDAO:
             "total": summary.get_total(),  
             "last_total": summary.get_last_total(),  
             "last_months_total": summary.get_last_months_total(),  
-            "last_months_total_today": summary.get_last_months_total_today()  
+            "last_months_total_today": summary.get_last_months_total_today(), 
+            "last_report_date" : summary.get_last_report_date()
         }
         doc_ref.set(new_summary)
         return summary

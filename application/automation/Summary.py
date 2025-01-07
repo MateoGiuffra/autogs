@@ -3,6 +3,7 @@ from application.automation.WebDriverManager import WebDriverManager
 from application.pandas.ExcelReader import ExcelReader
 from abs_path import dir
 import logging
+from datetime import datetime
 class Summary:
 
     BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
@@ -17,6 +18,9 @@ class Summary:
         self.last_months_total = 0
         self.last_months_total_today = 0
         self.month_and_year = month_and_year
+        self.last_report_date = datetime.now()
+         
+        
     
     def initialize_logging(self):
         logging.basicConfig(
@@ -39,7 +43,8 @@ class Summary:
 
         print(f"Se obtuvo el total con exito: {total}")
         print(f"Se settearon con exito en Summary el total: {self.total} y el last_total: {self.last_total}")
-
+        self.last_report_date = datetime.now()
+        
         return total
     
     def answer_of_current_total(self):
@@ -80,7 +85,20 @@ class Summary:
         if current_total: return 
         raise Exception("Antes de comparar resumenes primero se tiene que obtener resumen del dia")
     
+    # devuelve un JSON con la informacion del objeto
+    def get_info(self):
+        return {
+            "total": self.total, 
+            "dif": self.total - self.last_total, 
+            "lm": self.last_months_total,
+            "lmt": self.last_months_total,
+            "last_report_date": self.last_report_date
+        }
+        
    # getters  
+    def get_last_report_date(self):
+        return self.last_report_date
+   
     def get_total(self):
         return self.total 
 
@@ -97,6 +115,9 @@ class Summary:
         return self.month_and_year
 
     # setters  
+    def set_last_report_date(self, date): #el parametro tiene que ser datetime.datetime object
+        self.last_report_date = date 
+    
     def set_total(self, total):
         self.total = total 
     

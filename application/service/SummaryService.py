@@ -1,5 +1,7 @@
 from application.persistence.SummaryDAO import SummaryDAO
 import logging
+from application.automation.Summary import Summary
+from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
 
 class SummaryService:
     
@@ -8,13 +10,22 @@ class SummaryService:
 
     def get_summarys_answer(self, date_setter, month_and_year):
         try:
+            s = Summary(None)
+            print(f"aca esta el last report date: {s.get_last_report_date()}")
             summary = self.find_or_create(month_and_year)
+            summary.get_total_number(date_setter)
             summary.get_total_number(date_setter)
             self.update_summary(summary)
             return summary.answer_of_current_total() 
         except Exception as e:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
+    
+    # actualiza la instancia summary con el ultimo resumen hecho    
+    def update_total(self, month_and_year):
+        summary = self.find_or_create(month_and_year)
+        summary.get_total_number(DateSetterCurrentMonth(None))
+        self.dao.update_summary(summary)
 
     def dif_summaries(self, date_setter, month_and_year):
         try:
@@ -34,20 +45,21 @@ class SummaryService:
     
     #get total info
     def get_info(self, month_and_year):
-        info = self.dao.get_info(month_and_year)
-        return info.get_json()
-
+        summary_saved = self.dao.find_or_create(month_and_year)
+        return summary_saved.get_info()
 
     #cruds
     def find_or_create(self, month_and_year):
         return self.dao.find_or_create(month_and_year)
-
-    def update(self, field, value):
-        month_and_year = self.summary.get_month_and_year()
-        self.dao.update(month_and_year, field, value)
+    
 
     def update_summary(self, summary):
         self.dao.update_summary(summary) 
     
     def get(self, field, month_and_year):
         return self.dao.get(month_and_year, field)
+
+    # actualiza un campo especifico con el valor dado
+    # def update(self, field, value):
+    #     month_and_year = self.summary.get_month_and_year()
+    #     self.dao.update(month_and_year, field, value)

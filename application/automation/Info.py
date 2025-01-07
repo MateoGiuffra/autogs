@@ -10,6 +10,6 @@ class Info():
         self.last_month_today = num
 
     def get_json(self):
-        return { "message": f"El mes pasado en total se recaudaron {self.last_month} " f"Y este mismo dia pero del mes pasado se llego a: {self.last_month_today}", 
-                "total": f"{self.last_month_today}"
+        return { "message_lmt": f"El mes pasado en total se recaudaron {self.last_month} " , 
+                 "message_lmtt": f"Este mismo dia pero del mes pasado se llego a: {self.last_month_today}"
             }

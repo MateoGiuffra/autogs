@@ -2,10 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="/static/css/style.css">
     <meta name="description" content="Aplicación para obtener resúmenes y compararlos.">
     <title>Resumenes</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+   
 </head>
 <body>
     <div class="container">
@@ -15,6 +16,8 @@
             <button id="btn-copy-number" style="display: none;" aria-label="Copiar al portapapeles">
                 <img src="/static/assets/copy.png" alt="Copiar" class="icon">
             </button>
+            <h1>Datos del Endpoint 1</h1>
+            <p>{{ data1['message'] }}</p>
         </div>
         <div id="summary-container" style="display: none;">
             <p id="summary-number" class="highlighted-number"></p>

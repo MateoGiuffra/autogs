@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <!-- <link rel="stylesheet" href="/static/css/style.css"> -->
+        <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
+        <title>Resumenes</title>
+    </head>
+    <body>
+        <h1>Resumenes</h1>
+        <article> Actualizar Resumen
+            <button id="actualizar-button">Actualizar</button>
+        </article>
+        <article>Total de Hoy: 
+            <p> {{data1['total']}}
+                <div>
+                    Ult. vez actualizado: {{data1['last_report_date']}}
+                </div>
+                <div>
+                    Diferencia de la ultima actualizacion: {{data1['dif']}}
+                </div>
+            </p>
+        </article>
+        <article> Recaudacion Total del Mes Pasado: 
+            <p>{{data1['lm']}}</p>
+        </article>
+        <article> Recaudacion del mes pasado 
+            <p>{{data1['lmt']}}</p>
+        </article>
+    </body>
+</html>
+
+<!-- "total": self.total, 
+"dif": self.total - self.last_total, 
+"lm": self.get_last_months_total,
+"lmt": self.get_last_months_total,
+"last_report_date": self.last_report_date -->
