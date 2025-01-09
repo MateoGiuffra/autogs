@@ -27,6 +27,8 @@ class SummaryDAO:
             summary_recuperado.set_last_months_total(float(data.get("last_months_total", 0)))  
             summary_recuperado.set_last_months_total_today(float(data.get("last_months_total_today", 0)))
             summary_recuperado.set_last_report_date(data.get("last_report_date", datetime.now()))
+            summary_recuperado.set_message_last_months_total(data.get("message_last_months_total", {"message": "JSON vacio"}))
+            summary_recuperado.set_message_last_months_total_today(data.get("message_last_months_total_today", {"message": "JSON vacio"}))
             return summary_recuperado
         else:
             summary_creado = Summary(month_and_year)
@@ -40,7 +42,9 @@ class SummaryDAO:
                 "last_total": summary.get_last_total(),
                 "last_months_total": summary.get_last_months_total(),
                 "last_months_total_today": summary.get_last_months_total_today(), 
-                "last_report_date" : summary.get_last_report_date()
+                "last_report_date" : summary.get_last_report_date(),
+                "message_last_months_total" : summary.get_message_last_months_total(),
+                "message_last_months_total_today" : summary.get_message_last_months_total_today()
             })
         except Exception as e:
             print(f"Error al actualizar el documento: {e}")
@@ -56,7 +60,9 @@ class SummaryDAO:
             "last_total": summary.get_last_total(),  
             "last_months_total": summary.get_last_months_total(),  
             "last_months_total_today": summary.get_last_months_total_today(), 
-            "last_report_date" : summary.get_last_report_date()
+            "last_report_date" : summary.get_last_report_date(),
+            "message_last_months_total" : summary.get_message_last_months_total(),
+            "message_last_months_total_today" : summary.get_message_last_months_total_today()
         }
         doc_ref.set(new_summary)
         return summary

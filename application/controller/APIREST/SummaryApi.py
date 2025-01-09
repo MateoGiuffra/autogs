@@ -9,24 +9,62 @@ from decouple import config
 from datetime import datetime
 import logging 
 import os 
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.jobstores.base import ConflictingIdError
+from pytz import timezone
+import requests
+from logging.handlers import RotatingFileHandler
 
 load_dotenv()  # para cargar el .env en local
+
+
 
 class SummaryApi:
 
     def __init__(self):
         self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
-        self.initialize_logging()   
+        self.initialize_logging()
         self.setup_routes()
         self.month_and_year = f"{datetime.now().month}-{datetime.now().year}"
+        self.scheduler = BackgroundScheduler(timezone=timezone("America/Argentina/Buenos_Aires"))
+        self.setup_scheduler()
+
+    def setup_scheduler(self):
+        try:
+            if not self.scheduler.get_job("update_summary_job"):
+                self.scheduler.add_job(
+                    self.call_update_endpoint,
+                    "cron",
+                    hour=16,
+                    minute=45,
+                    id="update_summary_job",
+                    replace_existing=True
+                )
+            self.scheduler.start()
+            print("Scheduler iniciado con horario de Argentina (UTC-3).")
+        except Exception as e:
+            logging.error(f"Error al iniciar el Scheduler: {e}")
+
+    def call_update_endpoint(self):
+        try:
+            response = requests.put("http://127.0.0.1:10000/resumenDeUnMesAtras")
+            if response.status_code == 200:
+                print("Resumen actualizado exitosamente.")
+            else:
+                print(f"Error al actualizar resumen: {response.status_code}, {response.text}")
+        except requests.ConnectionError as e:
+            logging.error(f"Error de conexión: {e}")
+        except Exception as e:
+            logging.error(f"Error general al llamar al endpoint: {e}")
 
     def initialize_logging(self):
+        handler = RotatingFileHandler('summary_api.log', maxBytes=5000000, backupCount=3)
         logging.basicConfig(
             level=logging.ERROR,
             format='%(asctime)s - %(levelname)s - %(message)s',
-            filename='summary_api.log',
-            filemode='a'
+            handlers=[handler]
         )
+
     #endpoints
     def setup_routes(self):
         # carga la pagina principal con sus datos
@@ -35,45 +73,42 @@ class SummaryApi:
             service = SummaryService()
             data1 = service.get_info(self.month_and_year)
             print(f"aca esta {data1}")    
-            return render_template("pagina.html", data1=data1)
+            return render_template("index.html", data1=data1)
         
         # actualiza el resumen al ultimo hecho
-        @self.app.route("/actualizar_resumen", methods=["PUT"])
+        @self.app.route("/resumenActual", methods=["PUT"])
         def update_summary():
-            service = SummaryService()
-            service.update_total()
-
-        #endpoints innecesarios
-        @self.app.route("/obtenerResumen", methods=["GET"])
-        def get_summary():
             try:
                 service = SummaryService()
-                answerJSON = service.get_summarys_answer(DateSetterCurrentMonth(None), self.month_and_year)
-                print("El total del answerJSON de la API es: " + str(answerJSON["total"]))
-                return jsonify(answerJSON), 200 
-            except Exception as p:
-                answerJSON =  {"message": f"Hubo un error, intentalo mas tarde: {p}"}
-                return jsonify(answerJSON), 500
+                service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))  
+                summary = service.find_or_create(self.month_and_year)
+                return jsonify(summary.get_info()), 200
+            except Exception as e:
+                logging.error(f"Error al actualizar el resumen: {e}")
+                return jsonify({"message": f"Error al actualizar: {e}"}), 500
 
-        @self.app.route("/diferenciaResumenes", methods=["GET"])
-        def diferencia_resumenes():
-            print("Se le pegó al endpoint diferenciaResumenes")
-            return self.dif_summaries(DateSetterLastMonth(None))
-
-        @self.app.route("/diferenciaResumenesHoy", methods=["GET"])
-        def diferencia_resumenes_hoy():
-            print("Se le pegó al endpoint diferenciaResumenesHoy")
-            return self.dif_summaries(DateSetterLastMonthToday(None))
-    
-
-    def dif_summaries(self, date_setter):
-        try: 
-            service = SummaryService()
-            answerJSON =  service.dif_summaries(date_setter, self.month_and_year)
-            return jsonify(answerJSON), 200
-        except Exception as e: 
-            answerJSON = {"message": "Hubo un error, intentalo mas tarde:" +  str(e)}
-            return jsonify(answerJSON), 500               
+        # actualiza el resumen de este mismo dia pero de un mes atras 
+        @self.app.route("/resumenDeUnMesAtras", methods=["PUT"])
+        def update_total_last_months_total_today():
+            try:
+                service = SummaryService()
+                service.update_by_date_setter(self.month_and_year, DateSetterLastMonthToday(None))  
+                return jsonify({"message": "Resumen de un mes atras actualizado correctamente."}), 200
+            except Exception as e:
+                logging.error(f"Error al actualizar el resumen: {e}")
+                return jsonify({"message": f"Error al actualizar: {e}"}), 500
+            
+        # actualiza el resumen del total obtenido en todo el mes anterior 
+        @self.app.route("/resumenDelMesPasado", methods=["PUT"])
+        def update_total_last_months_total():
+            try:
+                service = SummaryService()
+                service.update_by_date_setter(self.month_and_year, DateSetterLastMonth(None)) 
+                return jsonify({"message": "Resumen del mes pasado actualizado correctamente."}), 200
+            except Exception as e:
+                logging.error(f"Error al actualizar el resumen: {e}")
+                return jsonify({"message": f"Error al actualizar: {e}"}), 500
+        
 
     def run(self):
         port = int(os.environ.get("PORT", 10000))

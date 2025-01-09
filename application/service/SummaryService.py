@@ -2,6 +2,8 @@ from application.persistence.SummaryDAO import SummaryDAO
 import logging
 from application.automation.Summary import Summary
 from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
+from application.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth 
+from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday  
 
 class SummaryService:
     
@@ -21,11 +23,12 @@ class SummaryService:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
     
-    # actualiza la instancia summary con el ultimo resumen hecho    
-    def update_total(self, month_and_year):
+    #actualizar el summary segun la fecha requerida
+    def update_by_date_setter(self, month_and_year, date_setter):
         summary = self.find_or_create(month_and_year)
-        summary.get_total_number(DateSetterCurrentMonth(None))
+        summary.get_total_number(date_setter)
         self.dao.update_summary(summary)
+
 
     def dif_summaries(self, date_setter, month_and_year):
         try:
@@ -33,12 +36,12 @@ class SummaryService:
             field = date_setter.get_field() # obtengo el field que tengo que buscar, depende de que date setter me pasen. 
             last_month = self.get(field, month_and_year) # obtengo el contenido
             if last_month > 0 and  (not date_setter.is_necesary_calculate()): # si ya se calculo, que no lo haga de vuelta. Solo que haga la cuenta. 
-                return summary.calculate_dif(last_month, summary.get_total())    
+                return summary.calculate_dif(last_month, summary.get_total(),date_setter)    
             #caso contrario, tiene que calcularlo
             last_month = summary.get_total_number(date_setter)
             self.update_summary(summary)
             print(f"Aca esta el total del mes anterior: {last_month}. El tipo es {type(last_month)}")
-            return summary.calculate_dif(last_month, summary.get_total())
+            return summary.calculate_dif(last_month, summary.get_total(), date_setter)
         except Exception as e:
             logging.error(f"Error al obtener el resumen: {e}")
             raise

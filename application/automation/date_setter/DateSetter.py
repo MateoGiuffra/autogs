@@ -44,7 +44,7 @@ class DateSetter(ABC):
         pass 
 
     @abstractmethod
-    def set_summary_total(self, summary, amount):
+    def update_info(self, summary, amount):
         pass
 
     @abstractmethod 
@@ -54,6 +54,9 @@ class DateSetter(ABC):
     @abstractmethod
     def is_necesary_calculate(self):
         pass   
+    
+    def set_message(self, summary, json):
+        pass
 
     def set_driver(self, driver):
         self.driver = driver 

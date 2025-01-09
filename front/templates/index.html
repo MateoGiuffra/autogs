@@ -1,42 +1,57 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width">
-    <link rel="stylesheet" href="/static/css/style.css">
-    <meta name="description" content="Aplicación para obtener resúmenes y compararlos.">
-    <title>Resumenes</title>
-   
-</head>
-<body>
-    <div class="container">
-        <h1>Resúmenes</h1>
-        <div class="buttons">
-            <button id="btn-obtener-resumen">Obtener Resumen</button>  
-            <button id="btn-copy-number" style="display: none;" aria-label="Copiar al portapapeles">
-                <img src="/static/assets/copy.png" alt="Copiar" class="icon">
-            </button>
-            <h1>Datos del Endpoint 1</h1>
-            <p>{{ data1['message'] }}</p>
-        </div>
-        <div id="summary-container" style="display: none;">
-            <p id="summary-number" class="highlighted-number"></p>
-            <p id="summary-text"></p>
-        </div>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <!-- <link rel="stylesheet" href="/static/css/style.css"> -->
+        <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
+        <title>Resumenes</title>
+        <script src="/static/js/script.js"></script>
         
-        <h2>Diferencia entre Resúmenes</h2>
-        <div class="other-buttons">
-            <button id="btn-diferencia-resumenes" disabled>Mensual</button>
-            <button id="btn-diferencia-hoy" disabled>De Hoy</button>
-        </div>
-
-        <div id="loading-indicator" style="display: none;">
-            <div class="spinner"></div>
-        </div>
-        <div id="response-container">
-            <p id="response-message">Aquí aparecerán los resultados.</p>
-        </div>
-    </div>
-    <script src="/static/js/scripts.js"></script>
-</body>
+    </head>
+    <body>
+        <h1>Resumenes</h1>
+        <article> 
+            <h1>
+                Actualizar Resumen
+                <button id='actualizar'>Actualizar</button>
+                <div id="spinner" style="display: none;"></div>
+            </h1>
+        </article>
+        <main>
+            <article id="total-hoy">
+                <h2>Total de Hoy</h2> 
+                <p> 
+                    <h3 id="total">{{data1['total']}}</h3>
+                    <div>
+                        Ult. vez actualizado: <span id="last-report-date">{{data1['last_report_date']}}</span>
+                    </div>
+                    <div>
+                        Diferencia de la ultima actualizacion: <span id="dif">{{data1['dif']}}</span>
+                    </div>
+                </p>
+            </article>
+            <article> 
+                <h2>Recaudacion Total del Mes Pasado</h2>
+                <strong>{{data1['lm']}}</strong>
+                <p>{{data1['message_last_months_total']}}</p>
+            </article>
+            <article> 
+                <h2>Recaudacion de Hacia un Mes Atras </h2>
+                <strong>{{data1['lmt']}}</strong>
+                <p>{{data1['message_last_months_total_today']}}</p>
+            </article>
+        </main>
+        <footer>
+            Copyright &copy 2025 Resumen Financiero
+        </footer>
+        <script src="/static/js/script.js"></script>
+    </body>
 </html>
+
+
+<!-- "total": self.total, 
+"dif": self.total - self.last_total, 
+"lm": self.get_last_months_total,
+"lmt": self.get_last_months_total,
+"last_report_date": self.last_report_date -->
