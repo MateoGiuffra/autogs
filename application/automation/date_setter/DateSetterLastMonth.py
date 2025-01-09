@@ -2,7 +2,8 @@ from .DateSetter import DateSetter
 import datetime
 from dateutil import relativedelta 
 import pytz
-
+from decouple import config 
+TIMEZONE = config("TIMEZONE", default = 'America/Argentina/Buenos_Aires')
 class DateSetterLastMonth(DateSetter):
 
     def __init__(self, driver):
@@ -15,13 +16,13 @@ class DateSetterLastMonth(DateSetter):
         return last_day.strftime("%d/%m/%Y") 
 
     def get_today(self):
-        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        tz_buenos_aires = pytz.timezone(TIMEZONE)
         now = datetime.datetime.now(tz_buenos_aires)
         today = now.astimezone(tz_buenos_aires).date()
         return today + relativedelta.relativedelta(months = -1)
     
     def next_month_of_today(self, today):
-        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        tz_buenos_aires = pytz.timezone(TIMEZONE)
         now = datetime.datetime.now(tz_buenos_aires)
         return now.astimezone(tz_buenos_aires).date()
     

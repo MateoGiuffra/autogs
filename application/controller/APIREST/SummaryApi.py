@@ -9,14 +9,10 @@ from decouple import config
 from datetime import datetime
 import logging 
 import os 
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.jobstores.base import ConflictingIdError
-from pytz import timezone
-import requests
 from logging.handlers import RotatingFileHandler
+from application.service.SchedulerService import SchedulerService
 
 load_dotenv()  # para cargar el .env en local
-
 
 
 class SummaryApi:
@@ -26,36 +22,9 @@ class SummaryApi:
         self.initialize_logging()
         self.setup_routes()
         self.month_and_year = f"{datetime.now().month}-{datetime.now().year}"
-        self.scheduler = BackgroundScheduler(timezone=timezone("America/Argentina/Buenos_Aires"))
-        self.setup_scheduler()
-
-    def setup_scheduler(self):
-        try:
-            if not self.scheduler.get_job("update_summary_job"):
-                self.scheduler.add_job(
-                    self.call_update_endpoint,
-                    "cron",
-                    hour=16,
-                    minute=45,
-                    id="update_summary_job",
-                    replace_existing=True
-                )
-            self.scheduler.start()
-            print("Scheduler iniciado con horario de Argentina (UTC-3).")
-        except Exception as e:
-            logging.error(f"Error al iniciar el Scheduler: {e}")
-
-    def call_update_endpoint(self):
-        try:
-            response = requests.put("http://127.0.0.1:10000/resumenDeUnMesAtras")
-            if response.status_code == 200:
-                print("Resumen actualizado exitosamente.")
-            else:
-                print(f"Error al actualizar resumen: {response.status_code}, {response.text}")
-        except requests.ConnectionError as e:
-            logging.error(f"Error de conexión: {e}")
-        except Exception as e:
-            logging.error(f"Error general al llamar al endpoint: {e}")
+        self.scheduler = SchedulerService()
+        self.scheduler.scheduler_jobs()
+        self.scheduler.start()
 
     def initialize_logging(self):
         handler = RotatingFileHandler('summary_api.log', maxBytes=5000000, backupCount=3)

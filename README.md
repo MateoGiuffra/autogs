@@ -97,6 +97,8 @@ autogs/
    DB_USER=usuario
    DB_PASSWORD=contraseña
    DB_KEY=key de firebase (tiene que estar en una sola linea)
+   API_BASE_URL=escribi el principio de tu url entre comillas dobles sin el ultimo '/' 
+   TIMEZONE=declaras la zona horaria de tu preferencia, por defecto esta la de BsAs 
    ```
 
 ## Cómo Ejecutar el Proyecto

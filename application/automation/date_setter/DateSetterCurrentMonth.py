@@ -2,14 +2,16 @@ from .DateSetter import DateSetter
 import datetime
 from dateutil import relativedelta 
 import pytz 
+from decouple import config
 
+TIMEZONE = config("TIMEZONE", default = 'America/Argentina/Buenos_Aires')
 class DateSetterCurrentMonth(DateSetter):
 
     def __init__(self, driver):
         super().__init__(driver)
 
     def get_today(self):
-        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        tz_buenos_aires = pytz.timezone(TIMEZONE)
         now = datetime.datetime.now(tz_buenos_aires)
         return now.astimezone(tz_buenos_aires).date()
     
