@@ -20,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (response.ok) {
                     const data = await response.json();
+                    const resta = data.total - data.last_total;
                     document.getElementById('total').textContent = data.total;
                     document.getElementById('last-report-date').textContent = data.last_report_date;
-                    document.getElementById('dif').textContent = data.dif;
-
+                    document.getElementById('dif').textContent = resta;
                     alert('Resumen actualizado con éxito.');
                 } else {
                     console.error('Error:', response.status, response.statusText);
