@@ -4,7 +4,9 @@ from abs_path import dir
 import logging
 from datetime import datetime
 from application.pandas.excel_reader import reader_get_total
+import pytz 
 
+TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
 class Summary:
 
     BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
@@ -19,7 +21,7 @@ class Summary:
         self.last_months_total = 0
         self.last_months_total_today = 0
         self.month_and_year = month_and_year
-        self.last_report_date = datetime.now()
+        self.last_report_date = datetime.now(pytz.timezone(TIMEZONE))
         self.message_last_months_total = {"message": "Todavia no se calculo ninguna diferencia", "last_month_total": "Primero obtener diferencia"}
         self.message_last_months_total_today = {"message": "Todavia no se calculo ninguna diferencia", "last_month_total": "Primero obtener diferencia"}
          
