@@ -4,6 +4,7 @@ from application.pandas.ExcelReader import ExcelReader
 from abs_path import dir
 import logging
 from datetime import datetime
+
 class Summary:
 
     BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"

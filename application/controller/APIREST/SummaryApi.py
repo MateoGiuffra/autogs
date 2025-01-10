@@ -40,9 +40,28 @@ class SummaryApi:
         @self.app.route("/", methods=["GET"])
         def index():
             service = SummaryService()
-            data1 = service.get_info(self.month_and_year)
+            data1 = service.get_json(self.month_and_year)
             print(f"aca esta {data1}")    
             return render_template("index.html", data1=data1)
+        
+        @self.app.route("/getSummary", methods=["GET"])
+        def getSummary():
+            service = SummaryService()
+            service.find_or_create(self.month_and_year)
+            return jsonify("Encontrado con exito"), 200 
+        
+        @self.app.route("/getInfo", methods=["GET"])
+        def getInfo():
+            service = SummaryService()
+            service.get_info(self.month_and_year)
+            return jsonify("Encontrado con exito"), 200 
+        
+        @self.app.route("/getJSON", methods=["GET"])
+        def getJson():
+            service = SummaryService()
+            return jsonify(service.get_json(self.month_and_year)), 200 
+        
+        
         
         # actualiza el resumen al ultimo hecho
         @self.app.route("/resumenActual", methods=["PUT"])
@@ -50,12 +69,12 @@ class SummaryApi:
             try:
                 service = SummaryService()
                 service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))  
-                summary = service.find_or_create(self.month_and_year)
-                return jsonify(summary.get_info()), 200
+                # summary = service.find_or_create(self.month_and_year)
+                return jsonify(service.get_json(self.month_and_year)), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
-
+        
         # actualiza el resumen de este mismo dia pero de un mes atras 
         @self.app.route("/resumenDeUnMesAtras", methods=["PUT"])
         def update_total_last_months_total_today():

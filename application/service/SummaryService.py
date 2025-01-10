@@ -46,6 +46,10 @@ class SummaryService:
             logging.error(f"Error al obtener el resumen: {e}")
             raise
     
+    # obtener del DAO SOLO el JSON de un Summary 
+    def get_json(self, month_and_year):
+        return self.dao.get_json(month_and_year)
+    
     #get total info
     def get_info(self, month_and_year):
         summary_saved = self.dao.find_or_create(month_and_year)

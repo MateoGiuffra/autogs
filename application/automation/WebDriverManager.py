@@ -1,13 +1,17 @@
 from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
-from application.automation.FileDownloader import FileDownloader
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service   
-from application.automation.Report import Report 
-from application.automation.Login import Login 
-from selenium.webdriver.common.by import By 
 from selenium import webdriver
+from selenium.webdriver.common.by import By 
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+# functions para la automatizacion
+from application.automation.report_module import navigate_to_report
+from application.automation.login_module import login
+from application.automation.file_downloader_module import download_file
+#registrar errores
 import logging 
-
 
 class WebDriverManager:
 
@@ -18,8 +22,6 @@ class WebDriverManager:
         self.expected_filename_pattern = expected_filename_pattern
         self.file_downloaded_path = None
         self.date_setter =  DateSetterCurrentMonth(self.driver)
-        self.report_page = Report(self.driver)
-        self.file_downloader = FileDownloader(self.driver, self.output_path, self.expected_filename_pattern)
         self.login_page = None 
     
     def configure_driver(self):
@@ -56,11 +58,9 @@ class WebDriverManager:
             self.driver.delete_all_cookies()
             self.driver.get(url)
             
-            self.login(user, password)
-            self.navigate_to_report()        
+            login(user, password, self.driver)
+            navigate_to_report(self.driver)       
             self.set_dates()
-            #click on resume
-            self.driver.find_element(By.ID, "ctl15_chkResumen").click()
             self.download_file()
         except Exception as e:
             print(f"Hubo un error al iniciar: {e}")
@@ -69,19 +69,32 @@ class WebDriverManager:
         finally:
             self.quit_driver()
 
-    def login(self, user, password):
-        if self.login_page is None: 
-            self.login_page = Login(self.driver, user, password)
-        self.login_page.login()
 
     def navigate_to_report(self):
-        self.report_page.navigate_to_report()
+        reportes = WebDriverWait(self.driver, 20).until(
+            EC.visibility_of_element_located((By.XPATH, "/html/body/form/div[3]/div[2]/table/tbody/tr/td/div[2]/table/tbody/tr/td[6]/nobr"))
+        )
+
+        # Usar ActionChains para mover el mouse sobre "Reportes" y abrir el menú desplegable
+        actions = ActionChains(self.driver)
+        actions.move_to_element(reportes).perform()
+
+        # Esperar que el menú desplegable sea visible
+        cobranzas_xpath = "//div[contains(text(),'Cobranzas')]"  # Ajusta el XPath según el texto o estructura
+        cobranzas = WebDriverWait(self.driver, 30).until(
+            EC.visibility_of_element_located((By.XPATH, cobranzas_xpath))
+        )
+        
+        #me dirijo a la pagina del reporte
+        cobranzas.click()
 
     def set_dates(self):
        self.date_setter.set()
 
     def download_file(self):
-        self.file_downloaded_path = self.file_downloader.download()
+        #click en resumen
+        self.driver.find_element(By.ID, "ctl15_chkResumen").click()
+        self.file_downloaded_path = download_file(self.driver, self.output_path, self.expected_filename_pattern, timeout=30)
 
     def get_downloaded_file_path(self):
         return self.file_downloaded_path

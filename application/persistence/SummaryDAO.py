@@ -86,6 +86,14 @@ class SummaryDAO:
             info.set_last_month(float(data.get("last_months_total", 0)))
             info.set_last_month_today(float(data.get("last_months_total_today", 0)))
         return info
+
+    # devuelve el JSON asi nomas, no crea una instancia
+    def get_json(self, month_and_year):
+        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict()
+        return {"message": "Ocurrio un error al recuperar la info"}
     
 
 
