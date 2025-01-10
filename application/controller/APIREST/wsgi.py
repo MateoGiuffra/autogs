@@ -1,10 +1,10 @@
 from application.controller.APIREST.SummaryApi import SummaryApi
 import psutil
 import os 
-
 # Instanciar la aplicación
 app_routes = SummaryApi()
 app = app_routes.app  
+
 
 # Monitoreo de memoria
 process = psutil.Process(os.getpid())
