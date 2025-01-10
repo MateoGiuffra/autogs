@@ -1,7 +1,8 @@
 import logging
 from application.configuration.firebase_config import db
 from application.automation.Summary import Summary
-
+from application.automation.Info import Info 
+from datetime import datetime
 class SummaryDAO:
 
     def __init__(self):
@@ -24,7 +25,10 @@ class SummaryDAO:
             summary_recuperado.set_total(float(data.get("total", 0)))  
             summary_recuperado.set_last_total(float(data.get("last_total", 0)))  
             summary_recuperado.set_last_months_total(float(data.get("last_months_total", 0)))  
-            summary_recuperado.set_last_months_total_today(float(data.get("last_months_total_today", 0)))  
+            summary_recuperado.set_last_months_total_today(float(data.get("last_months_total_today", 0)))
+            summary_recuperado.set_last_report_date(data.get("last_report_date", datetime.now()))
+            summary_recuperado.set_message_last_months_total(data.get("message_last_months_total", {"message": "JSON vacio"}))
+            summary_recuperado.set_message_last_months_total_today(data.get("message_last_months_total_today", {"message": "JSON vacio"}))
             return summary_recuperado
         else:
             summary_creado = Summary(month_and_year)
@@ -37,7 +41,10 @@ class SummaryDAO:
                 "total": summary.get_total(),
                 "last_total": summary.get_last_total(),
                 "last_months_total": summary.get_last_months_total(),
-                "last_months_total_today": summary.get_last_months_total_today()
+                "last_months_total_today": summary.get_last_months_total_today(), 
+                "last_report_date" : summary.get_last_report_date(),
+                "message_last_months_total" : summary.get_message_last_months_total(),
+                "message_last_months_total_today" : summary.get_message_last_months_total_today()
             })
         except Exception as e:
             print(f"Error al actualizar el documento: {e}")
@@ -52,7 +59,10 @@ class SummaryDAO:
             "total": summary.get_total(),  
             "last_total": summary.get_last_total(),  
             "last_months_total": summary.get_last_months_total(),  
-            "last_months_total_today": summary.get_last_months_total_today()  
+            "last_months_total_today": summary.get_last_months_total_today(), 
+            "last_report_date" : summary.get_last_report_date(),
+            "message_last_months_total" : summary.get_message_last_months_total(),
+            "message_last_months_total_today" : summary.get_message_last_months_total_today()
         }
         doc_ref.set(new_summary)
         return summary
@@ -65,6 +75,17 @@ class SummaryDAO:
             data = doc.to_dict()
             return data.get(field, f"No existe el campo: {field}")
         return None 
+
+    #no forma parte de este dao porque devuelve otro objeto
+    def get_info(self,month_and_year):
+        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
+        doc = doc_ref.get()
+        info = Info()
+        if doc.exists:
+            data = doc.to_dict()
+            info.set_last_month(float(data.get("last_months_total", 0)))
+            info.set_last_month_today(float(data.get("last_months_total_today", 0)))
+        return info
     
 
 

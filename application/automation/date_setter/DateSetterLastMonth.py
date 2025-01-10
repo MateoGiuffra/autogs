@@ -2,7 +2,8 @@ from .DateSetter import DateSetter
 import datetime
 from dateutil import relativedelta 
 import pytz
-
+from decouple import config 
+TIMEZONE = config("TIMEZONE", default = 'America/Argentina/Buenos_Aires')
 class DateSetterLastMonth(DateSetter):
 
     def __init__(self, driver):
@@ -15,23 +16,28 @@ class DateSetterLastMonth(DateSetter):
         return last_day.strftime("%d/%m/%Y") 
 
     def get_today(self):
-        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        tz_buenos_aires = pytz.timezone(TIMEZONE)
         now = datetime.datetime.now(tz_buenos_aires)
         today = now.astimezone(tz_buenos_aires).date()
         return today + relativedelta.relativedelta(months = -1)
     
     def next_month_of_today(self, today):
-        tz_buenos_aires = pytz.timezone('America/Argentina/Buenos_Aires')
+        tz_buenos_aires = pytz.timezone(TIMEZONE)
         now = datetime.datetime.now(tz_buenos_aires)
         return now.astimezone(tz_buenos_aires).date()
     
 
-    def set_summary_total(self, summary, amount):
+    def update_info(self, summary, amount):
         print(f"Se settio el set_last_months_total a {amount}")
         summary.set_last_months_total(amount)
+        summary.set_message_last_months_total(summary.calculate_dif(amount, summary.get_total()))
 
     def get_field(self):
         return "last_months_total"
     
     def is_necesary_calculate(self):
         return False  
+    
+    
+    def set_message(self, summary, json):
+        summary.set_message_last_months_total(json)
