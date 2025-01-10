@@ -61,8 +61,9 @@ ENV LC_ALL=en_US.UTF-8
 
 
 # Exponer el puerto para que esté disponible externamente
-EXPOSE 10000
+# EXPOSE 10000
+EXPOSE 5000
 
 
 # Comando para ejecutar la aplicación con Gunicorn y un timeout adecuado para Selenium
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:10000", "--timeout", "600", "application.controller.APIREST.wsgi:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "--timeout", "600", "application.controller.APIREST.wsgi:app"]
