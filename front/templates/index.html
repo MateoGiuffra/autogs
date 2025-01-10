@@ -5,8 +5,8 @@
         <meta name="viewport" content="width=device-width">
         <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
         <title>Resumenes</title>
-        <!-- <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
         <link rel="stylesheet" href="/static/css/mystyle.css">
+        <!-- <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
         <script src="/static/js/script.js"></script>
         <!-- fuente de google -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,11 +18,12 @@
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
     </head>
     <body>
-        <h1>Resumenes</h1>
+        <h1 class="resumenes-title">Resumenes</h1>
         <article class="article-id"> 
             <h1>
-                Actualizar Resumen
-                <button class='actualizar-button-style' id='actualizar'>Actualizar</button>
+                <button class='actualizar-button-style' id='actualizar'>
+                    <div class='texto-btn'>Actualizar Resumen</div>
+                </button>
                 <div id="spinner" style="display: none;"></div>
             </h1>
         </article>
@@ -56,10 +57,3 @@
         <script src="/static/js/script.js"></script>
     </body>
 </html>
-
-
-<!-- "total": self.total, 
-"dif": self.total - self.last_total, 
-"lm": self.get_last_months_total,
-"lmt": self.get_last_months_total,
-"last_report_date": self.last_report_date -->
