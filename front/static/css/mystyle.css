@@ -1,135 +1,151 @@
 /* Estilos generales */
 body {
-    font-family: 'DM Serif Text', serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4; /* Fondo suave */
-    color: #333; /* Texto en gris oscuro */
-  }
-  
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    text-align: center;
-    color: #2c3e50; /* Azul oscuro elegante */
-    margin: 20px 0;
-  }
-  
-  h2, h3 {
-    font-family: 'DM Serif Text', serif;
-    color: #34495e; /* Gris azulado */
-  }
-  
-  /* Botones */
-  .actualizar-button-style {
-    background-color: #1abc9c; /* Verde menta */
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .actualizar-button-style:hover {
-    background-color: #16a085; /* Verde más oscuro para hover */
-  }
-  
-  #spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid #3498db; /* Azul elegante */
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 10px auto;
-  }
-  
-  /* Animación del spinner */
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  /* Artículos */
-  article {
-    background-color: #ffffff; /* Fondo blanco para claridad */
-    padding: 15px;
-    margin: 10px auto;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombras sutiles */
-    max-width: 800px;
-    border-left: 5px solid #1abc9c; /* Línea decorativa en el lado izquierdo */
-  }
-  
-  /* Estilos responsivos */
-  @media (max-width: 768px) {
-    body {
+  font-family: 'DM Serif Text', serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4; /* Fondo suave */
+  color: #333; /* Texto en gris oscuro */
+  display: flex;
+  flex-direction: column; /* Organizar en columnas */
+  min-height: 100vh; /* Asegura que el cuerpo ocupe al menos el 100% de la altura de la ventana */
+}
+
+h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  text-align: center;
+  color: #2c3e50; /* Azul oscuro elegante */
+  margin: 20px 0;
+}
+
+h2, h3 {
+  font-family: 'DM Serif Text', serif;
+  color: #34495e; /* Gris azulado */
+}
+
+/* Botones */
+.actualizar-button-style {
+  background-color: #1abc9c; /* Verde menta */
+  border: none;
+  padding: 10px 20px; /* Espaciado interno */
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 100% !important; /* Tamaño del texto */
+  font-family: 'Bebas Neue', sans-serif;
+  color: white;
+}
+
+.actualizar-button-style:hover {
+  background-color: #16a085; /* Verde más oscuro para hover */
+}
+
+#spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3498db; /* Azul elegante */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 10px auto;
+}
+
+/* Animación del spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Artículos */
+article {
+  background-color: #ffffff; /* Fondo blanco para claridad */
+  padding: 15px;
+  margin: 10px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombras sutiles */
+  max-width: 800px;
+  border-left: 5px solid #1abc9c; /* Línea decorativa en el lado izquierdo */
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  body {
       font-size: 14px;
-    }
-  
-    h1 {
+  }
+
+  h1 {
       font-size: 24px;
-    }
-  
-    h2 {
+  }
+
+  h2 {
       font-size: 18px;
-    }
-  
-    h3 {
+  }
+
+  h3 {
       font-size: 16px;
-    }
-  
-    .actualizar-button-style {
+  }
+
+  .actualizar-button-style {
       font-size: 14px;
       padding: 8px 15px;
-    }
-  
-    article {
+  }
+
+  article {
       padding: 10px;
       margin: 5px;
-    }
   }
-  
-  @media (min-width: 769px) {
-    body {
+}
+
+@media (min-width: 769px) {
+  body {
       font-size: 16px;
-    }
-  
-    h1 {
+  }
+
+  h1 {
       font-size: 32px;
-    }
-  
-    h2 {
+  }
+
+  h2 {
       font-size: 24px;
-    }
-  
-    h3 {
+  }
+
+  h3 {
       font-size: 18px;
-    }
-  
-    .actualizar-button-style {
+  }
+
+  .actualizar-button-style {
       font-size: 16px;
       padding: 10px 20px;
-    }
-  
-    article {
+  }
+
+  article {
       padding: 20px;
       margin: 15px auto;
       max-width: 900px;
-    }
   }
-  
-  /* Footer */
-  footer {
-    text-align: center;
-    padding: 10px 0;
-    background-color: #2c3e50; /* Azul oscuro */
-    color: white;
-    margin-top: 20px;
-    font-size: 14px;
-  }
-  
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #2c3e50; /* Azul oscuro */
+  color: white;
+  margin-top: 20px;
+  font-size: 14px;
+  /* Asegura que el footer se quede al final */
+  flex-shrink: 0; /* Evita que el footer se encoja */
+}
+
+.resumenes-title {
+  font-size: 270%;
+}
+
+/* Contenedor principal para ocupar el espacio disponible */
+main {
+  flex: 1; /* Ocupa el espacio restante entre el header y el footer */
+  padding: 20px;
+}
+
 
 /* 
 .container-general{
