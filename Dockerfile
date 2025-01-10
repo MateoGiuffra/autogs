@@ -66,4 +66,5 @@ EXPOSE 5000
 
 
 # Comando para ejecutar la aplicación con Gunicorn y un timeout adecuado para Selenium
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "--timeout", "600", "application.controller.APIREST.wsgi:app"]
+CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:$PORT", "--timeout", "600", "application.controller.APIREST.wsgi:app"]
+
