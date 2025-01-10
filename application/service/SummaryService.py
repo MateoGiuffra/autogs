@@ -27,7 +27,7 @@ class SummaryService:
     def update_by_date_setter(self, month_and_year, date_setter):
         summary = self.find_or_create(month_and_year)
         summary.get_total_number(date_setter)
-        self.dao.update_summary(summary)
+        return self.dao.update_summary(summary)
 
 
     def dif_summaries(self, date_setter, month_and_year):

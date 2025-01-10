@@ -1,9 +1,9 @@
 from decouple import config  
 from application.automation.WebDriverManager import WebDriverManager
-from application.pandas.ExcelReader import ExcelReader
 from abs_path import dir
 import logging
 from datetime import datetime
+from application.pandas.excel_reader import reader_get_total
 
 class Summary:
 
@@ -39,8 +39,7 @@ class Summary:
         
         path = self.web_driver_manager.get_downloaded_file_path()
         
-        excel_reader = ExcelReader(path)
-        total =  float(excel_reader.get_total())
+        total = float(reader_get_total(path))
         
         date_setter.update_info(self, total)
 

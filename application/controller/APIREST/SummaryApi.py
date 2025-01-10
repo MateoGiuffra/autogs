@@ -68,9 +68,7 @@ class SummaryApi:
         def update_summary():
             try:
                 service = SummaryService()
-                service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))  
-                # summary = service.find_or_create(self.month_and_year)
-                return jsonify(service.get_json(self.month_and_year)), 200
+                return jsonify(service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
