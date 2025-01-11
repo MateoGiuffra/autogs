@@ -71,6 +71,7 @@ class SummaryApi:
                 return jsonify(service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
+                print(f"Error al actualizar el resumen: {e}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
         
         # actualiza el resumen de este mismo dia pero de un mes atras 

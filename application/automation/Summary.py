@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from application.pandas.excel_reader import reader_get_total
 import pytz 
+from zoneinfo import ZoneInfo 
 
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
 class Summary:
@@ -14,17 +15,22 @@ class Summary:
     DB_PASSWORD = config("DB_PASSWORD")
     
     def __init__(self, month_and_year):
-        self.web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
-        self.initialize_logging()
-        self.total = 0
-        self.last_total  = 0
-        self.last_months_total = 0
-        self.last_months_total_today = 0
-        self.month_and_year = month_and_year
-        self.last_report_date = datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
-        print(f"Aca esta la fecha de mierda {self.last_report_date} ")
-        self.message_last_months_total = "Todavia no se calculo ninguna diferencia"
-        self.message_last_months_total_today = "Todavia no se calculo ninguna diferencia"
+        try: 
+            self.web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
+            self.initialize_logging()
+            self.total = 0
+            self.last_total  = 0
+            self.last_months_total = 0
+            self.last_months_total_today = 0
+            self.month_and_year = month_and_year
+            self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
+            print(f"Aca esta la fecha de mierda {self.last_report_date} ")
+            self.message_last_months_total = "Todavia no se calculo ninguna diferencia"
+            self.message_last_months_total_today = "Todavia no se calculo ninguna diferencia"
+        except Exception as e: 
+            message = f"Error al inicializar instancia de Summary: {e}"
+            print(message)
+            raise Exception(message) 
          
     
     def initialize_logging(self):
