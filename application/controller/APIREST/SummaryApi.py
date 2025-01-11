@@ -11,6 +11,7 @@ import logging
 import os 
 from logging.handlers import RotatingFileHandler
 from application.service.SchedulerService import SchedulerService
+from  application.persistence.SummaryDAO import SummaryDAO
 
 load_dotenv()  # para cargar el .env en local
 
@@ -43,25 +44,6 @@ class SummaryApi:
             data1 = service.get_json(self.month_and_year)
             print(f"aca esta {data1}")    
             return render_template("index.html", data1=data1)
-        
-        @self.app.route("/getSummary", methods=["GET"])
-        def getSummary():
-            service = SummaryService()
-            service.find_or_create(self.month_and_year)
-            return jsonify("Encontrado con exito"), 200 
-        
-        @self.app.route("/getInfo", methods=["GET"])
-        def getInfo():
-            service = SummaryService()
-            service.to_summary_dict(self.month_and_year)
-            return jsonify("Encontrado con exito"), 200 
-        
-        @self.app.route("/getJSON", methods=["GET"])
-        def getJson():
-            service = SummaryService()
-            return jsonify(service.get_json(self.month_and_year)), 200 
-        
-        
         
         # actualiza el resumen al ultimo hecho
         @self.app.route("/resumenActual", methods=["PUT"])

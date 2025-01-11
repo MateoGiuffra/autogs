@@ -15,6 +15,8 @@ class SummaryDAO:
             filename='summary_dao.log',
             filemode='a'
         )
+    
+    
     def find_or_create(self, month_and_year):
         doc_ref = self.db.collection("summary").document(f"{month_and_year}")
         doc = doc_ref.get()
@@ -26,6 +28,7 @@ class SummaryDAO:
     def update_summary(self, summary):
         try:
             doc_ref = self.db.collection("summary").document(f"{summary.get_month_and_year()}")
+            
             doc_ref.update({
                 "total": summary.get_total(),
                 "last_total": summary.get_last_total(),
@@ -45,8 +48,6 @@ class SummaryDAO:
         new_summary = summary.to_summary_dict()
         doc_ref.set(new_summary)
         return summary
-
-
 
     # devuelve el objeto como un JSON evitando crear una instancia de Summary
     def get_json(self, month_and_year):

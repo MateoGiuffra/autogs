@@ -35,12 +35,12 @@ class WebDriverManager:
             options.add_argument("--disable-extensions")
             options.add_argument("--disable-gpu")
             options.add_argument("--window-size=1920,1080")
+            options.add_argument("--disable-software-rasterizer")  # Desactiva el renderizador de software
             options.add_experimental_option("prefs", {
                 "download.default_directory": self.output_path,
                 "safebrowsing.enabled": True
             })
             self.driver = webdriver.Chrome(service=service, options=options)
-            self.driver.set_page_load_timeout(30)
         except Exception as e: 
             logging.error(f"Error al configuar el WebDriver: {e}")
             raise e 

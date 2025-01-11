@@ -29,7 +29,6 @@ class SummaryService:
         summary.get_total_number(date_setter)
         return self.dao.update_summary(summary)
 
-
     def dif_summaries(self, date_setter, month_and_year):
         try:
             summary = self.find_or_create(month_and_year)
