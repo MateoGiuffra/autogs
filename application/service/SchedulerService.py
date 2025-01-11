@@ -27,8 +27,9 @@ class SchedulerService():
                 self.scheduler.add_job(
                     func=self.call_resumenDeUnMesAtras, 
                     trigger='cron',
-                    hour= 11, 
-                    minute=57,
+                    minute='*/3',
+                    # hour= 11, 
+                    # minute=57,
                     id="update_summary_daily",
                     replace_existing=True 
                 )
@@ -51,7 +52,9 @@ class SchedulerService():
     @staticmethod
     def call_resumenDeUnMesAtras():
         try: 
-            request = requests.put(f"{API_BASE_URL}/resumenDeUnMesAtras")
+            url = f"https://vivacious-playfulness-production.up.railway.app/resumenDeUnMesAtras"
+            print(f"Aca esta la url que le esta pegando {url}")
+            request = requests.put(url)
             if request.status_code == 200: 
                 print("Resumen de este mismo dia pero un mes atras actualizado")
             else: 

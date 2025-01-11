@@ -21,7 +21,7 @@ class Summary:
         self.last_months_total = 0
         self.last_months_total_today = 0
         self.month_and_year = month_and_year
-        self.last_report_date = datetime.now(pytz.timezone(TIMEZONE))
+        self.last_report_date = datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
         print(f"Aca esta la fecha de mierda {self.last_report_date} ")
         self.message_last_months_total = "Todavia no se calculo ninguna diferencia"
         self.message_last_months_total_today = "Todavia no se calculo ninguna diferencia"
@@ -88,7 +88,7 @@ class Summary:
         instance.last_total = float(data.get("last_total", 0))
         instance.last_months_total = float(data.get("last_months_total", 0))
         instance.last_months_total_today = float(data.get("last_months_total_today", 0))
-        instance.last_report_date = data.get("last_report_date", datetime.now())
+        instance.last_report_date = data.get("last_report_date", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S"))
         instance.message_last_months_total = data.get("message_last_months_total", {"message": "JSON vacio"})
         instance.message_last_months_total_today = data.get("message_last_months_total_today", {"message": "JSON vacio"})
         return instance
@@ -125,12 +125,11 @@ class Summary:
     def set_message_last_months_total_today(self, json):
         self.message_last_months_total_today = json 
     
-    def set_last_report_date(self, date): #el parametro tiene que ser datetime.datetime object
+    def set_last_report_date(self, date): 
         if (isinstance(date, str)):
              self.last_report_date = date 
              return 
-        formatted_date = date.strftime("%d-%m-%Y %H:%M:%S")
-        self.last_report_date = formatted_date 
+        self.last_report_date = date.strftime("%d-%m-%Y %H:%M:%S")
     
     def set_total(self, total):
         self.total = total 
