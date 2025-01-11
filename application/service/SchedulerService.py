@@ -52,7 +52,7 @@ class SchedulerService():
     @staticmethod
     def call_resumenDeUnMesAtras():
         try: 
-            url = f"https://vivacious-playfulness-production.up.railway.app/resumenDeUnMesAtras"
+            url = f"{API_BASE_URL}/resumenDeUnMesAtras"
             print(f"Aca esta la url que le esta pegando {url}")
             request = requests.put(url)
             if request.status_code == 200: 
