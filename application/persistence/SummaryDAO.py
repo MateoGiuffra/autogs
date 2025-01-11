@@ -19,19 +19,9 @@ class SummaryDAO:
         doc_ref = self.db.collection("summary").document(f"{month_and_year}")
         doc = doc_ref.get()
         if doc.exists:
-            data = doc.to_dict()
-            summary_recuperado = Summary(month_and_year)
-            summary_recuperado.set_total(float(data.get("total", 0)))  
-            summary_recuperado.set_last_total(float(data.get("last_total", 0)))  
-            summary_recuperado.set_last_months_total(float(data.get("last_months_total", 0)))  
-            summary_recuperado.set_last_months_total_today(float(data.get("last_months_total_today", 0)))
-            summary_recuperado.set_last_report_date(data.get("last_report_date", datetime.now()))
-            summary_recuperado.set_message_last_months_total(data.get("message_last_months_total", {"message": "JSON vacio"}))
-            summary_recuperado.set_message_last_months_total_today(data.get("message_last_months_total_today", {"message": "JSON vacio"}))
-            return summary_recuperado
+            return Summary.from_dict(month_and_year, doc.to_dict())
         else:
-            summary_creado = Summary(month_and_year)
-            return self.save(summary_creado)
+            return self.save(Summary(month_and_year))
 
     def update_summary(self, summary):
         try:
@@ -50,24 +40,23 @@ class SummaryDAO:
             print(f"Error al actualizar el documento: {e}")
             raise 
 
-    def update(self, month_and_year, field, value):
-        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
-        doc_ref.update({field: value})
-
     def save(self, summary):
         doc_ref = self.db.collection("summary").document(f"{summary.get_month_and_year()}")
-        new_summary = {
-            "total": summary.get_total(),  
-            "last_total": summary.get_last_total(),  
-            "last_months_total": summary.get_last_months_total(),  
-            "last_months_total_today": summary.get_last_months_total_today(), 
-            "last_report_date" : summary.get_last_report_date(),
-            "message_last_months_total" : summary.get_message_last_months_total(),
-            "message_last_months_total_today" : summary.get_message_last_months_total_today()
-        }
+        new_summary = summary.to_summary_dict()
         doc_ref.set(new_summary)
         return summary
 
+
+
+    # devuelve el objeto como un JSON evitando crear una instancia de Summary
+    def get_json(self, month_and_year):
+        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
+        doc = doc_ref.get()
+        if doc.exists:
+            return doc.to_dict()
+        return {"message": "Ocurrio un error al recuperar la info"}
+    
+    # devuelven o updatean casos en especifico
     
     def get(self, month_and_year, field):
         doc_ref = self.db.collection("summary").document(f"{month_and_year}")
@@ -76,14 +65,10 @@ class SummaryDAO:
             data = doc.to_dict()
             return data.get(field, f"No existe el campo: {field}")
         return None 
-
-    # devuelve el JSON asi nomas, no crea una instancia
-    def get_json(self, month_and_year):
+    
+    def update(self, month_and_year, field, value):
         doc_ref = self.db.collection("summary").document(f"{month_and_year}")
-        doc = doc_ref.get()
-        if doc.exists:
-            return doc.to_dict()
-        return {"message": "Ocurrio un error al recuperar la info"}
+        doc_ref.update({field: value})
     
 
 

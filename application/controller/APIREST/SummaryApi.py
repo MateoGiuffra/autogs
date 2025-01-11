@@ -53,7 +53,7 @@ class SummaryApi:
         @self.app.route("/getInfo", methods=["GET"])
         def getInfo():
             service = SummaryService()
-            service.get_info(self.month_and_year)
+            service.to_summary_dict(self.month_and_year)
             return jsonify("Encontrado con exito"), 200 
         
         @self.app.route("/getJSON", methods=["GET"])

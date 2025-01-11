@@ -22,8 +22,9 @@ class Summary:
         self.last_months_total_today = 0
         self.month_and_year = month_and_year
         self.last_report_date = datetime.now(pytz.timezone(TIMEZONE))
-        self.message_last_months_total = {"message": "Todavia no se calculo ninguna diferencia", "last_month_total": "Primero obtener diferencia"}
-        self.message_last_months_total_today = {"message": "Todavia no se calculo ninguna diferencia", "last_month_total": "Primero obtener diferencia"}
+        print(f"Aca esta la fecha de mierda {self.last_report_date} ")
+        self.message_last_months_total = "Todavia no se calculo ninguna diferencia"
+        self.message_last_months_total_today = "Todavia no se calculo ninguna diferencia"
          
     
     def initialize_logging(self):
@@ -52,56 +53,45 @@ class Summary:
 
     def calculate_dif(self, last_month_total, current_total):
         try:
-            self.validate_current_total(current_total)
             dif = current_total - last_month_total
-            porcent = self.get_percent(dif, last_month_total)
-            return self.percent_message(dif, porcent, last_month_total)
+            percent = (dif/last_month_total) * 100
+            return self.percent_message(dif, percent, last_month_total)
         except ZeroDivisionError:
             print("Error: No se puede dividir por 0")
-            return {
-                     "message": f"El monto total del mes pasado fue de $ 0.",
-                     "last_month_total": 0
-                   }
+            return f"El monto total del mes pasado fue de $ 0."
         except Exception as e:
             print(f"Error inesperado en calculate_dif: {e}") 
             raise 
-
-    def validate_current_total(self, current_total):
-        if current_total == 0:  
-            raise Exception("Antes de comparar resumenes primero se tiene que obtener resumen del dia")
         
-    def get_percent(self, dif,last_month_total ):
-        return (dif/last_month_total)*100
-    
-    def percent_message(self, dif, porcent, last_month_total):
+    def percent_message(self, dif, percent, last_month_total):
         more_or_less = "mas" if dif > 0 else "menos" 
         return ( f"El mes pasado se llegó a los: {last_month_total} de pesos. " 
-                 f"Por lo tanto, actualmente hay un {abs(porcent):.2f}% {more_or_less} que el mes anterior. Habiendo una diferencia de {abs(dif):.2f} de pesos entre ambos." ) 
+                 f"Por lo tanto, actualmente hay un {abs(percent):.2f}% {more_or_less} que el mes anterior. Habiendo una diferencia de {abs(dif):.2f} de pesos entre ambos." ) 
         
-
-    # Devuelve un JSON con la respuesta dependiendo si ya fue calculado anteriormente el total por primera vez. 
-    def answer_of_current_total(self):
-        if self.last_total != 0:
-            return {
-                "message": f"El total actual es: {self.total} de pesos. Se obtuvieron {self.total - self.last_total} pesos más que la anterior vez.",
-                "total": f"{self.total}"
-            }
-        return {
-                "message": f"El total actual es: {self.total} de pesos.",
-                "total": f"{self.total}"
-            }
     
     # devuelve un JSON con la informacion del objeto
-    def get_info(self):
+    def to_summary_dict(self):
         return {
-            "total": self.total, 
-            "dif": self.total - self.last_total, 
-            "lm": self.last_months_total,
-            "lmt": self.last_months_total_today,
-            "last_report_date": self.last_report_date,
-            "message_last_months_total": self.message_last_months_total, 
-            "message_last_months_total_today":  self.message_last_months_total_today
+            "total": self.total,  
+            "last_total": self.last_total,  
+            "last_months_total": self.last_months_total,   
+            "last_months_total_today": self.last_months_total_today, 
+            "last_report_date" : self.last_report_date, 
+            "message_last_months_total" : self.message_last_months_total, 
+            "message_last_months_total_today" : self.message_last_months_total_today
         }
+    
+    @classmethod
+    def from_dict(cls, month_and_year, data):
+        instance = cls(month_and_year)
+        instance.total = float(data.get("total", 0))
+        instance.last_total = float(data.get("last_total", 0))
+        instance.last_months_total = float(data.get("last_months_total", 0))
+        instance.last_months_total_today = float(data.get("last_months_total_today", 0))
+        instance.last_report_date = data.get("last_report_date", datetime.now())
+        instance.message_last_months_total = data.get("message_last_months_total", {"message": "JSON vacio"})
+        instance.message_last_months_total_today = data.get("message_last_months_total_today", {"message": "JSON vacio"})
+        return instance
     
    # getters  
     def get_message_last_months_total(self):

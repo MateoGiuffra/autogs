@@ -53,4 +53,4 @@ ENV LC_ALL=en_US.UTF-8
 EXPOSE 5000
 
 # Comando para ejecutar la aplicación con Gunicorn usando $PORT
-CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} --timeout 1200 application.controller.APIREST.wsgi:app"]
+CMD ["sh", "-c", "gunicorn -w 4 -b 0.0.0.0:${PORT:-5000} --timeout 1200  --access-logfile '-' --error-logfile '-' application.controller.APIREST.wsgi:app"]
