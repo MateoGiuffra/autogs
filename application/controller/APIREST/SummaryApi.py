@@ -83,6 +83,7 @@ class SummaryApi:
                 return jsonify({"message": "Resumen de un mes atras actualizado correctamente."}), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
+                print(f"Error al actualizar el resumen: {e}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
             
         # actualiza el resumen del total obtenido en todo el mes anterior 
@@ -94,6 +95,7 @@ class SummaryApi:
                 return jsonify({"message": "Resumen del mes pasado actualizado correctamente."}), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
+                print(f"Error al actualizar el resumen: {e}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
         
 

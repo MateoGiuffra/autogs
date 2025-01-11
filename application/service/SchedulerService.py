@@ -1,86 +1,96 @@
-import logging 
-import requests 
+import logging
+import requests
 from apscheduler.schedulers.background import BackgroundScheduler
-from pytz import timezone 
-from decouple import config  
+from pytz import timezone
+from decouple import config
 
+# Configuración de constantes
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
-API_BASE_URL= config("API_BASE_URL", default = "http://127.0.0.1:10000")
+API_BASE_URL = config("API_BASE_URL", default="http://127.0.0.1:10000")
 
-class SchedulerService():
-    
+class SchedulerService:
     def __init__(self):
         self.scheduler = BackgroundScheduler(timezone=timezone(TIMEZONE))
-        
+
     def start(self):
+        """
+        Inicia el scheduler y maneja posibles errores de inicio.
+        """
         try:
             self.scheduler.start()
-            print(f"Scheduler iniciado con exite. Horario de {TIMEZONE}")
-        except Exception as e: 
+            logging.info(f"Scheduler iniciado con éxito. Horario de {TIMEZONE}")
+        except Exception as e:
             logging.error(f"Error al iniciar el Scheduler: {e}")
     
-    
     def scheduler_jobs(self):
-        try: 
+        """
+        Configura los trabajos del scheduler, evitando duplicados.
+        """
+        try:
             if not self.scheduler.get_job("update_summary_daily"):
-                # Job para el endpoint resumentDeUnMesAtras - Todos los dias a las 00:05
                 self.scheduler.add_job(
-                    func=self.call_resumenDeUnMesAtras, 
+                    func=self.call_resumenDeUnMesAtras,
                     trigger='cron',
-                    minute='*/3',
-                    # hour= 11, 
-                    # minute=57,
+                    minute='*/3',  # Cada 3 minutos
                     id="update_summary_daily",
-                    replace_existing=True 
+                    replace_existing=True
                 )
-            # Job para el endpoint resumenDelMesPasado  - Primer día de cada mes a las 00:05
+                logging.info("Job 'update_summary_daily' configurado correctamente.")
+            
             if not self.scheduler.get_job("update_summary_monthly"):
                 self.scheduler.add_job(
-                    self.call_resumenDelMesPasado,
-                    "cron",
+                    func=self.call_resumenDelMesPasado,
+                    trigger='cron',
                     day=1,
                     hour=0,
                     minute=5,
                     id="update_summary_monthly",
                     replace_existing=True
                 )
-        except Exception as e: 
-            print(f"Ocurrio un error al configurar el scheduler: {e}")
-            logging.error(f"Error al programar trabajos en el Scheduler: {e}")
-            
-        
+                logging.info("Job 'update_summary_monthly' configurado correctamente.")
+        except Exception as e:
+            logging.error(f"Error al configurar los trabajos del Scheduler: {e}")
+
     @staticmethod
     def call_resumenDeUnMesAtras():
-        try: 
-            url = f"{API_BASE_URL}/resumenDeUnMesAtras"
-            print(f"Aca esta la url que le esta pegando {url}")
-            request = requests.put(url)
-            if request.status_code == 200: 
-                print("Resumen de este mismo dia pero un mes atras actualizado")
-            else: 
-                print("No se recibio un 200 al hacer el put de resumenDeUnMesAtras")
-        except request.ConnectionError as e: 
-            message = f"Error de conexion al ejecutar resumenDeUnMesAtras {e}"
-            print(message)
-            logging.error(message)
-        except Exception as e: 
-            message = f"Error general al ejecutar resumenDeUnMesAtras {e}"
-            print(message)
-            logging.error(message)
-            
+        """
+        Llama al endpoint `/resumenDeUnMesAtras` y maneja los posibles errores.
+        """
+        url = f"{API_BASE_URL}/resumenDeUnMesAtras"
+        logging.info(f"Llamando al endpoint: {url}")
+        try:
+            response = requests.put(url, timeout=10)  # Timeout para evitar bloqueos
+            if response.status_code == 200:
+                logging.info("Resumen de este mismo día pero un mes atrás actualizado correctamente.")
+            else:
+                logging.warning(f"Error en el endpoint '/resumenDeUnMesAtras'. "
+                                f"Status code: {response.status_code}, "
+                                f"Response: {response.text}")
+        except requests.ConnectionError as e:
+            logging.error(f"Error de conexión al ejecutar '/resumenDeUnMesAtras': {e}")
+        except requests.Timeout as e:
+            logging.error(f"Timeout al ejecutar '/resumenDeUnMesAtras': {e}")
+        except Exception as e:
+            logging.error(f"Error general al ejecutar '/resumenDeUnMesAtras': {e}")
+
     @staticmethod
     def call_resumenDelMesPasado():
-        try: 
-            request = requests.put(f"{API_BASE_URL}/resumenDelMesPasado")
-            if request.status_code == 200: 
-                print("Resumen de este mismo dia pero un mes atras actualizado")
-            else: 
-                print("No se recibio un 200 al hacer el put de resumenDelMesPasado")
-        except request.ConnectionError as e: 
-            message = f"Error de conexion al ejecutar resumenDelMesPasado {e}"
-            print(message)
-            logging.error(message)
-        except Exception as e: 
-            message = f"Error general al ejecutar resumenDelMesPasado {e}"
-            print(message)
-            logging.error(message)
+        """
+        Llama al endpoint `/resumenDelMesPasado` y maneja los posibles errores.
+        """
+        url = f"{API_BASE_URL}/resumenDelMesPasado"
+        logging.info(f"Llamando al endpoint: {url}")
+        try:
+            response = requests.put(url, timeout=10)  # Timeout para evitar bloqueos
+            if response.status_code == 200:
+                logging.info("Resumen del mes pasado actualizado correctamente.")
+            else:
+                logging.warning(f"Error en el endpoint '/resumenDelMesPasado'. "
+                                f"Status code: {response.status_code}, "
+                                f"Response: {response.text}")
+        except requests.ConnectionError as e:
+            logging.error(f"Error de conexión al ejecutar '/resumenDelMesPasado': {e}")
+        except requests.Timeout as e:
+            logging.error(f"Timeout al ejecutar '/resumenDelMesPasado': {e}")
+        except Exception as e:
+            logging.error(f"Error general al ejecutar '/resumenDelMesPasado': {e}")
