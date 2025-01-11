@@ -59,7 +59,7 @@ class SchedulerService:
         url = f"{API_BASE_URL}/resumenDeUnMesAtras"
         logging.info(f"Llamando al endpoint: {url}")
         try:
-            response = requests.put(url, timeout=10)  # Timeout para evitar bloqueos
+            response = requests.put(url)  # Timeout para evitar bloqueos
             if response.status_code == 200:
                 logging.info("Resumen de este mismo día pero un mes atrás actualizado correctamente.")
             else:
@@ -81,7 +81,7 @@ class SchedulerService:
         url = f"{API_BASE_URL}/resumenDelMesPasado"
         logging.info(f"Llamando al endpoint: {url}")
         try:
-            response = requests.put(url, timeout=10)  # Timeout para evitar bloqueos
+            response = requests.put(url)  # Timeout para evitar bloqueos
             if response.status_code == 200:
                 logging.info("Resumen del mes pasado actualizado correctamente.")
             else:
