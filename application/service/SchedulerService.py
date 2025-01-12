@@ -5,6 +5,7 @@ from pytz import timezone
 from decouple import config
 from datetime import datetime
 from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
+from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonth
 from application.service.SummaryService import SummaryService
 # Configuración de constantes
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
@@ -17,9 +18,6 @@ class SchedulerService:
         
 
     def start(self):
-        """
-        Inicia el scheduler y maneja posibles errores de inicio.
-        """
         try:
             self.scheduler.start()
             logging.info(f"Scheduler iniciado con éxito. Horario de {TIMEZONE}")
@@ -32,7 +30,8 @@ class SchedulerService:
                 self.scheduler.add_job(
                     func=self.call_resumenDeUnMesAtras,
                     trigger='cron',
-                    minute='*/3',  # Cada 3 minutos
+                    hour=0,
+                    minute=5, 
                     id="update_summary_daily",
                     replace_existing=True
                 )
@@ -54,38 +53,30 @@ class SchedulerService:
 
     @staticmethod
     def call_resumenDeUnMesAtras():
-        url = f"{API_BASE_URL}/resumenDeUnMesAtras"
-        logging.info(f"Llamando al endpoint: {url}")
+        logging.info(f"Dentro de call_resumenDeUnMesAtras")
         try:
             service = SummaryService()
             service.update_by_date_setter(SchedulerService.MONTH_AND_YEAR, DateSetterLastMonthToday(None)) 
             logging.info("resumen de un mes atras bien hecho") 
             print("resumen de un mes atras bien hecho") 
         except requests.ConnectionError as e:
-            logging.error(f"Error de conexión al ejecutar '/resumenDeUnMesAtras': {e}")
+            logging.error(f"Error de conexión al ejecutar call_resumenDeUnMesAtras: {e}")
         except requests.Timeout as e:
-            logging.error(f"Timeout al ejecutar '/resumenDeUnMesAtras': {e}")
+            logging.error(f"Timeout al ejecutar call_resumenDeUnMesAtras: {e}")
         except Exception as e:
-            logging.error(f"Error general al ejecutar '/resumenDeUnMesAtras': {e}")
+            logging.error(f"Error general al ejecutar call_resumenDeUnMesAtras: {e}")
 
     @staticmethod
     def call_resumenDelMesPasado():
-        """
-        Llama al endpoint `/resumenDelMesPasado` y maneja los posibles errores.
-        """
-        url = f"{API_BASE_URL}/resumenDelMesPasado"
-        logging.info(f"Llamando al endpoint: {url}")
+        logging.info(f"Dentro de call_resumenDelMesPasado")
         try:
-            response = requests.put(url)  # Timeout para evitar bloqueos
-            if response.status_code == 200:
-                logging.info("Resumen del mes pasado actualizado correctamente.")
-            else:
-                logging.warning(f"Error en el endpoint '/resumenDelMesPasado'. "
-                                f"Status code: {response.status_code}, "
-                                f"Response: {response.text}")
+            service = SummaryService()
+            service.update_by_date_setter(SchedulerService.MONTH_AND_YEAR, DateSetterLastMonth(None)) 
+            logging.info("resumen de un mes atras bien hecho") 
+            print("resumen de un mes atras bien hecho") 
         except requests.ConnectionError as e:
-            logging.error(f"Error de conexión al ejecutar '/resumenDelMesPasado': {e}")
+            logging.error(f"Error de conexión al ejecutar call_resumenDelMesPasado: {e}")
         except requests.Timeout as e:
-            logging.error(f"Timeout al ejecutar '/resumenDelMesPasado': {e}")
+            logging.error(f"Timeout al ejecutar call_resumenDelMesPasado: {e}")
         except Exception as e:
-            logging.error(f"Error general al ejecutar '/resumenDelMesPasado': {e}")
+            logging.error(f"Error general al ejecutar call_resumenDelMesPasado: {e}")

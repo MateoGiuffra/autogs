@@ -6,8 +6,10 @@ WORKDIR /app
 # Copiar el archivo de dependencias primero para aprovechar la cache en las instalaciones
 COPY requirements.txt ./requirements.txt
 
-# Instalar las dependencias necesarias
+# Configurar la zona horaria de Argentina
+ENV TZ=America/Argentina/Buenos_Aires
 RUN apt-get update && apt-get install -y \
+   tzdata \
    locales-all \
    libgl1-mesa-glx \
    libglib2.0-0 \
