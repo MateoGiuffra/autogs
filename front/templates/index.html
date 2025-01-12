@@ -7,7 +7,7 @@
         <title>Resumenes</title>
         <link rel="stylesheet" href="/static/css/mystyle.css">
         <!-- <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
-         <!-- script para darle comportamiento el boton Actualizar Resumen -->
+        <!-- script para darle comportamiento al botón Actualizar Resumen -->
         <script src="/static/js/script.js"></script>
         <!-- fuente de google -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,10 +18,10 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
         <!-- carga de los valores total y last_total para el script -->
-        <div id="totalValue" data-total="{{data1['total']}} "style="display:none;"></div>
+        <div id="totalValue" data-total="{{data1['total']}}" style="display:none;"></div>
         <div id="lastTotalValue" data-last-total="{{data1['last_total']}}" style="display:none;"></div>
-             <!-- el script encargado de la resta es -->
-             <script src="/static/js/script-resta.js"></script>
+        <!-- el script encargado de la resta -->
+        <script src="/static/js/script-resta.js"></script>
     </head>
     <body>
         <h1 class="resumenes-title">Resumenes</h1>
@@ -47,28 +47,21 @@
                 </p>
             </article>
             <article> 
-                <h2>Recaudacion Total del Mes Pasado</h2>
-                <strong>{{data1['last_months_total']}}</strong>
+                <h2>Recaudación Total del Mes Pasado</h2>
+                <strong id="last_months_total">{{data1['last_months_total']}}</strong>
                 <p>{{data1['message_last_months_total']}}</p>
             </article>
             <article> 
-                <h2>Recaudacion de Hacia un Mes Atras </h2>
-                <strong>{{data1['last_months_total_today']}}</strong>
+                <h2>Recaudación de Hacia un Mes Atrás</h2>
+                <strong id="last_months_total_today">{{data1['last_months_total_today']}}</strong>
                 <p>{{data1['message_last_months_total_today']}}</p>
             </article>
         </main>
         <footer>
             Copyright &copy 2025 Resumen Financiero
         </footer>
+        <!-- Cargar el script para formatear números -->
+        <script src="/static/js/format-numbers.js"></script>
     </body>
 </html>
 
-<!-- {
-    "last_months_total": 164539019.43,
-    "last_months_total_today": 25495246.78,
-    "last_report_date": "10-01-2025 18:19:01",
-    "last_total": 37929589.72,
-    "message_last_months_total": "El mes pasado se llegó a los: 164539019.43 de pesos. Por lo tanto, actualmente hay un 85.24% menos que el mes anterior. Habiendo una diferencia de 140260954.99 de pesos entre ambos.",
-    "message_last_months_total_today": "El mes pasado se llegó a los: 25495246.78 de pesos. Por lo tanto, actualmente hay un 48.77% mas que el mes anterior. Habiendo una diferencia de 12434342.94 de pesos entre ambos.",
-    "total": 38392825.72
-} -->
