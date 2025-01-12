@@ -3,27 +3,24 @@ import time
 from selenium.webdriver.common.by import By
 
 def clear_output_directory(output_path):
-    """Elimina todos los archivos en el directorio de salida."""
-    for entry in os.scandir(output_path):
-        if entry.is_file():
-            os.remove(entry.path)
-            print(f"Archivo eliminado: {entry.name}")
-    
+    # Directamente obtener el único archivo y eliminarlo
+    file = next(os.scandir(output_path), None)
+    if file and file.is_file():
+        os.remove(file.path)
+        print(f"Archivo eliminado: {file.name}")
+    else:
+        print("No se encontró ningún archivo para eliminar.")
+
 def get_latest_file(output_path):
-    """Obtiene el archivo más reciente basado en la fecha de modificación."""
-    files = [
-        entry for entry in os.scandir(output_path)
-        if entry.name.startswith("rptCobranzas") and entry.name.endswith(".xls")
-    ]
-    if not files:
+    # Obtener directamente el único archivo en el directorio
+    file = next(os.scandir(output_path), None)
+    if not file or not file.is_file() or not file.name.startswith("rptCobranzas") or not file.name.endswith(".xls"):
         raise FileNotFoundError("No se encontró ningún archivo con el patrón esperado.")
     
-    latest_file = max(files, key=lambda f: f.stat().st_mtime)
-    print(f"Archivo más reciente encontrado: {latest_file.name}")
-    return latest_file.path
+    print(f"Archivo encontrado: {file.name}")
+    return file.path
 
 def download_file(driver, output_path, expected_filename_pattern, timeout=30):
-    """Función principal para descargar el archivo."""
     start_time = time.time()
 
     # Vaciar la carpeta de salida
@@ -43,7 +40,6 @@ def download_file(driver, output_path, expected_filename_pattern, timeout=30):
 
     raise TimeoutError("No se encontró el archivo esperado dentro del tiempo especificado.")
 
-    
 
     
     

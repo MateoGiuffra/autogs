@@ -1,8 +1,8 @@
-from application.controller.APIREST.SummaryApi import SummaryApi
+from application.controller.rest.SummaryREST import SummaryREST
 import psutil
 import os 
 # Instanciar la aplicación
-app_routes = SummaryApi()
+app_routes = SummaryREST()
 app = app_routes.app  
 
 

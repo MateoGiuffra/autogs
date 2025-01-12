@@ -1,11 +1,11 @@
+from application.models.automation.WebDriverManager import WebDriverManager
+from application.models.pandas.excel_reader import reader_get_total
+from datetime import datetime
+from zoneinfo import ZoneInfo 
 from decouple import config  
-from application.automation.WebDriverManager import WebDriverManager
 from abs_path import dir
 import logging
-from datetime import datetime
-from application.pandas.excel_reader import reader_get_total
 import pytz 
-from zoneinfo import ZoneInfo 
 
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
 class Summary:

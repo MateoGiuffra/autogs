@@ -1,91 +1,76 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const btnObtenerResumen = document.getElementById("btn-obtener-resumen");
-    const btnDiferenciaResumenes = document.getElementById("btn-diferencia-resumenes");
-    const btnDiferenciaHoy = document.getElementById("btn-diferencia-hoy");
-    const responseMessage = document.getElementById("response-message");
-    const loadingIndicator = document.getElementById("loading-indicator");
-    const summaryContainer = document.getElementById("summary-container");
-    const summaryNumber = document.getElementById("summary-number");
-    const summaryText = document.getElementById("summary-text");
-    const btnCopyNumber = document.getElementById("btn-copy-number");
-    
-    btnDiferenciaResumenes.disabled = true;
-    btnDiferenciaHoy.disabled = true;
-    
-    const showLoadingIndicator = () => {
-        loadingIndicator.style.display = "block";
-    };
+document.addEventListener("DOMContentLoaded", function () {
+    // Función para restar números
+    const totalElement = document.getElementById("totalValue");
+    const lastTotalElement = document.getElementById("lastTotalValue");
 
-    const hideLoadingIndicator = () => {
-        loadingIndicator.style.display = "none";
-    };
+    if (totalElement && lastTotalElement) {
+        const total = parseFloat(totalElement.getAttribute("data-total"));
+        const lastTotal = parseFloat(lastTotalElement.getAttribute("data-last-total"));
+        const dif = total - lastTotal;
 
-    const resetResponseMessage = () => {
-        responseMessage.textContent = "";
-    };
+        document.getElementById("dif").textContent = dif;
+    }
 
-    const copyToClipboard = (text, buttonElement) => {
-        navigator.clipboard.writeText(text)
-            .then(() => {
-                const originalText = buttonElement.textContent;
-                buttonElement.textContent = "¡Copiado!";
-                setTimeout(() => {
-                    buttonElement.textContent = originalText;
-                }, 2000); // Cambia el texto por 2 segundos
-            })
-            .catch(() => {
-                console.error("Error al copiar el texto.");
-            });
-    };
 
-    btnCopyNumber.addEventListener("click", () => {
-        copyToClipboard(summaryNumber.textContent, btnCopyNumber);
-    });
+    // Función para el botón de actualizar resumen
+    const actualizarButton = document.getElementById("actualizar");
+    if (actualizarButton) {
+        const spinner = document.getElementById("spinner");
 
-    const handleRequest = (endpoint, onSuccess) => {
-        showLoadingIndicator(); 
-        resetResponseMessage(); 
+        actualizarButton.addEventListener("click", async () => {
+            if (!spinner) {
+                console.error("No se encontró el elemento spinner");
+                return;
+            }
 
-        fetch(endpoint)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Error en la solicitud a ${endpoint}`);
+            try {
+                spinner.style.display = "inline-block";
+
+                const response = await fetch("/resumenActual", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    const resta = data.total - data.last_total;
+
+                    totalElement.textContent = data.total;
+                    document.getElementById('last-report-date').textContent = data.last_report_date;
+                    document.getElementById("dif").textContent = resta;
+
+                    alert("Resumen actualizado con éxito.");
+                } else {
+                    console.error("Error:", response.status, response.statusText);
+                    alert("Error al actualizar el resumen.");
                 }
-                return response.json();
-            })
-            .then(data => {
-                onSuccess(data);        
-            })
-            .catch(error => {
-                responseMessage.textContent = `Ocurrio algo inesperado: ${error.message}`;
-            })
-            .finally(() => {
-                hideLoadingIndicator();
-            });
-    };
-
-    btnObtenerResumen.addEventListener("click", () => {
-        handleRequest("/obtenerResumen", data => {
-            summaryNumber.textContent = `${data.total}`;      
-            summaryText.textContent = `${data.message}`;      // Actualiza el número y el mensaje
-
-            summaryContainer.style.display = "block";         // Muestra el contenedor con el resumen y el botón de copiar
-            btnCopyNumber.style.display = "inline-block";     
-
-            btnDiferenciaResumenes.disabled = false;          // Habilita los botones "Mensual" y "De Hoy"
-            btnDiferenciaHoy.disabled = false;                
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+                alert("Ocurrió un error al intentar actualizar.");
+            } finally {
+                spinner.style.display = "none";
+            }
         });
-    });
+    } else {
+        console.error("El botón con id 'actualizar' no existe.");
+    }
 
-    btnDiferenciaResumenes.addEventListener("click", () => {
-        handleRequest("/diferenciaResumenes", data => {
-            responseMessage.textContent = data.error ? data.error : data.message;
-        });
-    });
+    // Función para formatear números
+    function formatNumber(input) {
+        const numberString = input.toString();
+        const [integerPart, decimalPart] = numberString.split(".");
+        const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        return `${formattedInteger},${decimalPart || "00"}`;
+    }
 
-    btnDiferenciaHoy.addEventListener("click", () => {
-        handleRequest("/diferenciaResumenesHoy", data => {
-            responseMessage.textContent = data.error ? data.error : data.message;
-        });
+    // Formatear números en elementos con la clase "formatted-number"
+    const elements = document.getElementsByClassName("formatted-number");
+
+    Array.from(elements).forEach(element => {
+        const value = parseFloat(element.textContent); // Convertir texto a número
+        if (!isNaN(value)) {
+            element.textContent = formatNumber(value); // Formatear y actualizar
+        }
     });
 });
+

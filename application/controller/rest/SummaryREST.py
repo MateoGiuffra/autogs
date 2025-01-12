@@ -1,23 +1,20 @@
+from application.models.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
+from application.models.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
+from application.models.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth
 from application.service.SummaryService import SummaryService
-from application.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth
-from application.automation.Summary import Summary
-from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
-from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
 from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv 
 from decouple import config  
 from datetime import datetime
-from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
-import logging 
-import os 
 from logging.handlers import RotatingFileHandler
 from application.service.SchedulerService import SchedulerService
 from  application.persistence.SummaryDAO import SummaryDAO
+import logging 
+import os 
 
 load_dotenv()  # para cargar el .env en local
 
-
-class SummaryApi:
+class SummaryREST:
 
     def __init__(self):
         self.app = Flask(__name__, template_folder="../../../front/templates", static_folder="../../../front/static")
@@ -81,14 +78,13 @@ class SummaryApi:
                 print(f"Error al actualizar el resumen: {e}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
         
-
     def run(self):
         port = int(os.environ.get("PORT", 5000))  # Railway Port = 5000 | Render Port = 10000
         self.app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
 
 if __name__ == "__main__":
     try:
-        app_routes = SummaryApi()
+        app_routes = SummaryREST()
         app_routes.run()
     except Exception as e:
         print(f"Error al iniciar la aplicación: {e}")

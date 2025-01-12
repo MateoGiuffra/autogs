@@ -22,6 +22,9 @@ h2, h3 {
   color: #34495e; /* Gris azulado */
 }
 
+h3{
+  color: #333;
+}
 /* Botones */
 .actualizar-button-style {
   background-color: #1abc9c; /* Verde menta */

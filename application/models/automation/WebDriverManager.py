@@ -1,40 +1,37 @@
-from application.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
+from application.models.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
+from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service   
-from selenium import webdriver
 from selenium.webdriver.common.by import By 
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
 # functions para la automatizacion
-from application.automation.report_module import navigate_to_report
-from application.automation.login_module import login
-from application.automation.file_downloader_module import download_file
+from application.models.automation.report_module import navigate_to_report
+from application.models.automation.login_module import login
+from application.models.automation.file_downloader_module import download_file 
 #registrar errores
 import logging 
 
 class WebDriverManager:
 
     def __init__(self, output_path, expected_filename_pattern ):
+        self.expected_filename_pattern = expected_filename_pattern
         self.output_path = output_path
         self.driver = None
         self.configure_driver()
-        self.expected_filename_pattern = expected_filename_pattern
         self.file_downloaded_path = None
         self.date_setter =  DateSetterCurrentMonth(self.driver)
-        self.login_page = None 
     
     def configure_driver(self):
         self.initialize_logging()
         try:
             service = Service(ChromeDriverManager().install())
             options = webdriver.ChromeOptions()
-            options.add_argument("--headless")
+            options.add_argument("--headless") # No abre el navegador
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("--disable-extensions")
-            options.add_argument("--disable-gpu")
-            options.add_argument("--window-size=1920,1080")
+            options.add_argument("--disable-extensions") # Desactiva extensiones que pueda llegar a tener el navegador
+            options.add_argument("--disable-gpu") 
+            options.add_argument("--window-size=1920,1080") # asigna un tamaño para su correcto funcionamiento 
             options.add_argument("--disable-software-rasterizer")  # Desactiva el renderizador de software
             options.add_experimental_option("prefs", {
                 "download.default_directory": self.output_path,

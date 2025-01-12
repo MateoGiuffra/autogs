@@ -1,7 +1,7 @@
-import logging
 from application.configuration.firebase_config import db
-from application.automation.Summary import Summary
-from datetime import datetime
+from application.models.Summary import Summary
+import logging
+
 class SummaryDAO:
 
     def __init__(self):
@@ -15,15 +15,6 @@ class SummaryDAO:
             filename='summary_dao.log',
             filemode='a'
         )
-    
-    
-    def find_or_create(self, month_and_year):
-        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
-        doc = doc_ref.get()
-        if doc.exists:
-            return Summary.from_dict(month_and_year, doc.to_dict())
-        else:
-            return self.save(Summary(month_and_year))
 
     def update_summary(self, summary):
         try:
@@ -45,10 +36,18 @@ class SummaryDAO:
 
     def save(self, summary):
         doc_ref = self.db.collection("summary").document(f"{summary.get_month_and_year()}")
-        new_summary = summary.to_summary_dict()
-        doc_ref.set(new_summary)
+        summary_dict = summary.to_summary_dict()
+        doc_ref.set(summary_dict)
         return summary
 
+    # devuelve el objeto summary con el month_and_year dado
+    def find(self, month_and_year):
+        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
+        doc = doc_ref.get()
+        if doc.exists:
+            return Summary.from_dict(month_and_year, doc.to_dict())
+        return None 
+    
     # devuelve el objeto como un JSON evitando crear una instancia de Summary
     def get_json(self, month_and_year):
         doc_ref = self.db.collection("summary").document(f"{month_and_year}")
@@ -57,19 +56,7 @@ class SummaryDAO:
             return doc.to_dict()
         return {"message": "Ocurrio un error al recuperar la info"}
     
-    # devuelven o updatean casos en especifico
-    
-    def get(self, month_and_year, field):
-        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
-        doc = doc_ref.get()    
-        if doc.exists:
-            data = doc.to_dict()
-            return data.get(field, f"No existe el campo: {field}")
-        return None 
-    
-    def update(self, month_and_year, field, value):
-        doc_ref = self.db.collection("summary").document(f"{month_and_year}")
-        doc_ref.update({field: value})
+
     
 
 

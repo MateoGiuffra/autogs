@@ -6,9 +6,10 @@
         <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
         <title>Resumenes</title>
         <link rel="stylesheet" href="/static/css/mystyle.css">
+        <link rel="icon" type="image/png" sizes="16x16" rel="icon" href="/static/assets/phone-and-cash.png">
         <!-- <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
-        <!-- script para darle comportamiento al botón Actualizar Resumen -->
-        <script src="/static/js/script.js"></script>
+        <!-- scripts como: darle comportamiento al boton Actualizar Resumen, restar numeros y formatear el resultado  -->
+        <script src="/static/js/scripts.js"></script>
         <!-- fuente de google -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,8 +21,6 @@
         <!-- carga de los valores total y last_total para el script -->
         <div id="totalValue" data-total="{{data1['total']}}" style="display:none;"></div>
         <div id="lastTotalValue" data-last-total="{{data1['last_total']}}" style="display:none;"></div>
-        <!-- el script encargado de la resta -->
-        <script src="/static/js/script-resta.js"></script>
     </head>
     <body>
         <h1 class="resumenes-title">Resumenes</h1>
@@ -37,52 +36,36 @@
             <article id="total-hoy">
                 <h2>Total de Hoy</h2> 
                 <p> 
-                    <h3 id="total">{{data1['total']}}</h3>
+                    <h3 id="total" class="formatted-number">{{data1['total']}}</h3>
                     <div>
-                        Ult. vez actualizado: <span id="last-report-date">{{data1['last_report_date']}}</span>
+                        Ult. vez actualizado: <span id='last-report-date'>{{data1['last_report_date']}}</span>
                     </div>
                     <div>
-                        Diferencia de la última actualización: <span id="dif"></span>
+                        Diferencia de la última actualización: <span id="dif" class="formatted-number"></span>
                     </div>
                 </p>
             </article>
             <article> 
                 <h2>Recaudación Total del Mes Pasado</h2>
-                <strong id="last_months_total">{{data1['last_months_total']}}</strong>
-                <p>{{data1['message_last_months_total']}}</p>
+                <strong class="formatted-number">
+                    {{data1['last_months_total']}}
+                </strong>
+                <p>
+                    {{data1['message_last_months_total']}}
+                </p>
             </article>
             <article> 
-                <h2>Recaudación de Hacia un Mes Atrás</h2>
-                <strong id="last_months_total_today">{{data1['last_months_total_today']}}</strong>
-                <p>{{data1['message_last_months_total_today']}}</p>
+                <h2>Recaudación Parcial del Mes Pasado</h2>
+                <strong class="formatted-number">
+                    {{data1['last_months_total_today']}}
+                </strong>
+                <p>
+                    {{data1['message_last_months_total_today']}}
+                </p>
             </article>
         </main>
         <footer>
             Copyright &copy 2025 Resumen Financiero
         </footer>
-        <!-- Script para formatear números -->
-        <script>
-            function formatNumber(input) {
-                const numberString = input.toString();
-                const [integerPart, decimalPart] = numberString.split(".");
-                const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-                return `${formattedInteger},${decimalPart || "00"}`;
-            }
-
-            document.addEventListener("DOMContentLoaded", function() {
-                // Formatear y actualizar los valores en la página
-                const total = parseFloat(document.getElementById('totalValue').getAttribute('data-total'));
-                const lastTotal = parseFloat(document.getElementById('lastTotalValue').getAttribute('data-last-total'));
-
-                // Actualizar elementos con el formato deseado
-                document.getElementById('total').textContent = formatNumber(total);
-                document.getElementById('last_months_total').textContent = formatNumber(parseFloat('{{data1["last_months_total"]}}'));
-                document.getElementById('last_months_total_today').textContent = formatNumber(parseFloat('{{data1["last_months_total_today"]}}'));
-
-                // Calcular la diferencia y formatearla
-                const dif = total - lastTotal;
-                document.getElementById('dif').textContent = formatNumber(dif);
-            });
-        </script>
     </body>
 </html>
