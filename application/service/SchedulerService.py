@@ -3,14 +3,18 @@ import requests
 from apscheduler.schedulers.background import BackgroundScheduler
 from pytz import timezone
 from decouple import config
-
+from datetime import datetime
+from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
+from application.service.SummaryService import SummaryService
 # Configuración de constantes
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
 API_BASE_URL = config("API_BASE_URL", default="http://127.0.0.1:10000")
 
 class SchedulerService:
+    MONTH_AND_YEAR = f"{datetime.now().month}-{datetime.now().year}"
     def __init__(self):
         self.scheduler = BackgroundScheduler(timezone=timezone(TIMEZONE))
+        
 
     def start(self):
         """
@@ -23,9 +27,6 @@ class SchedulerService:
             logging.error(f"Error al iniciar el Scheduler: {e}")
     
     def scheduler_jobs(self):
-        """
-        Configura los trabajos del scheduler, evitando duplicados.
-        """
         try:
             if not self.scheduler.get_job("update_summary_daily"):
                 self.scheduler.add_job(
@@ -53,19 +54,13 @@ class SchedulerService:
 
     @staticmethod
     def call_resumenDeUnMesAtras():
-        """
-        Llama al endpoint `/resumenDeUnMesAtras` y maneja los posibles errores.
-        """
         url = f"{API_BASE_URL}/resumenDeUnMesAtras"
         logging.info(f"Llamando al endpoint: {url}")
         try:
-            response = requests.put(url)  # Timeout para evitar bloqueos
-            if response.status_code == 200:
-                logging.info("Resumen de este mismo día pero un mes atrás actualizado correctamente.")
-            else:
-                logging.warning(f"Error en el endpoint '/resumenDeUnMesAtras'. "
-                                f"Status code: {response.status_code}, "
-                                f"Response: {response.text}")
+            service = SummaryService()
+            service.update_by_date_setter(SchedulerService.MONTH_AND_YEAR, DateSetterLastMonthToday(None)) 
+            logging.info("resumen de un mes atras bien hecho") 
+            print("resumen de un mes atras bien hecho") 
         except requests.ConnectionError as e:
             logging.error(f"Error de conexión al ejecutar '/resumenDeUnMesAtras': {e}")
         except requests.Timeout as e:

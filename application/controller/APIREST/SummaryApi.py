@@ -7,6 +7,7 @@ from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv 
 from decouple import config  
 from datetime import datetime
+from application.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
 import logging 
 import os 
 from logging.handlers import RotatingFileHandler
