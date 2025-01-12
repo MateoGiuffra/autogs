@@ -7,6 +7,7 @@ class DateSetterLastMonthToday(DateSetterLastMonth):
     
     def update_info(self, summary, amount):
         print(f"Se settio el set_last_months_total_today a {amount}")
+        summary.set_total(0)
         summary.set_last_months_total_today(amount)
         summary.set_message_last_months_total_today(summary.calculate_dif(amount, summary.get_total()))
 
