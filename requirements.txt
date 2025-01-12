@@ -81,3 +81,4 @@ xlrd==2.0.1
 pytz==2024.2
 apscheduler==3.10.1
 psutil==5.9.0
+requests==2.32.3

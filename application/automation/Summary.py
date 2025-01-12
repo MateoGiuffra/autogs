@@ -17,7 +17,6 @@ class Summary:
     def __init__(self, month_and_year):
         try: 
             self.web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
-            self.id = 0
             self.initialize_logging()
             self.total = 0
             self.last_total  = 0
