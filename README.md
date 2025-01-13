@@ -7,10 +7,11 @@ Este proyecto es una combinación de automatización de tareas y una API REST qu
 - **Automatización Web**: Navega automáticamente por el sistema externo, ingresa credenciales, descarga reportes y procesa la información.
 - **API REST**: Ofrece endpoints para interactuar con la automatización y obtener resúmenes financieros.
 - **Procesamiento de Datos**: Analiza reportes descargados utilizando Pandas y extrae información relevante.
+- **SchedulerService**: Automatiza procesos recurrentes como generación de reportes y actualización de datos mediante tareas programadas, optimizando tiempo y reduciendo intervención manual.
 - **Frontend Interactivo**: Interfaz web diseñada para interactuar con los endpoints de la API. Está optimizada para dispositivos móviles, 
   permitiendo al usuario acceder fácilmente desde su celular y obtener los resúmenes financieros con facilidad
 
-![Muestra del GIF](./front/static/assets/muestra.gif)
+![Muestra del GIF](./front/static/assets/muestra-version-nueva.gif)
 
 
 ## Estructura del Proyecto
@@ -21,36 +22,38 @@ autogs/
 │   ├── configuration/
 │   │   └── firebase_config.py
 │   ├── controller/
-│   │   ├── APIREST/
-│   │   │   └── SummaryApi.py
-│   ├── automation/
-│   │   ├── date_setter/
-│   │   │   ├── DateSetter.py 
-│   │   │   ├── DateSetterLastMonth.py
-│   │   │   ├── DateSetterLastMonthToday.py
-│   │   │   └── DateSetterCurrentMonth.py
-│   │   ├── FileDownloader.py
-│   │   ├── Login.py
-│   │   ├── Report.py
-│   │   ├── Summary.py
-│   │   └── WebDriverManager.py
-│   ├── pandas/
-│   │   └── ExcelReader.py
+│   │   ├── rest/
+│   │   │   ├── wsgi.py
+│   │   │   └── SummaryREST.py
+│   ├── models/
+|   |   ├── Summary.py
+│   │   ├── automation/
+│   │   │   ├── date_setter/
+│   │   │   │   ├── DateSetter.py 
+│   │   │   │   ├── DateSetterLastMonth.py
+│   │   │   │   ├── DateSetterLastMonthToday.py
+│   │   │   │   └── DateSetterCurrentMonth.py
+│   │   │   ├── file_downloader_module.py
+│   │   │   ├── login_module.py
+│   │   │   ├── report_module.py
+│   │   │   └── WebDriverManager.py
+│   │   ├── pandas/
+│   │   └── excel_reader.py
 │   ├── service/
+│   │   ├── SchedulerService.py
 │   │   └── SummaryService.py
 │   ├── persistence/
 │   │   └── SummaryDAO.py
 ├── front/
 │   ├── static/
 │   │   ├── css/
-│   │   │   └── style.css           
+│   │   │   └── mystyle.css           
 │   │   ├── js/
 │   │   │   └── scripts.css  
 │   │   ├── assets/
 │   ├── templates/
 │   │   │   └── index.html
 ├── Dockerfile.py
-├── Procfile.py
 └── requirements.txt
 ```
 
@@ -60,18 +63,20 @@ autogs/
   - `firebase_config.py`: Encargado de leer las credenciales para inicializar la app de firebase y crear una instancia de firestore.  
 - **controller/**: Implementa la API REST con Flask.
   - `SummaryApi.py`: Define los endpoints `/diferenciaResumenes`,  `/diferenciaResumenesHoy` y `/obtenerResumen` para interactuar con el servicio.
+- **models/**: Contiene el modelo del proyecto. En el se encuentra el objeto Summary el cual almacena la informacion de los reportes, las carpetas automation y pandas. 
 - **automation/**: Contiene los scripts de automatización basados en Selenium.
   - `WebDriverManager.py`: Trabaja como Orquestador usando el resto de las clases. Configura el WebDriver, navega y descarga reportes.
   - `DateSetter.py`: Establece rangos de fechas en formularios dependiendo lo requerido.
-  - `Login.py`: Realiza el inicio de sesión en el sistema externo.
-  - `Report.py`: Navega al reporte deseado dentro del sistema.
-  - `FileDownloader.py`: Descarga el archivo del reporte y verifica su existencia.
+  - `login_module.py`: Realiza el inicio de sesión en el sistema externo.
+  - `report_module.py`: Navega al reporte deseado dentro del sistema.
+  - `file_downloader_module.py`: Descarga el archivo del reporte y verifica su existencia.
   - `Summary.py`: Define la lógica del negocio. Orquesta los pasos de automatización y procesamiento de datos. Almacena los datos de valor.  
 - **pandas/**: Procesa los datos del reporte descargado.
   - `ExcelReader.py`: Lee y analiza el archivo descargado para extraer el total. Se maneja de forma eficiente borrando al anterior 
     para ahorrar espacio en memoria y recursos.
 - **service/**: Se encarga de interactuar con el modelo y la capa de persistencia.
   - `SummaryService.py`: Interviene como intermediario entre el negocio y la persistencia de datos para asegurar consistencia en los datos.
+  - `SchedulerService.py`: Implementacion de APScheduler para ejecutar registro de reportes en dias y horarios especificos. Especificamente, obtiene el resumen de este mismo dia pero de un mes atras cada dia que pasa y el resumen total del mes pasado cada vez que cambia el mes.  
 - **persistencia/**: Se encarga de interactuar con la base de datos (firestore).
   - `SummaryDAO.py`: Crea y actualiza instancias de Summary con lo suficiente para asegurar su correcto funcionamiento.
 - **abs_path.py**: Define rutas absolutas para asegura que el archivo se almacene correctamente.
@@ -97,7 +102,6 @@ autogs/
    DB_USER=usuario
    DB_PASSWORD=contraseña
    DB_KEY=key de firebase (tiene que estar en una sola linea)
-   API_BASE_URL=escribi el principio de tu url entre comillas dobles sin el ultimo '/' 
    TIMEZONE=declaras la zona horaria de tu preferencia, por defecto esta la de BsAs 
    ```
 
@@ -116,11 +120,11 @@ autogs/
    python -m application.controller.APIREST.SummaryApi
    ```
 4. Accede a los endpoints:
-   - GET `/diferenciaResumenes`: Devuelve la diferencia entre el resumen total del mes anterior y el resumen del dia actual. 
+   - PUT `/resumenDelMesPasado`: Actualizar el monto obtenido en todo el mes anterior y en la pagina se muestra su diferencia con el resumen actual en forma de porcentaje. 
      -- ``Ejemplo``: Suponiendo que hoy es 26/12/2024, entonces la resta es entre el resumen del 30/11/2024 y del 26/12/2024 
-   - GET `/diferenciaResumenesHoy`: Devuelve la diferencia entre el resumen de hoy pero un mes atras y el resumen del dia actual.
+   - PUT `/resumenDeUnMesAtras`: Actualizar el monto obtenido este mismo dia pero de un mes anterior y en la pagina se muestra su diferencia con el resumen actual en forma de porcentaje.
      -- ``Ejemplo``: La resta es entre el resumen del 26/11/2024 y del 26/12/2024
-   - GET `/obtenerResumen`: Devuelve el resumen del dia actual en formato JSON.
+   - PUT `/resumenActual`: Actualiza los datos obteniendo el resumen del dia actual, fecha con hora de cuando se solicito por ult vez el resumen y la diferencia con el total anteriormente pedido.
 
 ## Ventajas del Proyecto
 - **Escalabilidad**: Diseñado con una arquitectura modular para agregar nuevas funcionalidades.
@@ -130,8 +134,11 @@ autogs/
 - **Consistencia de Datos**: Utiliza Firestore como base de datos, asegurando la consistencia, alta disponibilidad y escalabilidad de los datos en tiempo real.
 
 ## Deploy
-- El proyecto ya esta listo para el deploy a traves del Dockerfile. 
-Especificamente listo para Render ya que esta escuchando en el puerto 10000, pero podes cambiarlo segun tus necesidades.
+- El proyecto ya esta listo para el deploy a traves del Dockerfile.
+-  *¿Donde y como hacerlo?*
+  - Primero carga la variables de entorno de USER, PASSWORD y DB_KEY.    
+  - Render: Carga la variable de entorno PORT con 10000
+  - Railway: no hagas nada mas.  
 
 ## Contacto
 Cualquier consulta o mejora, no dudes en contactarme: matteogiuffrah40@gmail.com
