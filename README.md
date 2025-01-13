@@ -85,10 +85,12 @@ autogs/
 - **front/**: Un mini front para interactuar con la aplicación. Hecho solo con CSS, HTML y JavaScript para que la app sea lo menos pesado y eficiente.
 
 ## Tecnologías Utilizadas
-- **Flask**: Framework para construir la API REST.
 - **Selenium**: Para la automatización de navegación y descargas.
+- **APScheduler**: Librería para programar y gestionar tareas automatizadas como la ejecución recurrente de procesos.
 - **Pandas**: Para el análisis y procesamiento de datos.
+- **Flask**: Framework para construir la API REST.
 - **dotenv y decouple**: Manejo de configuraciones sensibles como credenciales y variables de entorno.
+
 
 ## Requisitos Previos
 1. **Python 3.12+**
