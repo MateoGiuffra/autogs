@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     totalElement.textContent = data.total;
                     document.getElementById('last-report-date').textContent = data.last_report_date;
                     document.getElementById("dif").textContent = resta;
-
+                    spinner.style.display = "none";
                     alert("Resumen actualizado con éxito.");
                 } else {
                     console.error("Error:", response.status, response.statusText);
