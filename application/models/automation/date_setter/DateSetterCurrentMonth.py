@@ -25,9 +25,3 @@ class DateSetterCurrentMonth(DateSetter):
         summary.set_last_total(summary.get_total())
         summary.set_total(amount)
         summary.set_last_report_date(datetime.datetime.now())
-    
-    def get_field(self):
-        return "total"
-    
-    def is_necesary_calculate(self):
-        return True 

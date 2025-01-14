@@ -41,7 +41,7 @@
                         Ult. vez actualizado: <span id='last-report-date'>{{data1['last_report_date']}}</span>
                     </div>
                     <div>
-                        Diferencia de la última actualización: <span id="dif" class="formatted-number"></span>
+                        Diferencia de la última actualización: <span id="dif" class="difference">{{data1['last_total']}}</span>
                     </div>
                 </p>
             </article>
@@ -51,7 +51,9 @@
                     {{data1['last_months_total']}}
                 </strong>
                 <p>
-                    {{data1['message_last_months_total']}}
+                    La recaudación total del mes anterior fue de $<span class="formatted-number">{{data1['last_months_total']}}</span>.
+                    Actualmente, se registra un <span class='percent-message'>{{data1['last_months_total']}}</span> respecto al monto actual, lo que 
+                    representa una diferencia de <span class='difference'>{{data1['last_months_total']}}</span>. 
                 </p>
             </article>
             <article> 
@@ -60,7 +62,9 @@
                     {{data1['last_months_total_today']}}
                 </strong>
                 <p>
-                    {{data1['message_last_months_total_today']}}
+                    El mes pasado, en este mismo día, la recaudación fue de $<span class="formatted-number">{{data1['last_months_total_today']}}</span>.
+                    Actualmente, se registra un <span class='percent-message'>{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que 
+                    representa una diferencia de <span class='difference'>{{data1['last_months_total_today']}}</span>. 
                 </p>
             </article>
         </main>

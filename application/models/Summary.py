@@ -18,15 +18,12 @@ class Summary:
         try: 
             self.web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
             self.initialize_logging()
+            self.month_and_year = month_and_year
             self.total = 0
             self.last_total  = 0
             self.last_months_total = 0
             self.last_months_total_today = 0
-            self.month_and_year = month_and_year
             self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
-            print(f"Aca esta la fecha de mierda {self.last_report_date} ")
-            self.message_last_months_total = "Todavia no se calculo ninguna diferencia"
-            self.message_last_months_total_today = "Todavia no se calculo ninguna diferencia"
         except Exception as e: 
             message = f"Error al inicializar instancia de Summary: {e}"
             print(message)
@@ -53,27 +50,8 @@ class Summary:
         date_setter.update_info(self, total)
 
         print(f"Se obtuvo el total con exito: {total}")
-        print(f"Se settearon con exito en Summary el total: {self.total} y el last_total: {self.last_total}")
         
         return total
-
-    def calculate_dif(self, last_month_total, current_total):
-        try:
-            dif = current_total - last_month_total
-            percent = (dif/last_month_total) * 100
-            return self.percent_message(dif, percent, last_month_total)
-        except ZeroDivisionError:
-            print("Error: No se puede dividir por 0")
-            return f"El monto total del mes pasado fue de $ 0."
-        except Exception as e:
-            print(f"Error inesperado en calculate_dif: {e}") 
-            raise 
-        
-    def percent_message(self, dif, percent, last_month_total):
-        more_or_less = "mas" if dif > 0 else "menos" 
-        return ( f"El mes pasado se llegó a los: {last_month_total} de pesos. " 
-                 f"Por lo tanto, actualmente hay un {abs(percent):.2f}% {more_or_less} que el mes anterior. Habiendo una diferencia de {abs(dif):.2f} de pesos entre ambos." ) 
-        
     
     # devuelve un JSON con la informacion del objeto
     def to_summary_dict(self):
@@ -82,9 +60,7 @@ class Summary:
             "last_total": self.last_total,  
             "last_months_total": self.last_months_total,   
             "last_months_total_today": self.last_months_total_today, 
-            "last_report_date" : self.last_report_date, 
-            "message_last_months_total" : self.message_last_months_total, 
-            "message_last_months_total_today" : self.message_last_months_total_today
+            "last_report_date" : self.last_report_date
         }
     
     @classmethod
@@ -95,17 +71,9 @@ class Summary:
         instance.last_months_total = float(data.get("last_months_total", 0))
         instance.last_months_total_today = float(data.get("last_months_total_today", 0))
         instance.last_report_date = data.get("last_report_date", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S"))
-        instance.message_last_months_total = data.get("message_last_months_total", {"message": "JSON vacio"})
-        instance.message_last_months_total_today = data.get("message_last_months_total_today", {"message": "JSON vacio"})
         return instance
     
    # getters  
-    def get_message_last_months_total(self):
-        return self.message_last_months_total
-    
-    def get_message_last_months_total_today(self):
-        return self.message_last_months_total_today
-    
     def get_last_report_date(self):
         return self.last_report_date
    
@@ -124,13 +92,7 @@ class Summary:
     def get_month_and_year(self):
         return self.month_and_year
 
-    # setters  
-    def set_message_last_months_total(self, json):
-        self.message_last_months_total = json 
-        
-    def set_message_last_months_total_today(self, json):
-        self.message_last_months_total_today = json 
-    
+    # setters 
     def set_last_report_date(self, date): 
         if (isinstance(date, str)):
              self.last_report_date = date 

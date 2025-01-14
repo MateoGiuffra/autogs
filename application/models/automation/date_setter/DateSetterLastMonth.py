@@ -30,14 +30,4 @@ class DateSetterLastMonth(DateSetter):
     def update_info(self, summary, amount):
         print(f"Se settio el set_last_months_total a {amount}")
         summary.set_last_months_total(amount)
-        summary.set_message_last_months_total(summary.calculate_dif(amount, summary.get_total()))
-
-    def get_field(self):
-        return "last_months_total"
     
-    def is_necesary_calculate(self):
-        return False  
-    
-    
-    def set_message(self, summary, json):
-        summary.set_message_last_months_total(json)

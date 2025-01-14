@@ -25,9 +25,7 @@ class SummaryDAO:
                 "last_total": summary.get_last_total(),
                 "last_months_total": summary.get_last_months_total(),
                 "last_months_total_today": summary.get_last_months_total_today(), 
-                "last_report_date" : summary.get_last_report_date(),
-                "message_last_months_total" : summary.get_message_last_months_total(),
-                "message_last_months_total_today" : summary.get_message_last_months_total_today()
+                "last_report_date" : summary.get_last_report_date()
             })
             return doc_ref.get().to_dict()
         except Exception as e:
