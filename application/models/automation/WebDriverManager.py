@@ -26,21 +26,34 @@ class WebDriverManager:
         try:
             service = Service(ChromeDriverManager().install())
             options = webdriver.ChromeOptions()
-            options.add_argument("--headless") # No abre el navegador
-            options.add_argument("--no-sandbox")
-            options.add_argument("--disable-dev-shm-usage")
-            options.add_argument("--disable-extensions") # Desactiva extensiones que pueda llegar a tener el navegador
-            options.add_argument("--disable-gpu") 
-            options.add_argument("--window-size=1920,1080") # asigna un tamaño para su correcto funcionamiento 
-            options.add_argument("--disable-software-rasterizer")  # Desactiva el renderizador de software
+
+            # Primero las configuraciones de entorno y modo sin cabeza
+            options.add_argument("--headless=new")  # Modo sin cabeza (evita UI)
+            options.add_argument("--no-sandbox")  # Recomendado en contenedores (e.g., Docker)
+            options.add_argument("--disable-dev-shm-usage")  # Evita problemas con memoria compartida en entornos limitados
+            options.add_argument("--disable-gpu")  # Deshabilita el uso de GPU (especialmente en entornos sin cabeza)
+            options.add_argument("--disable-software-rasterizer")  # Desactiva renderizado por software (usado cuando la GPU está deshabilitada)
+            
+            # Configuraciones de rendimiento y comportamiento
+            options.add_argument("--disable-extensions")  # Desactiva las extensiones del navegador (mejor rendimiento)
+            options.add_argument("--window-size=1280,720")  # Tamaño de ventana para el navegador (aunque en modo sin cabeza no tiene efecto visual)
+            options.add_argument("--disable-logging")  # Desactiva los logs internos del navegador
+            options.add_argument("--disable-animations")  # Desactiva las animaciones para mejorar el rendimiento
+
+            # Configuración de preferencias
             options.add_experimental_option("prefs", {
-                "download.default_directory": self.output_path,
-                "safebrowsing.enabled": True
+                "profile.managed_default_content_settings.images": 2,  # No cargar imágenes para mejorar velocidad
+                "profile.default_content_setting_values.notifications": 2,  # Bloquea notificaciones emergentes
+                "download.default_directory": self.output_path,  # Directorio para descargas
+                "safebrowsing.enabled": True  # Habilita la protección contra descargas peligrosas
             })
+
+            # Inicializa el WebDriver con las opciones configuradas
             self.driver = webdriver.Chrome(service=service, options=options)
-        except Exception as e: 
-            logging.error(f"Error al configuar el WebDriver: {e}")
-            raise e 
+        except Exception as e:
+            logging.error(f"Error al configurar el WebDriver: {e}")
+            raise e
+
     
     def initialize_logging(self):
         logging.basicConfig(

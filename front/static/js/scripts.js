@@ -13,10 +13,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const percentMessage = (lastTotal) => {
         const total = parseFloat(totalElement.getAttribute("data-total")); 
         const dif = total - lastTotal
-        const percent = ((dif/total) * 100).toFixed(2)
+        const percent = ((dif/lastTotal) * 100).toFixed(2)
         const moreOrLess =  dif > 0 ? "incremento " :  "disminución" 
         return `${moreOrLess} del ${Math.abs(percent)}%`;
-    } 
+    }  
     // Obtiene el input de los elementos dados y le aplica la funcion pasa por parametro
     const assignToFunction = (someElements, f) => {
         Array.from(someElements).forEach(element => {
@@ -42,8 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const elementsToRestar = document.getElementsByClassName('difference');
     assignToFunction(elementsToRestar, sub)
 
-    // Función para el botón de actualizar resumen
-    const actualizarButton = document.getElementById("actualizar");
+    // Función para el botón de actualizar el resumen de hoy
+    const actualizarButton = document.getElementById("actualizar-hoy");
     if (actualizarButton) {
         const spinner = document.getElementById("spinner");
 
@@ -64,11 +64,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     const data = await response.json();
 
-                    totalElement.textContent = data.total;
+                    document.getElementById('total').textContent = data.total;
                     document.getElementById('last-report-date').textContent = data.last_report_date;
                     document.getElementById("dif").textContent = sub(data.last_total);
                     spinner.style.display = "none";
-                    alert("Resumen actualizado con éxito.");
+                    alert("Resumen de HOY actualizado con éxito.");
                 } else {
                     console.error("Error:", response.status, response.statusText);
                     alert("Error al actualizar el resumen.");
@@ -81,7 +81,85 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     } else {
-        console.error("El botón con id 'actualizar' no existe.");
+        console.error("El botón con id 'actualizar-hoy' no existe.");
+    }
+
+    const actualizarTotalDelMesAnterior = document.getElementById("actualizar-total");
+    if (actualizarTotalDelMesAnterior) {
+        const spinner = document.getElementById("spinner");
+
+        actualizarTotalDelMesAnterior.addEventListener("click", async () => {
+            if (!spinner) {
+                console.error("No se encontró el elemento spinner");
+                return;
+            } 
+
+            try {
+                spinner.style.display = "inline-block";
+
+                const response = await fetch("/resumenDelMesPasado", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    document.getElementById("last_months_total").textContent = data.last_months_total;
+                    spinner.style.display = "none";
+                    alert("Resumen TOTAL actualizado con éxito.");
+                } else {
+                    console.error("Error:", response.status, response.statusText);
+                    alert("Error al actualizar el resumen total del mes anterior.");
+                }
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+                alert("Ocurrió un error al intentar actualizar.");
+            } finally {
+                spinner.style.display = "none";
+            }
+        });
+    } else {
+        console.error("El botón con id 'actualizar-total' no existe.");
+    }
+
+    const actualizarParcialDeUnMesAtras = document.getElementById("actualizar-parcial");
+    if (actualizarParcialDeUnMesAtras) {
+        const spinner = document.getElementById("spinner");
+
+        actualizarParcialDeUnMesAtras.addEventListener("click", async () => {
+            if (!spinner) {
+                console.error("No se encontró el elemento spinner");
+                return;
+            } 
+
+            try {
+                spinner.style.display = "inline-block";
+
+                const response = await fetch("/resumenDeUnMesAtras", {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+
+                    document.getElementById("last_months_total_today").textContent = data.last_months_total_today;
+                    spinner.style.display = "none";
+                    alert("Resumen PARCIAL actualizado con éxito.");
+                } else {
+                    console.error("Error:", response.status, response.statusText);
+                    alert("Error al actualizar el resumen total del mes anterior.");
+                }
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+                alert("Ocurrió un error al intentar actualizar.");
+            } finally {
+                spinner.style.display = "none";
+            }
+        });
+    } else {
+        console.error("El botón con id 'actualizar-parcial' no existe.");
     }
 
 
