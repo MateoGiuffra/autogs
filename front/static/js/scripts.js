@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return `${moreOrLess} del ${Math.abs(percent)}%`;
     }  
     // Obtiene el input de los elementos dados y le aplica la funcion pasa por parametro
-    const assignToFunction = (someElements, f) => {
+    const applyFunctionTo = (someElements, f) => {
         Array.from(someElements).forEach(element => {
             const value = parseFloat(element.textContent); // Convertir texto a número
             if (!isNaN(value)) {
@@ -35,12 +35,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Formatear números en elementos con la clase "formatted-number"
     const elements = document.getElementsByClassName("formatted-number");
-    assignToFunction(elements, formatNumber)
+    applyFunctionTo(elements, formatNumber)
     // Obtener el mensaje del porcentaje de los elements con la clase "percent-message"
     const elementsPercentMessage = document.getElementsByClassName('percent-message');
-    assignToFunction(elementsPercentMessage, percentMessage)
-    const elementsToRestar = document.getElementsByClassName('difference');
-    assignToFunction(elementsToRestar, sub)
+    applyFunctionTo(elementsPercentMessage, percentMessage)
+    const elementsToSub = document.getElementsByClassName('difference');
+    applyFunctionTo(elementsToSub, sub)
 
     // Función para el botón de actualizar el resumen de hoy
     const actualizarButton = document.getElementById("actualizar-hoy");
@@ -104,8 +104,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (response.ok) {
                     const data = await response.json();
-
-                    document.getElementById("last_months_total").textContent = data.last_months_total;
                     spinner.style.display = "none";
                     alert("Resumen TOTAL actualizado con éxito.");
                 } else {
@@ -162,7 +160,4 @@ document.addEventListener("DOMContentLoaded", function () {
         console.error("El botón con id 'actualizar-parcial' no existe.");
     }
 
-
-
 });
-

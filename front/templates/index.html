@@ -5,8 +5,10 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
         <title>Resumenes</title>
-        <link rel="stylesheet" href="/static/css/mystyle.css">
-        <link rel="stylesheet" href="/front/static/css/mystyle.css">
+         <link rel="stylesheet" href="/static/css/style.css">
+        <link rel="stylesheet" href="/front/static/css/style.css"> 
+        <!-- <link rel="stylesheet" href="/static/css/mystyle.css">
+        <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
         <link rel="icon" type="image/png" sizes="16x16" rel="icon" href="/static/assets/phone-and-cash.png">
         <script src="/static/js/scripts.js"></script>
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,13 +19,13 @@
         <div id="lastTotalValue" data-last-total="{{data1['last_total']}}" style="display:none;"></div>
     </head>
     <body>
-        <div class="wrapper"> <!-- Contenedor principal para centrar todo -->
+        <div class="wrapper">
             <main>
-                <h1 class="resumenes-title">Resumenes</h1>
+                <h1>Resumenes</h1>
                 <article class="buttons"> 
                     <button class="actualizar-button-style" id="actualizar-hoy">
                         <div class="texto-btn">Hoy</div>
-                    </button> 
+                    </button>
                     <button class="actualizar-button-style" id="actualizar-total">
                         <div class="texto-btn">Total</div>
                     </button>
@@ -32,20 +34,26 @@
                     </button>
                     <div id="spinner" style="display: none;"></div>
                 </article>
-                <article id="total-hoy">
-                    <h2>Total de Hoy</h2> 
+                <article id="total-hoy" class="totals">
+                    <h2>Total de Hoy</h2>
                     <p> 
-                        <h3 id="total" class="formatted-number">{{data1['total']}}</h3>
+                        <h3 id="total" class="formatted-number">{{data1['total']}}<h3>
                         <div>
-                            Ult. vez actualizado: <span id="last-report-date">{{data1['last_report_date']}}</span>
+                            Últ. vez actualizado: 
+                            <span id="last-report-date">
+                                {{data1['last_report_date']}}
+                            </span>
                         </div>
                         <div>
-                            Diferencia de la última actualización: <span id="dif" class="difference">{{data1['last_total']}}</span>
+                            Diferencia de la última actualización: 
+                            <span id="dif" class="difference">
+                                {{data1['last_total']}}
+                            </span>
                         </div>
                     </p>
                 </article>
 
-                <article> 
+                <article class="totals"> 
                     <h2>Recaudación Total del Mes Pasado</h2>
                     <strong id="last_months_total" class="formatted-number">
                         {{data1['last_months_total']}}
@@ -57,7 +65,7 @@
                     </p>
                 </article>
 
-                <article> 
+                <article class="totals"> 
                     <h2>Recaudación Parcial del Mes Pasado</h2>
                     <strong id="last_months_total_today" class="formatted-number">
                         {{data1['last_months_total_today']}}
@@ -72,6 +80,6 @@
             <footer>
                 Copyright &copy; 2025 Resumen Financiero
             </footer>
-        </div> <!-- Fin del contenedor principal -->
+        </div>
     </body>
 </html>
