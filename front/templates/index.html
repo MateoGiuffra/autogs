@@ -2,7 +2,7 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
         <title>Resumenes</title>
         <link rel="stylesheet" href="/static/css/mystyle.css">
@@ -17,60 +17,61 @@
         <div id="lastTotalValue" data-last-total="{{data1['last_total']}}" style="display:none;"></div>
     </head>
     <body>
-        <main>
-            <h1 class="resumenes-title">Resumenes</h1>
-            <!-- Contenedor de botones -->
-            <article class="buttons"> 
-                <button class="actualizar-button-style" id="actualizar-hoy">
-                    <div class="texto-btn">Hoy</div>
-                </button> 
-                <button class="actualizar-button-style" id="actualizar-total">
-                    <div class="texto-btn">Total</div>
-                </button>
-                <button class="actualizar-button-style" id="actualizar-parcial">
-                    <div class="texto-btn">Parcial</div>
-                </button>
-                <div id="spinner" style="display: none;"></div>
-            </article>
-            <article id="total-hoy">
-                <h2>Total de Hoy</h2> 
-                <p> 
-                    <h3 id="total" class="formatted-number">{{data1['total']}}</h3>
-                    <div>
-                        Ult. vez actualizado: <span id="last-report-date">{{data1['last_report_date']}}</span>
-                    </div>
-                    <div>
-                        Diferencia de la última actualización: <span id="dif" class="difference">{{data1['last_total']}}</span>
-                    </div>
-                </p>
-            </article>
+        <div class="wrapper"> <!-- Contenedor principal para centrar todo -->
+            <main>
+                <h1 class="resumenes-title">Resumenes</h1>
+                <article class="buttons"> 
+                    <button class="actualizar-button-style" id="actualizar-hoy">
+                        <div class="texto-btn">Hoy</div>
+                    </button> 
+                    <button class="actualizar-button-style" id="actualizar-total">
+                        <div class="texto-btn">Total</div>
+                    </button>
+                    <button class="actualizar-button-style" id="actualizar-parcial">
+                        <div class="texto-btn">Parcial</div>
+                    </button>
+                    <div id="spinner" style="display: none;"></div>
+                </article>
+                <article id="total-hoy">
+                    <h2>Total de Hoy</h2> 
+                    <p> 
+                        <h3 id="total" class="formatted-number">{{data1['total']}}</h3>
+                        <div>
+                            Ult. vez actualizado: <span id="last-report-date">{{data1['last_report_date']}}</span>
+                        </div>
+                        <div>
+                            Diferencia de la última actualización: <span id="dif" class="difference">{{data1['last_total']}}</span>
+                        </div>
+                    </p>
+                </article>
 
-            <article> 
-                <h2>Recaudación Total del Mes Pasado</h2>
-                <strong id="last_months_total" class="formatted-number">
-                    {{data1['last_months_total']}}
-                </strong>
-                <p>
-                    La recaudación total del mes anterior fue de $<span class="formatted-number">{{data1['last_months_total']}}</span>.
-                    Actualmente, se registra un <span class="percent-message">{{data1['last_months_total']}}</span> respecto al monto actual, lo que 
-                    representa una diferencia de <span class="difference">{{data1['last_months_total']}}</span>. 
-                </p>
-            </article>
+                <article> 
+                    <h2>Recaudación Total del Mes Pasado</h2>
+                    <strong id="last_months_total" class="formatted-number">
+                        {{data1['last_months_total']}}
+                    </strong>
+                    <p>
+                        La recaudación total del mes anterior fue de $<span class="formatted-number">{{data1['last_months_total']}}</span>.
+                        Actualmente, se registra <span class="percent-message">{{data1['last_months_total']}}</span> respecto al monto actual, lo que 
+                        representa una diferencia de <span class="difference">{{data1['last_months_total']}}</span>. 
+                    </p>
+                </article>
 
-            <article> 
-                <h2>Recaudación Parcial del Mes Pasado</h2>
-                <strong id="last_months_total_today" class="formatted-number">
-                    {{data1['last_months_total_today']}}
-                </strong>
-                <p>
-                    El mes pasado, en este mismo día, la recaudación fue de $<span class="formatted-number">{{data1['last_months_total_today']}}</span>.
-                    Actualmente, se registra un <span class='percent-message'>{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que 
-                    representa una diferencia de <span class="difference">{{data1['last_months_total_today']}}</span>. 
-                </p>
-            </article>
-        </main>
-        <footer>
-            Copyright &copy; 2025 Resumen Financiero
-        </footer>
+                <article> 
+                    <h2>Recaudación Parcial del Mes Pasado</h2>
+                    <strong id="last_months_total_today" class="formatted-number">
+                        {{data1['last_months_total_today']}}
+                    </strong>
+                    <p>
+                        El mes pasado, en este mismo día, la recaudación fue de $<span class="formatted-number">{{data1['last_months_total_today']}}</span>.
+                        Actualmente, se registra <span class='percent-message'>{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que 
+                        representa una diferencia de <span class="difference">{{data1['last_months_total_today']}}</span>. 
+                    </p>
+                </article>
+            </main>
+            <footer>
+                Copyright &copy; 2025 Resumen Financiero
+            </footer>
+        </div> <!-- Fin del contenedor principal -->
     </body>
 </html>

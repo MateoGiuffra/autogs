@@ -2,18 +2,28 @@
 body {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Asegura que el body tenga al menos el alto de la pantalla */
-  margin: 0; /* Elimina márgenes del body */
+  min-height: 100vh;
+  margin: 0;
+  justify-content: flex-start;
+  align-items: center;
 }
 
+.wrapper {
+  width: 100%;
+  max-width: 1200px; /* Asegura que el contenido no sea más ancho que esto */
+  margin: 0 auto; /* Centra el contenido dentro de la pantalla */
+  padding: 20px;
+}
 
 main {
   font-family: 'DM Serif Text', serif;
   background-color: #f4f4f4;
   color: #333;
   padding: 20px;
-  flex-grow: 1; /* Permite que main ocupe el espacio restante */
+  flex-grow: 1;
+  width: 100%;
 }
+
 h1 {
   font-family: 'Bebas Neue', sans-serif;
   text-align: center;
@@ -21,45 +31,7 @@ h1 {
   margin: 20px 0;
 }
 
-h2, h3 {
-  font-family: 'DM Serif Text', serif;
-  color: #34495e;
-}
-
-h3 {
-  color: #333;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-/* Estilo para los botones */
-.actualizar-button-style {
-  background-color: #1abc9c;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  font-size: 100%;
-  font-family: 'Bebas Neue', sans-serif;
-  color: white;
-  padding: 12px 25px;
-  flex: 1;
-}
-
-.actualizar-button-style:hover {
-  background-color: #16a085;
-}
-
-.buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px; /* Espacio entre los botones */
-}
-
+/* Asegura que los artículos estén centrados */
 article {
   background-color: #ffffff;
   padding: 15px;
@@ -71,36 +43,31 @@ article {
   box-sizing: border-box;
 }
 
-#spinner {
-  width: 20px;
-  height: 20px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 10px auto;
+/* Flexbox en botones */
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  width: 100%;
+  max-width: 800px;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+footer {
+  text-align: center;
+  padding: 10px 0;
+  background-color: #2c3e50;
+  color: white;
+  margin-top: 20px;
+  font-size: 14px;
+  border-top: 1px solid #ddd;
+  width: 100%;
+  max-width: 1200px;
 }
 
+/* Media Queries */
 @media (max-width: 768px) {
   body {
     font-size: 14px;
-  }
-
-  h1 {
-    font-size: 24px;
-  }
-
-  h2 {
-    font-size: 18px;
-  }
-
-  h3 {
-    font-size: 16px;
   }
 
   .actualizar-button-style {
@@ -109,12 +76,12 @@ article {
   }
 
   footer {
-    margin-top: 1px; /* Reduce el espacio entre el contenido y el footer */
-    padding: 8px 0;   /* Ajusta el padding para hacer el footer más compacto */
+    margin-top: 0px;
+    padding: 8px 0;
   }
 
   article {
-    margin: 5px 0;  /* Reduce el margen entre artículos */
+    margin: 5px 0;
   }
 }
 
@@ -135,27 +102,12 @@ article {
     font-size: 18px;
   }
 
-  .actualizar-button-style {
-    font-size: 16px;
-    padding: 10px 20px;
-  }
-
   footer {
-    margin-top: 1px; /* Reduce el espacio entre el contenido y el footer */
-    padding: 8px 0;   /* Ajusta el padding para hacer el footer más compacto */
+    margin-top: 0px;
+    padding: 8px 0;
   }
 
   article {
-    margin: 5px 0;  /* Reduce el margen entre artículos */
+    margin: 5px 0;
   }
-}
-
-footer {
-  text-align: center;
-  padding: 10px 0;
-  background-color: #2c3e50;
-  color: white;
-  margin-top: 0px;
-  font-size: 14px;
-  border-top: 1px solid #ddd; 
 }
