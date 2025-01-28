@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const total = parseFloat(totalElement.getAttribute("data-total")); 
         const dif = total - lastTotal
         const percent = ((dif/lastTotal) * 100).toFixed(2)
-        const moreOrLess =  dif > 0 ? "incremento " :  "disminución" 
+        const moreOrLess =  dif > 0 ? "un incremento " :  "una disminución" 
         return `${moreOrLess} del ${Math.abs(percent)}%`;
     }  
     // Obtiene el input de los elementos dados y le aplica la funcion pasa por parametro
