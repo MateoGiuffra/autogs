@@ -31,12 +31,12 @@ class SchedulerService:
                 self.scheduler.add_job(
                     func=self.call_resumenDeUnMesAtras,
                     trigger='cron',
-                    hour=4,
+                    hour=1,
                     minute=0, 
                     id="update_summary_daily",
                     replace_existing=True
                 )
-                logging.info("Job 'update_summary_daily' configurado correctamente.")
+                logging.info("Job 'update_summary_daily' configured correctly.")
             
             if not self.scheduler.get_job("update_summary_monthly"):
                 self.scheduler.add_job(
@@ -48,9 +48,18 @@ class SchedulerService:
                     id="update_summary_monthly",
                     replace_existing=True
                 )
-                logging.info("Job 'update_summary_monthly' configurado correctamente.")
+                logging.info("Job 'update_summary_monthly' configured correctly.")
+            if not self.scheduler.get_job("keep_active"):
+                self.scheduler.add_job(
+                    func=self.keep_active,
+                    trigger='interval',
+                    minutes=5, 
+                    id="keep_active",
+                    replace_existing=True
+                )
+                logging.info("Job 'keep_active' configured correctly to execute every 5 minutes.")
         except Exception as e:
-            logging.error(f"Error al configurar los trabajos del Scheduler: {e}")
+            logging.error(f"Error in Scheduler Jobs configuration: {e}")
 
     @staticmethod
     def call_resumenDeUnMesAtras():
@@ -81,3 +90,15 @@ class SchedulerService:
             logging.error(f"Timeout al ejecutar call_resumenDelMesPasado: {e}")
         except Exception as e:
             logging.error(f"Error general al ejecutar call_resumenDelMesPasado: {e}")
+
+    @staticmethod
+    def keep_active():
+        url = "https://www.google.com"
+        try:
+            response = requests.get(url)
+            if response.status_code == 200:
+                print("Successful request to Google.")
+            else:
+                print(f"Google request error : {response.status_code}")
+        except requests.exceptions.RequestException as e:
+            print(f"Error to connection: {e}")
