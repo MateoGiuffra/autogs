@@ -30,9 +30,8 @@ class SchedulerService:
             if not self.scheduler.get_job("update_summary_daily"):
                 self.scheduler.add_job(
                     func=self.call_resumenDeUnMesAtras,
-                    trigger='cron',
-                    hour=1,
-                    minute=0, 
+                    trigger='interval',
+                    hour=3, 
                     id="update_summary_daily",
                     replace_existing=True
                 )
