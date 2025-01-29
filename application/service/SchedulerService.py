@@ -7,7 +7,7 @@ from decouple import config
 from pytz import timezone
 import requests
 import logging
-
+import time 
 # Configuración de constantes
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
 API_BASE_URL = config("API_BASE_URL", default="http://127.0.0.1:10000")
@@ -93,12 +93,10 @@ class SchedulerService:
 
     @staticmethod
     def keep_active():
-        url = "https://www.google.com"
         try:
-            response = requests.get(url)
-            if response.status_code == 200:
-                print("Successful request to Google.")
-            else:
-                print(f"Google request error : {response.status_code}")
+            start = time.time()
+            while time.time() - start < 315:
+                pass 
+            print(f"Execute 30 seconds 'while' without problems!")
         except requests.exceptions.RequestException as e:
-            print(f"Error to connection: {e}")
+            print(f"Error to 30 seconds 'while' : {e}")

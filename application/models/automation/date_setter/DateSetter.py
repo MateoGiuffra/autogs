@@ -7,18 +7,15 @@ class DateSetter(ABC):
 
     def set(self):   
         today = self.get_today()
-        print(f"Hoy es {today}")
+
         fecha_cobro_desde = self.set_first_day_of(today)
-        print(f"El primer dia del mes requerido para fecha desde es: {fecha_cobro_desde}")
         self.set_date_str(fecha_cobro_desde, "ctl15$FechaDesde$txtFecha")
 
         next_month = self.next_month_of_today(today)
         fecha_vto_desde =  self.set_first_day_of(next_month)
-        print(f"El primer dia del mes requerido para la fecha de vencimiento es: {fecha_vto_desde}")
         self.set_date_str(fecha_vto_desde, "ctl15$FechaVtoDesde$txtFecha")
 
         fecha_cobro_hasta = self.get_fecha_cobro_hasta(today)
-        print(f"La fecha requerida para la fecha cobro hasta es: {fecha_cobro_hasta}")
         self.set_date_str(fecha_cobro_hasta, "ctl15$FechaHasta$txtFecha")
         
         print("Fechas setteadas con exito")
