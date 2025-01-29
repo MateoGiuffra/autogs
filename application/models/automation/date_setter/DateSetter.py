@@ -46,4 +46,7 @@ class DateSetter(ABC):
 
     def set_driver(self, driver):
         self.driver = driver 
+        
+    def is_necessary_again(self,summary):
+        return True
 
