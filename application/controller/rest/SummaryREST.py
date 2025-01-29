@@ -57,8 +57,7 @@ class SummaryREST:
         @self.app.route("/resumenDeUnMesAtras", methods=["PUT"])
         def update_total_last_months_total_today():
             try:
-                self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonthToday(None))  
-                return jsonify({"message": "Resumen de un mes atras actualizado correctamente."}), 200
+                return jsonify(self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonthToday(None))  ), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 print(f"Error al actualizar el resumen: {e}")
@@ -68,8 +67,7 @@ class SummaryREST:
         @self.app.route("/resumenDelMesPasado", methods=["PUT"])
         def update_total_last_months_total():
             try:
-                self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonth(None)) 
-                return jsonify({"message": "Resumen del mes pasado actualizado correctamente."}), 200
+                return jsonify( self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonth(None)) ), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 print(f"Error al actualizar el resumen: {e}")
