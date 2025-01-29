@@ -20,12 +20,21 @@ document.addEventListener("DOMContentLoaded", function () {
     // Obtiene el input de los elementos dados y le aplica la funcion pasa por parametro
     const applyFunctionTo = (someElements, f) => {
         Array.from(someElements).forEach(element => {
-            const value = parseFloat(element.textContent); // Convertir texto a número
+            // Si el dataset no está definido, lo guardamos una única vez
+            if (!element.dataset.original) {
+                element.dataset.original = element.textContent.trim();
+            }
+    
+            let value = parseFloat(element.dataset.original.replace(/\./g, "").replace(",", "."));
+    
             if (!isNaN(value)) {
-                element.textContent = f(value); // Aplicar la funcion sobre el valor
+                element.textContent = f(value);
+            } else {
+                console.error(`Error convirtiendo número: ${element.dataset.original}`);
             }
         });
-    }
+    };
+    
 
     const sub = (number) => {
         total = parseFloat(totalElement.getAttribute("data-total")); 
@@ -33,14 +42,19 @@ document.addEventListener("DOMContentLoaded", function () {
         return formatNumber(Math.abs(dif))
     }
 
-    // Formatear números en elementos con la clase "formatted-number"
-    const elements = document.getElementsByClassName("formatted-number");
-    applyFunctionTo(elements, formatNumber)
-    // Obtener el mensaje del porcentaje de los elements con la clase "percent-message"
-    const elementsPercentMessage = document.getElementsByClassName('percent-message');
-    applyFunctionTo(elementsPercentMessage, percentMessage)
-    const elementsToSub = document.getElementsByClassName('difference');
-    applyFunctionTo(elementsToSub, sub)
+
+    const applyFunctionToAllElements = () =>{
+        // Formatear números en elementos con la clase "formatted-number"
+        const elements = document.getElementsByClassName("formatted-number");
+        applyFunctionTo(elements, formatNumber)
+        // Obtener el mensaje del porcentaje de los elements con la clase "percent-message"
+        const elementsPercentMessage = document.getElementsByClassName('percent-message');
+        applyFunctionTo(elementsPercentMessage, percentMessage)
+        const elementsToSub = document.getElementsByClassName('difference');
+        applyFunctionTo(elementsToSub, sub)
+    }
+
+    applyFunctionToAllElements();
 
     // Función para el botón de actualizar el resumen de hoy
     const actualizarButton = document.getElementById("actualizar-hoy");
@@ -67,6 +81,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     document.getElementById('total').textContent = data.total;
                     document.getElementById('last-report-date').textContent = data.last_report_date;
                     document.getElementById("dif").textContent = sub(data.last_total);
+
+                    applyFunctionToAllElements()
                     spinner.style.display = "none";
                     alert("Resumen de HOY actualizado con éxito.");
                 } else {
@@ -104,6 +120,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (response.ok) {
                     const data = await response.json();
+                    document.getElementById('last_months_total').textContent = data.last_months_total;
+                    
+                    applyFunctionToAllElements()
                     spinner.style.display = "none";
                     alert("Resumen TOTAL actualizado con éxito.");
                 } else {
@@ -143,6 +162,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     const data = await response.json();
 
                     document.getElementById("last_months_total_today").textContent = data.last_months_total_today;
+
+                    applyFunctionToAllElements()
                     spinner.style.display = "none";
                     alert("Resumen PARCIAL actualizado con éxito.");
                 } else {
