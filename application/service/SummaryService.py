@@ -11,6 +11,8 @@ class SummaryService:
     def update_by_date_setter(self, month_and_year, date_setter):
         try: 
             summary = self.find_or_create(month_and_year)
+            if (not date_setter.is_necessary_again(summary)):
+                return summary.to_summary_dict()
             summary.get_total_number(date_setter)
             return self.dao.update_summary(summary)
         except Exception as e: 
