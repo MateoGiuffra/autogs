@@ -31,18 +31,20 @@ class DateSetterLastMonth(DateSetter):
         summary.set_last_months_total(amount)
     
     def is_necessary_again(self, month_and_year, summary_json, service):
-        # date_of_lmt = summary_json["date_of_lmt"]
-        # print(f"type of date_of_lmt: {type(date_of_lmt)} Contenido del date_of_lmt: {date_of_lmt}. El mes de date_of_lmt es {date_of_lmt.month}")
-        # real_today = datetime.now(pytz.timezone("America/Argentina/Buenos_Aires"))
+        if not summary_json or "date_of_lmt" not in summary_json:
+            return True 
         
-        # current_month_and_year = (real_today.month, real_today.year)
-        # last_modified_month_and_year = (date_of_lmt.month, date_of_lmt.year)
-    
-        # if current_month_and_year != last_modified_month_and_year:
-        #     service.update_field_of(month_and_year,"date_of_lmt", real_today)
-        #     return True 
-        # return False
-        return True
+        date_of_lmt = summary_json["date_of_lmt"]
+        
+
+        real_today = datetime.datetime.now(pytz.timezone("America/Argentina/Buenos_Aires"))
+        # and real_today.year() != date_of_lmt.year()
+        if date_of_lmt is None or real_today.month != date_of_lmt.month:
+            service.update_field_of(month_and_year, "date_of_lmt", real_today)
+            return True 
+        
+        return False
+
     
 
     

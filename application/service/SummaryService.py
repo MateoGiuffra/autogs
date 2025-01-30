@@ -10,7 +10,7 @@ class SummaryService:
     # to update the summary according to date 
     def update_by_date_setter(self, month_and_year, date_setter):
         try: 
-            summary_json = self.dao.get_json(month_and_year)
+            summary_json = self.get_json(month_and_year)
             if (not date_setter.is_necessary_again(month_and_year, summary_json, self)):
                 return summary_json
             summary = self.find_or_create(month_and_year)
@@ -19,10 +19,16 @@ class SummaryService:
         except Exception as e: 
             message = f"Error al obtener el summary de {date_setter}: {e}"
             logging.error(message)
+            raise 
     
     # get only json summary 
     def get_json(self, month_and_year):
-        return self.dao.get_json(month_and_year)
+        try:
+            return self.dao.get_json(month_and_year)
+        except Exception as e:
+            print(f"Ocurrio un error: {e}")
+            raise 
+            
     
     def find_or_create(self, month_and_year):
         summary = self.dao.find(month_and_year)

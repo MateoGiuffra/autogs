@@ -24,8 +24,8 @@ class Summary:
             self.last_months_total = 0
             self.last_months_total_today = 0
             self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
-            self.date_of_lmtt = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires"))
-            self.date_of_lmt = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires"))
+            self.date_of_lmtt = None 
+            self.date_of_lmt = None
         except Exception as e: 
             message = f"Error al inicializar instancia de Summary: {e}"
             print(message)
@@ -75,8 +75,8 @@ class Summary:
         instance.last_months_total = float(data.get("last_months_total", 0))
         instance.last_months_total_today = float(data.get("last_months_total_today", 0))
         instance.last_report_date = data.get("last_report_date", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S"))
-        instance.date_of_lmtt = data.get("date_of_lmtt", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")))
-        instance.date_of_lmtt = data.get("date_of_lmt", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")))
+        instance.date_of_lmtt = data.get("date_of_lmtt", None)
+        instance.date_of_lmt  = data.get("date_of_lmt", None)
         return instance
     
    # getters  

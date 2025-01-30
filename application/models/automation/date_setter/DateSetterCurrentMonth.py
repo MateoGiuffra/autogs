@@ -25,3 +25,6 @@ class DateSetterCurrentMonth(DateSetter):
         summary.set_last_total(summary.get_total())
         summary.set_total(amount)
         summary.set_last_report_date(datetime.datetime.now())
+
+    def is_necessary_again(self, month_and_year, summary_json, service):
+        return True
