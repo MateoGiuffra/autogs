@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     alert("Resumen de HOY actualizado con éxito.");
                 } else {
                     console.error("Error:", response.status, response.statusText);
-                    alert("Error al actualizar el resumen.");
+                    alert("Error al actualizar el resumen.  Actualiza la pagina para refrescar los cambios");
                 }
             } catch (error) {
                 console.error("Error en la solicitud:", error);
@@ -111,11 +111,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (response.ok) {
                     const data = await response.json();
-                    const formattedDataLastMonthTotal = data.last_months_total;
+                    const formattedDataLastMonthTotal = formatNumber(data.last_months_total);
                     document.getElementById('last_months_total').textContent = formattedDataLastMonthTotal;
                     
                     spinner.style.display = "none";
-                    alert("Resumen TOTAL actualizado con éxito.");
+                    alert("Resumen TOTAL actualizado con éxito.  Actualiza la pagina para refrescar los cambios");
                 } else {
                     console.error("Error:", response.status, response.statusText);
                     alert("Error al actualizar el resumen total del mes anterior.");
@@ -152,11 +152,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (response.ok) {
                     const data = await response.json();
                     
-                    const formattedDataLastMonthTotalToday = data.last_months_total_today;
+                    const formattedDataLastMonthTotalToday = formatNumber(data.last_months_total_today);
                     document.getElementById('last_months_total_today').textContent = formattedDataLastMonthTotalToday;
 
                     spinner.style.display = "none";
-                    alert("Resumen PARCIAL actualizado con éxito.");
+                    alert("Resumen PARCIAL actualizado con éxito. Actualiza la pagina para refrescar los cambios");
                 } else {
                     console.error("Error:", response.status, response.statusText);
                     alert("Error al actualizar el resumen total del mes anterior.");
