@@ -16,8 +16,6 @@ class Summary:
     
     def __init__(self, month_and_year):
         try: 
-            self.web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
-            self.initialize_logging()
             self.month_and_year = month_and_year
             self.total = 0
             self.last_total  = 0
@@ -30,22 +28,13 @@ class Summary:
             message = f"Error al inicializar instancia de Summary: {e}"
             print(message)
             raise Exception(message) 
-         
-    
-    def initialize_logging(self):
-        logging.basicConfig(
-            level=logging.ERROR,
-            format='%(asctime)s - %(levelname)s - %(message)s',
-            filename='summary.log',
-            filemode='a'
-        )
-
-    # Obtener el total de la fecha dada. Este metodo obtiene el excel, lo lee y settea los valores segun el tipo de fecha requerida. 
-    def get_total_number(self, date_setter):
-        self.web_driver_manager.set_date_setter(date_setter)
-        self.web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)
         
-        path = self.web_driver_manager.get_downloaded_file_path()
+
+    # Gets total according to given date. This method gets excel file, read it and set on in this class all new values
+    def get_total_number(self, date_setter):
+        web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
+        web_driver_manager.set_date_setter(date_setter)
+        path = web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)
         
         total = float(reader_get_total(path))
         

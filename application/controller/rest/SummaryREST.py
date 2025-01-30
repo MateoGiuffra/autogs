@@ -42,6 +42,12 @@ class SummaryREST:
             data1 = self.service.get_json(self.month_and_year)
             print(f"Informacion de la bd: {data1}")    
             return render_template("index.html", data1=data1)
+
+
+        @self.app.route("/find_or_create", methods=["GET"])
+        def find_or_create():
+            data1 = self.service.find_or_create(self.month_and_year)
+            return jsonify({"data": "se encontro"}), 200
         
         # actualiza el resumen al ultimo hecho
         @self.app.route("/resumenActual", methods=["PUT"])
