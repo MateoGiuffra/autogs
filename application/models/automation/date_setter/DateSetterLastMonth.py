@@ -39,7 +39,7 @@ class DateSetterLastMonth(DateSetter):
 
         real_today = datetime.datetime.now(pytz.timezone("America/Argentina/Buenos_Aires"))
         # and real_today.year() != date_of_lmt.year()
-        if date_of_lmt is None or real_today.month != date_of_lmt.month:
+        if date_of_lmt is None or not summary_json or "date_of_lmtt" not in summary_json or (real_today.month != date_of_lmt.month and real_today.year != date_of_lmt.year):
             service.update_field_of(month_and_year, "date_of_lmt", real_today)
             return True 
         
