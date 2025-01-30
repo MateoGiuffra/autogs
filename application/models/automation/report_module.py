@@ -16,7 +16,7 @@ def navigate_to_report(driver):
 
     # Esperar a que el menu desplegable sea visible
     cobranzas_xpath = "//div[contains(text(),'Cobranzas')]"  # Ajusta el XPath según el texto o estructura
-    cobranzas = WebDriverWait(driver, 5).until(
+    cobranzas = WebDriverWait(driver, 2).until(
         EC.visibility_of_element_located((By.XPATH, cobranzas_xpath))
     )
     
