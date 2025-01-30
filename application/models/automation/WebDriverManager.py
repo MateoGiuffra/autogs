@@ -40,6 +40,11 @@ class WebDriverManager:
             options.add_argument("--disable-logging") 
             options.add_argument("--disable-animations")  
 
+            options.add_argument("--disable-features=VizDisplayCompositor")
+            options.add_argument("--use-gl=disabled")
+            options.add_argument("--disable-webgl")
+            options.add_argument("--disable-3d-apis")
+
             # Configuración de preferencias
             options.add_experimental_option("prefs", {
                 "profile.managed_default_content_settings.images": 2, 

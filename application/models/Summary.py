@@ -25,6 +25,7 @@ class Summary:
             self.last_months_total_today = 0
             self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
             self.date_of_lmtt = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires"))
+            self.date_of_lmt = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires"))
         except Exception as e: 
             message = f"Error al inicializar instancia de Summary: {e}"
             print(message)
@@ -62,7 +63,8 @@ class Summary:
             "last_months_total": self.last_months_total,   
             "last_months_total_today": self.last_months_total_today, 
             "last_report_date" : self.last_report_date,
-            "date_of_lmtt": self.date_of_lmtt 
+            "date_of_lmtt": self.date_of_lmtt,
+            "date_of_lmt": self.date_of_lmt
         }
     
     @classmethod
@@ -74,9 +76,13 @@ class Summary:
         instance.last_months_total_today = float(data.get("last_months_total_today", 0))
         instance.last_report_date = data.get("last_report_date", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S"))
         instance.date_of_lmtt = data.get("date_of_lmtt", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")))
+        instance.date_of_lmtt = data.get("date_of_lmt", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")))
         return instance
     
    # getters  
+    def get_date_of_lmt(self):
+        return self.date_of_lmt
+    
     def get_date_of_lmtt(self):
         return self.date_of_lmtt
     
@@ -110,6 +116,9 @@ class Summary:
         
     def set_date_of_lmtt(self, lmtt_date):
         self.date_of_lmtt = lmtt_date 
+        
+    def set_date_of_lmt(self, lmt_date):
+        self.date_of_lmt = lmt_date 
     
     def set_last_total(self, last_total):
         self.last_total = last_total
