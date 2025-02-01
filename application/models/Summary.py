@@ -1,48 +1,35 @@
+# automatition methods
 from application.models.automation.WebDriverManager import WebDriverManager
 from application.models.pandas.excel_reader import reader_get_total
+
+# time libraries  
 from datetime import datetime
-from zoneinfo import ZoneInfo 
-from decouple import config  
-from abs_path import dir
-import logging
 import pytz 
+import time 
+# environment library
+from decouple import config
 
 TIMEZONE = config("TIMEZONE", default="America/Argentina/Buenos_Aires")
 class Summary:
-
-    BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
-    DB_USER = config("DB_USER")
-    DB_PASSWORD = config("DB_PASSWORD")
-    
     def __init__(self, month_and_year):
-        try: 
-            self.month_and_year = month_and_year
-            self.total = 0
-            self.last_total  = 0
-            self.last_months_total = 0
-            self.last_months_total_today = 0
-            self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
-            self.date_of_lmtt = None 
-            self.date_of_lmt = None
-        except Exception as e: 
-            message = f"Error al inicializar instancia de Summary: {e}"
-            print(message)
-            raise Exception(message) 
-        
+        self.month_and_year = month_and_year
+        self.total = 0
+        self.last_total = 0
+        self.last_months_total = 0
+        self.last_months_total_today = 0
+        self.last_report_date = time.strftime("%d-%m-%Y %H:%M:%S")
+        self.date_of_lmtt = None
+        self.date_of_lmt = None
 
-    # Gets total according to given date. This method gets excel file, read it and set on in this class all new values
     def get_total_number(self, date_setter):
-        web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
-        web_driver_manager.set_date_setter(date_setter)
-        path = web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)
-        
-        total = float(reader_get_total(path))
-        
-        date_setter.update_info(self, total)
-
-        print(f"Se obtuvo el total con exito: {total}")
-        
-        return total
+        try: 
+            webdrivermanager = WebDriverManager()
+            path = webdrivermanager.set_dates_and_download()
+            self.total = float(reader_get_total(path))
+            date_setter.update_info(self, self.total)
+            return self.total
+        except Exception as e:
+            raise Exception(f"Something was Wrong to get total number: {e}")
     
     # devuelve un JSON con la informacion del objeto
     def to_summary_dict(self):
