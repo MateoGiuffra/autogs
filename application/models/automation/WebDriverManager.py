@@ -10,7 +10,8 @@ from application.models.automation.login_module import login
 from application.models.automation.file_downloader_module import download_file 
 #registrar errores
 import logging 
-
+from abs_path import dir
+from abs_path import chrome_driver_path
 import time
 
 class WebDriverManager:
@@ -34,7 +35,7 @@ class WebDriverManager:
 
     def configure_driver(self):
         try:
-            service = Service(ChromeDriverManager().install())
+            service = Service(chrome_driver_path)
             options = webdriver.ChromeOptions()
             
             # Primero las configuraciones de entorno y modo sin cabeza

@@ -7,15 +7,15 @@ def clear_output_directory(output_path):
     file = next(os.scandir(output_path), None)
     if file and file.is_file():
         os.remove(file.path)
-        print(f"Archivo eliminado: {file.name}")
+        print(f"Deleted file: {file.name}")
     else:
-        print("No se encontró ningún archivo para eliminar.")
+        print("Not Found File to Delete!.")
 
 def get_latest_file(output_path):
     # Obtener directamente el único archivo en el directorio
     file = next(os.scandir(output_path), None)
     if not file or not file.is_file() or not file.name.startswith("rptCobranzas") or not file.name.endswith(".xls"):
-        raise FileNotFoundError("No se encontró ningún archivo con el patrón esperado.")
+        raise FileNotFoundError("Not Found File with 'rptCobranzas' pattern! ")
     
     print(f"Archivo encontrado: {file.name}")
     return file.path
