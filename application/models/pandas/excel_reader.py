@@ -1,6 +1,9 @@
 import pandas as pd
 import locale 
 def reader_get_total(path):
+    """
+        this function reads the Excel file at given path in order to get its total
+    """
     try:
         locale.setlocale(locale.LC_NUMERIC, 'es_ES.UTF-8')
         # leo el archivo (es un .xls pero es mentira, es un HTML)

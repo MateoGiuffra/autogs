@@ -8,21 +8,22 @@ def fill_input(driver, id, keys):
 def login(user, password, driver):
     try: 
         if not user or not password:
-            raise ValueError("No se proporcionó usuario o contraseña")
+            raise ValueError("No username or password provided")
         
         fill_input(driver,"txtUsuarioId", user)
-        logging.info("Usuario escrito")
+        logging.info("User written")
+        print("User written")
         
         fill_input(driver,"txtClave", password)
-        logging.info("Contraseña escrita")
+        logging.info("Password written")
+        print("Password written")
         
         login_button = driver.find_element(By.ID,"btnLogin")
         login_button.click()
         
-        logging.info("Botón de Login clickeado")
+        logging.info("Clicked Login Button")
+        print("Clicked Login Button")
     
     except Exception as e: 
-        
-        logging.info(f"Error al loggearse: {e}")
-        raise Exception(f"Hubo un error al loggearse: {e}")
+        raise Exception(f"Error while logging in: {e}")
     

@@ -18,7 +18,7 @@ class DateSetter(ABC):
         fecha_cobro_hasta = self.get_fecha_cobro_hasta(today)
         self.set_date_str(fecha_cobro_hasta, "ctl15$FechaHasta$txtFecha")
         
-        print("Fechas setteadas con exito")
+        print("Dates Set Successfully!")
 
     def set_date_str(self, date_str, name):
         date = self.driver.find_element(By.NAME, name)

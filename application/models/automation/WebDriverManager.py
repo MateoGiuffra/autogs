@@ -1,34 +1,40 @@
-from application.models.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
+# selenium imports
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.service import Service   
 from selenium.webdriver.common.by import By 
 from selenium import webdriver
-# functions para la automatizacion
+# automatition methods
+from application.models.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
 from application.models.automation.report_module import navigate_to_report
 from application.models.automation.login_module import login
 from application.models.automation.file_downloader_module import download_file 
 #registrar errores
 import logging 
-
+# to get .env info
+from decouple import config  
 import time
+# path where excel file gonna be download 
+from abs_path import dir
 
 class WebDriverManager:
     _instance = None
 
-    def __new__(cls, output_path, expected_filename_pattern):
+    BASE_URL = "https://game.systemmaster.com.ar/frmLogin.aspx"
+    DB_USER = config("DB_USER")
+    DB_PASSWORD = config("DB_PASSWORD")
+    EXPECTED_FILENAME_PATTERN = "rptCobranzas*.xls"
+    
+    def __new__(cls):
         if cls._instance is None:
             cls._instance = super(WebDriverManager, cls).__new__(cls)
-            cls._instance.__init__(output_path, expected_filename_pattern)
+            cls._instance.__init__()
         return cls._instance
 
-    def __init__(self, output_path, expected_filename_pattern):
+    def __init__(self):
         if not hasattr(self, "initialized"):  # Para evitar re-inicialización
-            self.expected_filename_pattern = expected_filename_pattern
-            self.output_path = output_path
             self.driver = None
             self.configure_driver()
-            self.file_downloaded_path = None
             self.date_setter = DateSetterCurrentMonth(self.driver)
             self.initialized = True
 
@@ -36,8 +42,8 @@ class WebDriverManager:
         try:
             service = Service(ChromeDriverManager().install())
             options = webdriver.ChromeOptions()
-            
-            # Primero las configuraciones de entorno y modo sin cabeza
+
+            # First environment configs and headless mode 
             options.add_argument("--headless=new") 
             options.add_argument("--no-sandbox")  
             options.add_argument("--disable-dev-shm-usage")
@@ -55,54 +61,50 @@ class WebDriverManager:
             options.add_argument("--disable-webgl")
             options.add_argument("--disable-3d-apis")
 
-            # Preferences Configs
             options.add_experimental_option("prefs", {
                 "profile.managed_default_content_settings.images": 2, 
                 "profile.default_content_setting_values.notifications": 2,  
-                "download.default_directory": self.output_path, 
+                "download.default_directory": dir, 
                 "safebrowsing.enabled": True  
             })
             self.driver = webdriver.Chrome(service=service, options=options)
-            self.start_time = time.time()  # Saves the start time
+            self.start_time = time.time()
         except Exception as e:
             logging.error(f"Error al configurar el WebDriver: {e}")
             raise e
 
     def should_restart_driver(self):
-        if time.time() - self.start_time > 86400:  #  24 hours (86400 seconds)
-            return True
-        return False
+        return time.time() - self.start_time > 30 #86400
 
     def quit_driver(self):
         if self.driver and self.should_restart_driver():
             self.driver.quit()
-            self.configure_driver()  # Reboots driver if required
+            self.configure_driver()
     
-    def start(self, url, user, password):
-        try: 
-            self.driver.delete_all_cookies()
-            self.driver.get(url)
-            login(user, password, self.driver)
-            navigate_to_report(self.driver)       
+    def go_to_report_page(self):
+        try:
+            self.driver.get(self.BASE_URL)
+            login(self.DB_USER, self.DB_PASSWORD, self.driver)
+            navigate_to_report(self.driver)
+            # click on 'Resumen' button
+            self.driver.find_element(By.ID, "ctl15_chkResumen").click()
+        except Exception as e:
+            logging.error(f"Error al navegar a la página de reportes: {e}")
+            raise
+
+    def set_dates_and_download(self):
+        try:
             self.set_dates()
             return self.download_file()
         except Exception as e:
-            print(f"Hubo un error al iniciar: {e}")
-            print(str(e))
-            raise 
-        finally:
-            self.quit_driver()
+            logging.error(f"Error al settear fechas y descargar archivo: {e}")
+            raise
 
     def set_dates(self):
        self.date_setter.set()
 
     def download_file(self):
-        #Click on 'resumen' button
-        self.driver.find_element(By.ID, "ctl15_chkResumen").click()
-        return download_file(self.driver, self.output_path, self.expected_filename_pattern, timeout=30)
-
-    def get_downloaded_file_path(self):
-        return self.file_downloaded_path
+        return download_file(self.driver, dir, self.EXPECTED_FILENAME_PATTERN, timeout=30)
 
     def get_driver(self):
         if self.driver is None:
