@@ -1,6 +1,7 @@
 from application.models.automation.date_setter.DateSetterLastMonthToday import DateSetterLastMonthToday
 from application.models.automation.date_setter.DateSetterCurrentMonth import DateSetterCurrentMonth
 from application.models.automation.date_setter.DateSetterLastMonth import DateSetterLastMonth
+from application.models.automation.WebDriverManager import WebDriverManager
 from application.service.SummaryService import SummaryService
 from flask import Flask, jsonify, request, render_template
 from dotenv import load_dotenv 
@@ -25,6 +26,8 @@ class SummaryREST:
         self.scheduler.scheduler_jobs()
         self.scheduler.start()
         self.service = SummaryService()
+        WebDriverManager().go_to_report_page()
+    
 
     def initialize_logging(self):
         handler = RotatingFileHandler('summary_api.log', maxBytes=5000000, backupCount=3)
