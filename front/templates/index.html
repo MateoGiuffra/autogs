@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
         <title>Resumenes</title>
-         <link rel="stylesheet" href="/static/css/style.css">
+        <link rel="stylesheet" href="/static/css/style.css">
         <link rel="stylesheet" href="/front/static/css/style.css"> 
         <!-- <link rel="stylesheet" href="/static/css/mystyle.css">
         <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
@@ -20,9 +20,9 @@
     </head>
     <body>
         <div class="wrapper">
-            <main>
-                <h1>Resumenes</h1>
-                <article class="buttons"> 
+            <header>
+                <h1>Resúmenes</h1>
+                <article class="buttons">
                     <button class="actualizar-button-style" id="actualizar-hoy">
                         <div class="texto-btn">Hoy</div>
                     </button>
@@ -34,51 +34,45 @@
                     </button>
                     <div id="spinner" style="display: none;"></div>
                 </article>
-                <article id="total-hoy" class="totals">
-                    <h2>Total de Hoy</h2>
-                    <p> 
-                        <h3 id="total" class="formatted-number">{{data1['total']}}<h3>
-                        <div>
-                            Últ. vez actualizado: 
-                            <span id="last-report-date">
-                                {{data1['last_report_date']}}
-                            </span>
-                        </div>
-                        <div>
-                            Diferencia de la última actualización: 
-                            <span id="dif" class="difference">
-                                {{data1['last_total']}}
-                            </span>
-                        </div>
-                    </p>
-                </article>
-
-                <article class="totals"> 
-                    <h2>Recaudación Total del Mes Pasado</h2>
-                    <strong id="last_months_total" class="formatted-number">
-                        {{data1['last_months_total']}}
-                    </strong>
-                    <p>
-                        La recaudación total del mes anterior fue de $<span class="formatted-number">{{data1['last_months_total']}}</span>.
-                        Actualmente, se registra <span class="percent-message">{{data1['last_months_total']}}</span> respecto al monto actual, lo que 
-                        representa una diferencia de <span class="difference">{{data1['last_months_total']}}</span>. 
-                    </p>
-                </article>
-
-                <article class="totals"> 
-                    <h2>Recaudación Parcial del Mes Pasado</h2>
-                    <strong id="last_months_total_today" class="formatted-number">
-                        {{data1['last_months_total_today']}}
-                    </strong>
-                    <p>
-                        El mes pasado, en este mismo día, la recaudación fue de $<span class="formatted-number">{{data1['last_months_total_today']}}</span>.
-                        Actualmente, se registra <span class='percent-message'>{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que 
-                        representa una diferencia de <span class="difference">{{data1['last_months_total_today']}}</span>. 
-                    </p>
+            </header>
+            <main>
+                <article class="info-cards">
+                    <section id="total-hoy" class="card">
+                        <h2>Total de Hoy</h2>
+                        <p>
+                            <h3 id="total" class="formatted-number">{{data1['total']}}</h3>
+                            <div>
+                                Última vez actualizado:
+                                <span id="last-report-date">{{data1['last_report_date']}}</span>
+                            </div>
+                            <div>
+                                Diferencia de la última actualización:
+                                <span id="dif" class="difference">{{data1['last_total']}}</span>
+                            </div>
+                        </p>
+                    </section>
+                    <section class="card">
+                        <h2>Recaudación Total del Mes Pasado</h2>
+                        <strong id="last_months_total" class="formatted-number">{{data1['last_months_total']}}</strong>
+                        <p>
+                            La recaudación total del mes anterior fue de $<span class="formatted-number">{{data1['last_months_total']}}</span>.
+                            Actualmente, se registra <span class="percent-message">{{data1['last_months_total']}}</span> respecto al monto actual, lo que
+                            representa una diferencia de <span class="difference">{{data1['last_months_total']}}</span>.
+                        </p>
+                    </section>
+                    <section class="card">
+                        <h2>Recaudación Parcial del Mes Pasado</h2>
+                        <strong id="last_months_total_today" class="formatted-number">{{data1['last_months_total_today']}}</strong>
+                        <p>
+                            El mes pasado, en este mismo día, la recaudación fue de $<span class="formatted-number">{{data1['last_months_total_today']}}</span>.
+                            Actualmente, se registra <span class="percent-message">{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que
+                            representa una diferencia de <span class="difference">{{data1['last_months_total_today']}}</span>.
+                        </p>
+                    </section>
                 </article>
             </main>
             <footer>
-                Copyright &copy; 2025 Resumen Financiero
+                <h2>Copyright &copy; 2025 Resumen Financiero</h2>
             </footer>
         </div>
     </body>

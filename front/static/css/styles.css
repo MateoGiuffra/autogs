@@ -1,0 +1,38 @@
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'DM Serif Text', serif;
+}
+
+body{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: rgb(230, 230, 230);
+}
+
+.wrapper{
+    background-color: rgba(82, 165, 237, 0.066);
+    width: 1200px;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.info-cards{
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.card{
+    background-color: rgb(255, 255, 255);
+}
+
+footer{
+    bottom: 0px;
+}

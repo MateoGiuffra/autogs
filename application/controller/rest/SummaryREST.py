@@ -42,7 +42,10 @@ class SummaryREST:
             data1 = self.service.get_json(self.month_and_year)
             print(f"Informacion de la bd: {data1}")    
             return render_template("index.html", data1=data1)
-
+        
+        @self.app.route("/json", methods=["GET"])
+        def summary_json():
+            return self.service.get_json(self.month_and_year)
 
         @self.app.route("/find_or_create", methods=["GET"])
         def find_or_create():
@@ -81,7 +84,7 @@ class SummaryREST:
         
     def run(self):
         port = int(os.environ.get("PORT", 5000))  # Railway Port = 5000 | Render Port = 10000
-        self.app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
+        self.app.run(host="0.0.0.0", port=port, debug=False, use_reloader=True)
 
 if __name__ == "__main__":
     try:

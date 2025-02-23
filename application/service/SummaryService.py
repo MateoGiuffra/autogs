@@ -1,6 +1,10 @@
 from application.persistence.SummaryDAO import SummaryDAO
 from application.models.Summary import Summary
 import logging
+from application.persistence.SummaryDAO import SummaryDAO
+from application.models.Summary import Summary
+import logging
+import asyncio
 
 class SummaryService:
     
@@ -15,11 +19,15 @@ class SummaryService:
                 return summary_json
             summary = self.find_or_create(month_and_year)
             summary.get_total_number(date_setter)
-            return self.dao.update_summary(summary)
+            self.update_summary(summary)
+            return summary.to_summary_dict()
         except Exception as e: 
             message = f"Error al obtener el summary de {date_setter}: {e}"
             logging.error(message)
             raise 
+        
+    def update_summary(self, summary):
+        self.dao.update_summary(summary) 
     
     # get only json summary 
     def get_json(self, month_and_year):
@@ -28,16 +36,13 @@ class SummaryService:
         except Exception as e:
             print(f"Ocurrio un error: {e}")
             raise 
-            
     
     def find_or_create(self, month_and_year):
         summary = self.dao.find(month_and_year)
         if summary == None: 
             return self.dao.save(Summary(month_and_year))
         return summary
-    
-    def update_summary(self, summary):
-        self.dao.update_summary(summary) 
+
     
     # methods to get or to update specific fields 
     def update_field_of(self, month_and_year, field, value):

@@ -1,5 +1,5 @@
 from .DateSetter import DateSetter
-import datetime
+from datetime import datetime
 from dateutil import relativedelta 
 import pytz 
 from decouple import config
@@ -11,9 +11,8 @@ class DateSetterCurrentMonth(DateSetter):
         super().__init__(driver)
 
     def get_today(self):
-        tz_buenos_aires = pytz.timezone(TIMEZONE)
-        now = datetime.datetime.now(tz_buenos_aires)
-        return now.astimezone(tz_buenos_aires).date()
+        today = datetime.now(pytz.timezone(TIMEZONE))
+        return today.date()
     
     def next_month_of_today(self, today):
         return today + relativedelta.relativedelta(months = 1)
@@ -24,7 +23,7 @@ class DateSetterCurrentMonth(DateSetter):
     def update_info(self, summary, amount):
         summary.set_last_total(summary.get_total())
         summary.set_total(amount)
-        summary.set_last_report_date(datetime.datetime.now())
+        summary.set_last_report_date(datetime.now())
 
     def is_necessary_again(self, month_and_year, summary_json, service):
         return True

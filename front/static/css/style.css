@@ -1,105 +1,70 @@
-html, body {
-    width: 100%;
-    height: 100%;
+*, *::before, *::after {
     margin: 0;
     padding: 0;
-    display: flex;
-    justify-content: center;
-    background-color: #f4f4f4;
+    box-sizing: border-box;
     font-family: 'DM Serif Text', serif;
-    color: #181818;
 }
 
-h1 {
-    text-align: center;
+body {
+    background-color: #f4f4f4;
     color: #2c3e50;
-    font-family: 'Bebas Neue', sans-serif;
-    margin: 20px 0;
-    font-size: 8vw; /* Adaptable al ancho del dispositivo */
-}
-
-article {
-    background-color: #ffffff;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    box-sizing: border-box;
-    padding: 15px; /* Agregado para que el contenido tenga espacio */
-}
-
-article:last-of-type {
-    margin-bottom: 5px;
-}
-
-.totals {
-    height: auto;
-    padding: 10px;
-}
-
-.formatted-number, .difference {
-    font-weight: bold;
-}
-
-main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-footer {
-    background-color: #2c3e50;
-    height: 50px; 
-    color: #f4f4f4;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    bottom: 0;
-    font-size: 12px; 
+    line-height: 1.6;
+    font-size: 16px;
+    min-height: 100vh;
+    padding: 20px;
 }
 
 .wrapper {
+    background-color: #d5e4f4;
+    max-width: 1500px;
+    width: 100%;
+    height: 100vh;
+    margin: auto;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 100%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 8vw, 4rem); /* Escala según el tamaño de la pantalla */
+    color: #2c3e50;
+    margin-bottom: 20px;
 }
 
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Centrar botones en pantallas pequeñas */
-    align-items: center;
-    width: 100%;
-    padding: 0 10px;
-    margin-bottom: 2%;
-    box-sizing: border-box;
-    gap: 10px; /* Espaciado entre botones */
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
 }
 
 button {
     background-color: #007BFF;
-    border: none;
     color: white;
-    padding: 10px;
-    font-size: 4vw; /* Adaptable al ancho del dispositivo */
-    cursor: pointer;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    padding: 10px 20px;
+    border: none;
     border-radius: 5px;
+    cursor: pointer;
     transition: background-color 0.3s ease;
-    height: auto;
-    flex: 1 1 calc(50% - 20px); /* Ocupa 50% del ancho con margen */
-    margin: 0 5px; 
-    max-width: 150px; /* Límite máximo del botón */
+    flex: 1 1 calc(33% - 20px);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 button:hover {
     background-color: #0056b3;
-}
-
-.texto-btn {
-    text-align: center;
 }
 
 #spinner {
@@ -117,18 +82,47 @@ button:hover {
     100% { transform: rotate(360deg); }
 }
 
-/* Media query para pantallas pequeñas */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 10vw; /* Aumenta el tamaño en dispositivos más pequeños */
-    }
+.info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
 
-    .buttons button {
-        font-size: 5vw; /* Botones más pequeños */
-        padding: 8px;
-    }
+.totals.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    text-align: center;
+}
 
-    footer {
-        font-size: 10px; /* Ajusta el tamaño del texto en el footer */
-    }
+.totals h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.totals p {
+    font-size: 1rem;
+    color: #555;
+}
+
+.formatted-number, .difference {
+    font-weight: bold;
+    color: #007BFF;
+}
+
+.percent-message {
+    color: #27ae60;
+}
+
+footer {
+    background-color: #2c3e50;
+    color: #f4f4f4;
+    font-size: 1rem;
+    text-align: center;
+    padding: 15px;
+    margin-top: 40px;
+    width: 100%;
 }
