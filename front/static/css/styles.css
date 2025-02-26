@@ -12,6 +12,7 @@ body {
     background-color: #ececec;
     position: relative;
     min-height: 100vh;
+
 }
 
 .wrapper {
@@ -28,7 +29,7 @@ body {
 
 h1 {
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 4vw; 
+    font-size: clamp(24px, 10vh, 100px);  
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,7 +46,6 @@ h1 {
 }
 
 .buttons button {
-    margin-top: 8px;
     width: 160px;
     padding: 16px;
     font-family: 'Bebas Neue', sans-serif;
@@ -56,7 +56,6 @@ h1 {
     border: none;
     border-radius: 8px;
     transition: background-color 0.3s ease; 
-    
 }
 
 .buttons button:hover {
@@ -69,7 +68,7 @@ h1 {
     justify-content: center;
     flex-direction: column;
     gap: 50px;
-    margin: 0 auto;
+    margin: 16px auto;
 }
 
 time {
@@ -91,12 +90,9 @@ time {
     color: #27ae60;
 }
 
-.card:last-child {
-    margin-bottom: 64px;
-}
 
 footer {
-    position: fixed;
+    position: relative;
     bottom: 0;
     background-color: #2c3e50;
     color: #EDEDED;
@@ -105,6 +101,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: -16px;
 }
 
 /* Spinner */
@@ -132,11 +129,7 @@ footer {
 
 /* MEDIA QUERIES PARA RESPONSIVIDAD */
 
-/* Pantallas pequeñas (móviles) */
 @media (max-width: 600px) {
-    h1 {
-        font-size: 6vw; /* Ajustamos el tamaño del título */
-    }
 
     .buttons {
         flex-direction: column;
@@ -145,8 +138,8 @@ footer {
     }
 
     .buttons button {
-        width: 100%; /* Los botones ocupan todo el ancho disponible */
-        font-size: 5vw; /* Ajustamos el tamaño de fuente de los botones */
+        width: 100%; 
+        font-size: 5vw; 
     }
 
     .info-cards {
@@ -155,14 +148,14 @@ footer {
     }
 
     .card {
-        height: auto; /* Dejar que las tarjetas tengan altura flexible */
+        height: auto;
     }
 }
 
-/* Pantallas medianas (tabletas) */
+
 @media (max-width: 900px) {
-    h1 {
-        font-size: 5vw;
+    .wrapper{
+        height: 100%;
     }
 
     .buttons {
@@ -174,6 +167,7 @@ footer {
     .buttons button {
         width: 100%;
         font-size: 3vw;
+        margin-bottom: 16px;
     }
 
     .info-cards {
@@ -182,13 +176,48 @@ footer {
     }
 
     .card {
-        height: 180px; /* Aumentamos un poco la altura de las tarjetas */
+        height: auto;
+    }
+
+    footer{
+        position: relative;
+        bottom: 0;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: -16px;    
     }
 }
 
-/* Pantallas grandes (pantallas de escritorio más grandes) */
 @media (min-width: 1201px) {
     .wrapper {
-        width: 1200px; /* Máxima anchura para pantallas grandes */
+        width: 1200px; 
+    }
+}
+
+@media(width < 700px){
+    .buttons button{
+        font-size: 1.6rem;
+    }
+
+    body{
+        position: relative;
+    }
+
+    footer{
+        position: relative;
+        bottom: 0;
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: -16px;
+    }
+}
+
+@media(width < 900px){
+    .info-cards{
+        margin: 64px auto;
     }
 }
