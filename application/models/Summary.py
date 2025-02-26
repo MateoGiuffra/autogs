@@ -1,6 +1,6 @@
 from application.models.automation.WebDriverManager import WebDriverManager
 from application.models.pandas.excel_reader import reader_get_total
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo 
 from decouple import config  
 from abs_path import dir
@@ -16,6 +16,8 @@ class Summary:
     
     def __init__(self, month_and_year):
         try: 
+
+            
             self.month_and_year = month_and_year
             self.total = 0
             self.last_total  = 0
