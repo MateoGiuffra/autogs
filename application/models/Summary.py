@@ -21,7 +21,8 @@ class Summary:
             self.last_total  = 0
             self.last_months_total = 0
             self.last_months_total_today = 0
-            self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S")
+            self.last_report_date = datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).isoformat()
+            print(f"Esta es la fecha del init {self.last_report_date}")
             self.date_of_lmtt = None 
             self.date_of_lmt = None
         except Exception as e: 
@@ -63,7 +64,7 @@ class Summary:
         instance.last_total = float(data.get("last_total", 0))
         instance.last_months_total = float(data.get("last_months_total", 0))
         instance.last_months_total_today = float(data.get("last_months_total_today", 0))
-        instance.last_report_date = data.get("last_report_date", datetime.now(pytz.timezone("America/Argentina/Buenos_Aires")).strftime("%d-%m-%Y %H:%M:%S"))
+        instance.last_report_date = data.get("last_report_date", datetime.now(ZoneInfo("America/Argentina/Buenos_Aires")).isoformat())
         instance.date_of_lmtt = data.get("date_of_lmtt", None)
         instance.date_of_lmt  = data.get("date_of_lmt", None)
         return instance
@@ -94,11 +95,22 @@ class Summary:
         return self.month_and_year
 
     # setters 
-    def set_last_report_date(self, date): 
-        if (isinstance(date, str)):
-             self.last_report_date = date 
-             return 
-        self.last_report_date = date.strftime("%d-%m-%Y %H:%M:%S")
+    def set_last_report_date(self, date):
+        
+        # Si la fecha es una cadena, intenta convertirla a datetime
+        if isinstance(date, str):
+            try:
+                date = datetime.fromisoformat(date)
+            except ValueError:
+                # Si no se puede convertir, la dejamos como cadena
+                self.last_report_date = date
+                return
+        # Si ya es datetime, no hacemos nada
+        elif isinstance(date, datetime):
+            pass
+        
+        # Asignar la fecha procesada
+        self.last_report_date = date
     
     def set_total(self, total):
         self.total = total 

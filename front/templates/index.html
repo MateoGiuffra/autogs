@@ -3,34 +3,32 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Sitio web destinado al analisis de resumenes financieros">
+        <meta name="description" content="Sitio web para analisis de resumenes financieros">
         <title>Resumenes</title>
-        <link rel="stylesheet" href="/static/css/style.css">
-        <link rel="stylesheet" href="/front/static/css/style.css"> 
-        <!-- <link rel="stylesheet" href="/static/css/mystyle.css">
-        <link rel="stylesheet" href="/front/static/css/mystyle.css"> -->
+        <link rel="stylesheet" href="/static/css/styles.css">
+        <link rel="stylesheet" href="/front/static/css/styles.css"> 
         <link rel="icon" type="image/png" sizes="16x16" rel="icon" href="/static/assets/phone-and-cash.png">
-        <script src="/static/js/scripts.js"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Text:ital@0;1&display=swap" rel="stylesheet">
         <div id="totalValue" data-total="{{data1['total']}}" style="display:none;"></div>
         <div id="lastTotalValue" data-last-total="{{data1['last_total']}}" style="display:none;"></div>
+        <script src="/static/js/scripts.js"></script>
+        <script type="module">
+            import { RelativeTimeElement } from "https://cdn.skypack.dev/@github/relative-time-element";
+        </script>
     </head>
     <body>
         <div class="wrapper">
             <header>
-                <h1>Resúmenes</h1>
+                <h1>Resumenes</h1>
                 <article class="buttons">
                     <button class="actualizar-button-style" id="actualizar-hoy">
-                        <div class="texto-btn">Hoy</div>
+                        Hoy
                     </button>
                     <button class="actualizar-button-style" id="actualizar-total">
-                        <div class="texto-btn">Total</div>
+                        Total 
                     </button>
                     <button class="actualizar-button-style" id="actualizar-parcial">
-                        <div class="texto-btn">Parcial</div>
+                        Parcial
                     </button>
                     <div id="spinner" style="display: none;"></div>
                 </article>
@@ -43,9 +41,14 @@
                             <h3 id="total" class="formatted-number">{{data1['total']}}</h3>
                             <div>
                                 Última vez actualizado:
-                                <span id="last-report-date">{{data1['last_report_date']}}</span>
+                                <relative-time 
+                                    id="last-report-date"
+                                    lang="es"
+                                    datetime="{{data1['last_report_date']}}"
+                                ></relative-time>
                             </div>
                             <div>
+                                <span id="1"></span>
                                 Diferencia de la última actualización:
                                 <span id="dif" class="difference">{{data1['last_total']}}</span>
                             </div>
@@ -55,9 +58,9 @@
                         <h2>Recaudación Total del Mes Pasado</h2>
                         <strong id="last_months_total" class="formatted-number">{{data1['last_months_total']}}</strong>
                         <p>
-                            La recaudación total del mes anterior fue de $<span class="formatted-number">{{data1['last_months_total']}}</span>.
+                            La recaudación total del mes anterior fue de $<span id="last_months_total_span" class="formatted-number">{{data1['last_months_total']}}</span>.
                             Actualmente, se registra <span class="percent-message">{{data1['last_months_total']}}</span> respecto al monto actual, lo que
-                            representa una diferencia de <span class="difference">{{data1['last_months_total']}}</span>.
+                            representa una diferencia de <span id="last_months_total_dif" class="difference">{{data1['last_months_total']}}</span>.
                         </p>
                     </section>
                     <section class="card">
@@ -65,8 +68,8 @@
                         <strong id="last_months_total_today" class="formatted-number">{{data1['last_months_total_today']}}</strong>
                         <p>
                             El mes pasado, en este mismo día, la recaudación fue de $<span class="formatted-number">{{data1['last_months_total_today']}}</span>.
-                            Actualmente, se registra <span class="percent-message">{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que
-                            representa una diferencia de <span class="difference">{{data1['last_months_total_today']}}</span>.
+                            Actualmente, se registra <span id="last_months_total_today_span" class="percent-message">{{data1['last_months_total_today']}}</span> respecto al monto actual, lo que
+                            representa una diferencia de <span id="last_months_total_today_dif" class="difference">{{data1['last_months_total_today']}}</span>.
                         </p>
                     </section>
                 </article>

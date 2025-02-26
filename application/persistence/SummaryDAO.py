@@ -21,8 +21,6 @@ class SummaryDAO:
     def update_summary(self, summary):
         try:
             doc_ref = self.db.collection("summary").document(f"{summary.get_month_and_year()}")
-            print("Aca esta la date actual antes de updatear" + summary.get_last_report_date())
-            # Actualización del documento
             doc_ref.update({
                 "total": summary.get_total(),
                 "last_total": summary.get_last_total(),
