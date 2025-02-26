@@ -40,7 +40,6 @@ class SummaryREST:
         @self.app.route("/", methods=["GET"])
         def index():
             data1 = self.service.get_json(self.month_and_year)
-            print(f"Informacion de la bd: {data1}")    
             return render_template("index.html", data1=data1)
         
         @self.app.route("/json", methods=["GET"])
