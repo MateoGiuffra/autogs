@@ -16,8 +16,6 @@ class Summary:
     
     def __init__(self, month_and_year):
         try: 
-
-            
             self.month_and_year = month_and_year
             self.total = 0
             self.last_total  = 0
