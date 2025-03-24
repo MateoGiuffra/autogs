@@ -68,7 +68,7 @@ class SummaryREST:
                 return jsonify(self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonthToday(None))), 200
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
-                print(f"Error al actualizar el resumen: {e}")
+                print(f"Error al actualizar el resumen: {e} {e.__traceback__} {type(e)}")
                 return jsonify({"message": f"Error al actualizar: {e}"}), 500
             
         # actualiza el resumen del total obtenido en todo el mes anterior 

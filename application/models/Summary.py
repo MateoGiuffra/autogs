@@ -33,17 +33,17 @@ class Summary:
 
     # Gets total according to given date. This method gets excel file, read it and set on in this class all new values
     def get_total_number(self, date_setter):
-        web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
-        web_driver_manager.set_date_setter(date_setter)
-        path = web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)
-        
-        total = float(reader_get_total(path))
-        
-        date_setter.update_info(self, total)
+            web_driver_manager = WebDriverManager(dir, 'rptCobranzas*.xls')
+            web_driver_manager.set_date_setter(date_setter)
+            path = web_driver_manager.start(self.BASE_URL, self.DB_USER, self.DB_PASSWORD)
+            
+            total = float(reader_get_total(path))
+            
+            date_setter.update_info(self, total)
 
-        print(f"Se obtuvo el total con exito: {total}")
-        
-        return total
+            print(f"Se obtuvo el total con exito: {total}")
+            
+            return total
     
     # devuelve un JSON con la informacion del objeto
     def to_summary_dict(self):
@@ -77,6 +77,8 @@ class Summary:
         return self.date_of_lmtt
     
     def get_last_report_date(self):
+        if isinstance(self.last_report_date, str): 
+            return datetime.strptime(self.last_report_date, "%Y-%m-%dT%H:%M:%S.%f")
         return self.last_report_date
    
     def get_total(self):

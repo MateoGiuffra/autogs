@@ -31,6 +31,7 @@ class DateSetterLastMonth(DateSetter):
         summary.set_last_months_total(amount)
     
     def is_necessary_again(self, month_and_year, summary_json, service):
+        return True
         if not summary_json or "date_of_lmt" not in summary_json:
             return True 
         

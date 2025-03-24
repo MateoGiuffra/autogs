@@ -13,7 +13,7 @@ body {
     position: relative;
     height: 100vh;
     min-height: 100vh;
-    background-image: url('/static/assets/wallpaper.webp');
+    background-image: url('/front/static/assets/wallpaper.webp');
     background-size: cover; 
     background-position: center; 
     background-attachment: fixed;
@@ -138,7 +138,7 @@ footer {
 /* MEDIA QUERIES PARA RESPONSIVIDAD */
 
 @media (max-width: 600px) {
-
+  
     .buttons {
         flex-direction: column;
         gap: 20px;
@@ -211,7 +211,7 @@ footer {
 
     body{
         position: relative;
-        background-image: url('/static/assets/movil-wallpaper.webp');
+        background-image: url('/front/static/assets/movil-wallpaper.webp');
         background-size: cover; 
         background-position: center; 
         background-attachment: fixed;

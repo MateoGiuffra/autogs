@@ -68,15 +68,10 @@ class WebDriverManager:
             logging.error(f"Error al configurar el WebDriver: {e}")
             raise e
 
-    def should_restart_driver(self):
-        if time.time() - self.start_time > 86400:  #  24 hours (86400 seconds)
-            return True
-        return False
 
     def quit_driver(self):
-        if self.driver and self.should_restart_driver():
-            self.driver.quit()
-            self.configure_driver()  # Reboots driver if required
+        self.driver.quit()
+        self.configure_driver()
     
     def start(self, url, user, password):
         try: 
