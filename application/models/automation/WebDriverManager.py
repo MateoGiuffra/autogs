@@ -38,7 +38,7 @@ class WebDriverManager:
             options = webdriver.ChromeOptions()
             
             # Primero las configuraciones de entorno y modo sin cabeza
-            options.add_argument("--headless=new") 
+            # options.add_argument("--headless=new") 
             options.add_argument("--no-sandbox")  
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-gpu")  
@@ -68,10 +68,6 @@ class WebDriverManager:
             logging.error(f"Error al configurar el WebDriver: {e}")
             raise e
 
-
-    def quit_driver(self):
-        self.driver.quit()
-        self.configure_driver()
     
     def start(self, url, user, password):
         try: 
@@ -86,7 +82,7 @@ class WebDriverManager:
             print(str(e))
             raise 
         finally:
-            self.quit_driver()
+            self.driver.quit()
 
     def set_dates(self):
        self.date_setter.set()
