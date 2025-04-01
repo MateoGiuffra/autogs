@@ -21,7 +21,6 @@ class SummaryDAO:
     def update_summary(self, summary):
         try:
             doc_ref = self.db.collection("summary").document(f"{summary.get_month_and_year()}")
-            print(f"El valor es: {summary.get_last_report_date()} Y el tipo es {type(summary.get_last_report_date())}")
             doc_ref.update({
                 "total": summary.get_total(),
                 "last_total": summary.get_last_total(),

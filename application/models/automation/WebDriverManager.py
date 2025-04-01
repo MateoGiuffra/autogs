@@ -71,7 +71,6 @@ class WebDriverManager:
     
     def start(self, url, user, password):
         try: 
-            self.driver.delete_all_cookies()
             self.driver.get(url)
             login(user, password, self.driver)
             navigate_to_report(self.driver)       

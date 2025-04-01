@@ -15,7 +15,6 @@ class SummaryService:
     def update_by_date_setter(self, month_and_year, date_setter):
         try: 
             summary_json = self.get_json(month_and_year)
-            print("Se consiguio el summary con exito: ", summary_json)
             if (not date_setter.is_necessary_again(month_and_year, summary_json, self)):
                 return summary_json
             summary = self.find_or_create(month_and_year)
