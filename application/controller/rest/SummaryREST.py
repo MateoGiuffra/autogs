@@ -37,6 +37,10 @@ class SummaryREST:
     #endpoints
     def setup_routes(self):
         # carga la pagina principal con sus datos
+        @self.app.route("/hola", methods=["GET"])
+        def hola():
+            return jsonify({"respuesta":"hola"}), 200
+        
         @self.app.route("/", methods=["GET"])
         def index():
             data1 = self.service.get_json(self.month_and_year)
@@ -83,6 +87,7 @@ class SummaryREST:
         
     def run(self):
         port = int(os.environ.get("PORT", 5000))  # Railway Port = 5000 | Render Port = 10000
+        print(f"Application is running at http://0.0.0.0:{port}")
         self.app.run(host="0.0.0.0", port=port, debug=False, use_reloader=True)
 
 if __name__ == "__main__":
