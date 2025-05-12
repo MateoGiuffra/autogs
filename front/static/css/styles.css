@@ -13,10 +13,20 @@ body {
     position: relative;
     height: 100vh;
     min-height: 100vh;
-    background-image: url('/front/static/assets/wallpaper.webp');
+    
     background-size: cover; 
     background-position: center; 
     background-attachment: fixed;
+}
+
+.background{
+    position: absolute;
+    width: 100%;
+    min-height: 100vh;
+    background-size: cover; 
+    background-position: center; 
+    background-attachment: fixed;
+    z-index: -1;
 }
 
 .wrapper {
