@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 from decouple import config  
 from datetime import datetime
 from logging.handlers import RotatingFileHandler
-from application.service.SchedulerService import SchedulerService
 from  application.persistence.SummaryDAO import SummaryDAO
 import logging 
 import os 
@@ -21,9 +20,6 @@ class SummaryREST:
         self.initialize_logging()
         self.setup_routes()
         self.month_and_year = f"{datetime.now().month}-{datetime.now().year}"
-        self.scheduler = SchedulerService()
-        self.scheduler.scheduler_jobs()
-        self.scheduler.start()
         self.service = SummaryService()
 
     def initialize_logging(self):
@@ -59,7 +55,9 @@ class SummaryREST:
         @self.app.route("/resumenActual", methods=["PUT"])
         def update_summary():
             try:
-                return jsonify(self.service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))), 200
+                json = (self.service.update_by_date_setter(self.month_and_year, DateSetterCurrentMonth(None))), 200
+                print(json)
+                return jsonify(json)
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 print(f"Error al actualizar el resumen: {e}")
@@ -69,7 +67,9 @@ class SummaryREST:
         @self.app.route("/resumenDeUnMesAtras", methods=["PUT"])
         def update_total_last_months_total_today():
             try:
-                return jsonify(self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonthToday(None))), 200
+                json = (self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonthToday(None))), 200
+                print(json)
+                return jsonify(json)
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 print(f"Error al actualizar el resumen: {e} {e.__traceback__} {type(e)}")
@@ -79,7 +79,9 @@ class SummaryREST:
         @self.app.route("/resumenDelMesPasado", methods=["PUT"])
         def update_total_last_months_total():
             try:
-                return jsonify(self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonth(None))), 200
+                json = (self.service.update_by_date_setter(self.month_and_year, DateSetterLastMonth(None))), 200
+                print(json)
+                return jsonify(json)
             except Exception as e:
                 logging.error(f"Error al actualizar el resumen: {e}")
                 print(f"Error al actualizar el resumen: {e}")
